@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="275.0" prefWidth="374.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.PlayerNameController">
+   <children>
+      <VBox alignment="CENTER" layoutX="21.0" layoutY="14.0" prefHeight="246.0" prefWidth="329.0" spacing="15.0">
+         <children>
+            <Label prefHeight="39.0" prefWidth="94.0" text="Nombre Jugador" />
+            <TextField fx:id="txt_PlayerName" prefHeight="40.0" prefWidth="329.0" />
+            <JFXButton onAction="#onAction_savePlayer" prefHeight="45.0" prefWidth="111.0" text="Guardar" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
