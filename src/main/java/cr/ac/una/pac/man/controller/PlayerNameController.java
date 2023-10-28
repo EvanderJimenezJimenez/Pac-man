@@ -38,7 +38,7 @@ public class PlayerNameController extends Controller implements Initializable {
 
             String contenido;
 
-            File playerName = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player\\player.txt");
+            File playerName = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player.txt");
 
             FileWriter player = new FileWriter(playerName);
             player.write(nombre + "***");

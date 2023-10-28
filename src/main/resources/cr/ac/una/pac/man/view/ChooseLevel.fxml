@@ -19,7 +19,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <JFXComboBox fx:id="cbx_level" labelFloat="true" prefHeight="50.0" prefWidth="155.0" promptText="Buscar:" />
+            <JFXComboBox fx:id="cbx_level" labelFloat="true" onAction="#onAction_cbx" prefHeight="50.0" prefWidth="155.0" promptText="Buscar:" />
             <HBox alignment="CENTER" prefHeight="362.0" prefWidth="669.0" spacing="15.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#onAction_back" prefHeight="63.0" prefWidth="122.0" text="Anterior" />

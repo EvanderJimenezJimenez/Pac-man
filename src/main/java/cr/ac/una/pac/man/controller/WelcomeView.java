@@ -24,7 +24,7 @@ public class WelcomeView extends Controller implements Initializable {
     }
 
     private boolean archivoNoVacio() {
-        File player = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player\\player.txt");
+        File player = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player.txt");
         return player.exists() && player.length() > 0;
     }
 

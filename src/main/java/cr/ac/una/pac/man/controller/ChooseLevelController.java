@@ -48,21 +48,23 @@ public class ChooseLevelController extends Controller implements Initializable {
             "10-Dragon Ball Z"
     );
 
+    int index = 0;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cbx_level.setItems(FXCollections.observableList(opcionesColores));
-        
-         cbx_level.getSelectionModel().select(0);
+
+        cbx_level.getSelectionModel().select(0);
 
         loadLevelDataFromFile();
-        setDataLevel(levelList.get(0));
+        setDataLevel(levelList.get(index));
         // TODO
     }
 
     private void loadLevelDataFromFile() {
         List<Level> levels = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player\\completedlevels\\completedlevels.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\completedlevels.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] levelData = line.split("\\*\\*\\*");
@@ -91,9 +93,9 @@ public class ChooseLevelController extends Controller implements Initializable {
 
         levelList = FXCollections.observableArrayList(levels);
 
-        System.out.println("Item: " + levelList.get(0).getName()
-                + levelList.get(0).getLevelNumber() + levelList.get(0).isAvailable()
-                + levelList.get(0).isComplete());
+        System.out.println("Item: " + levelList.get(1).getName()
+                + levelList.get(1).getLevelNumber() + levelList.get(1).isAvailable()
+                + levelList.get(1).isComplete());
     }
 
     public boolean state(String state) {
@@ -103,33 +105,62 @@ public class ChooseLevelController extends Controller implements Initializable {
     public void setDataLevel(Level levelData) {
         lbl_name.setText(levelData.getName());
         img_level.setImage(imageLevel(levelData.getLevelNumber()));
+        System.out.println("Level: " + levelData.getLevelNumber());
+        newSelectCbx(Integer.valueOf(levelData.getLevelNumber()));
+
     }
 
+    public void newSelectCbx(Integer ind) {
+        ind -= 1;
+        cbx_level.getSelectionModel().select(ind);
 
-public Image imageLevel(String levelNumber) {
-    URL imageURL = null;
-    switch (levelNumber) {
-        case "1":
-            imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/joker.png");
-            break;
-        case "2":
-            imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/ironman.png");
-            break;
-        case "3":
-            imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/batman.png");
-            break;
-        default:
-            throw new AssertionError();
     }
 
-    if (imageURL != null) {
-        return new Image(imageURL.toExternalForm());
-    } else {
-        System.out.println("F");
-        return null;
-    }
-}
+    public Image imageLevel(String levelNumber) {
 
+        URL imageURL = null;
+        switch (levelNumber) {
+            case "1":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/joker.png");
+                break;
+            case "2":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/simpsons.jpg");
+                break;
+            case "3":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/ironman.png");
+                break;
+            case "4":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/spiderman.png");
+                break;
+            case "5":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/batman.png");
+                break;
+            case "6":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/superman.jpg");
+                break;
+            case "7":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/deadpool.png");
+                break;
+            case "8":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/onepiece.png");
+                break;
+            case "9":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/naruto.jpg");
+                break;
+            case "10":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/images/levels/dragonball.jpg");
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        if (imageURL != null) {
+            return new Image(imageURL.toExternalForm());
+        } else {
+            System.out.println("F");
+            return null;
+        }
+    }
 
     @Override
     public void initialize() {
@@ -137,14 +168,36 @@ public Image imageLevel(String levelNumber) {
 
     @FXML
     private void onAction_back(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_play(ActionEvent event) {
+        if (index > 0) {
+            index--;
+            setDataLevel(levelList.get(index));
+        }
     }
 
     @FXML
     private void onAction_next(ActionEvent event) {
+
+        if (index < levelList.size() - 1) {
+            index++;
+            setDataLevel(levelList.get(index));
+        }
+
+    }
+    
+        @FXML
+    private void onAction_play(ActionEvent event) {
+    }
+
+    @FXML
+    private void onAction_cbx(ActionEvent event) {
+
+        String name = cbx_level.getSelectionModel().getSelectedItem();
+        System.out.println("Name: " + name);
+
+        Level lev = levelList.filtered(level -> level.getName().equals(name)).get(0);
+
+        setDataLevel(lev);
+
     }
 
 }
