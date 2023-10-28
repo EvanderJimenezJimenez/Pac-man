@@ -1,53 +1,47 @@
 
 *{
-    
+   -fx-text-fill: white;
 }
 
 .root{
-    -fx-background-color: #FFF9C9;
+    -fx-background-color: #272829;
     -fx-border-width: 2.5px;
     -fx-border-color: black;
     -fx-font-family: Impact;
+    -fx-min-width: 700px; 
+    -fx-min-height: 600px; 
 }
-#fourPane{
-    -fx-background-color: #FFF9C9;
+.SecondPane{
+    -fx-background-color: #A78295;
     -fx-border-width: 2.5px;
     -fx-border-color: black;
 }
-#secondPane{
-    -fx-background-color: #B5C99A;
-    -fx-border-width: 2.5px;
-    -fx-border-color: black;
-}
-#TreePane{
-    -fx-background-color: #B5C99A;
-   
-}
-#EspecialButton{
-    -fx-text-fill: black;
-}
+
 /* Buttons  */
 .button,.jfx-button{
-   
-    -fx-border-color:  black;
-    -fx-background-color:#FFC95F ;
-    -fx-text-fill:#862B0D;
+    -fx-border-color:  #331D2C;
+    -fx-background-color: #EFE1D1 ;
+    -fx-text-fill: black;
     -fx-content-display: left;
     -fx-opacity: 1;
     transition: .5s;
-    -fx-border-width: 2px;
-    -fx-background-radius: 3px;
-    -fx-border-radius: 3px;
+    -fx-border-width: 3px;
+    -fx-min-width: 100px;
+    -fx-min-height: 10px; 
 }
 
 .jfx-button:hover,.button:hover{
     -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 10.0, 0.20, 0.0,5);
     -fx-cursor: hand;
-    -fx-background-color:#FFC95F ;
-    -fx-text-fill:#862B0D;
+    -fx-background-color:#A78295 ;
+    -fx-text-fill:white;
     -fx-scale-x: 1.1; 
     -fx-scale-y: 1.1; 
 }
+.jfx-button:pressed,.button:pressed{
+ rotate: 5px;
+}
+
 
 .jfx-button:pressed,.jfx-radio-button:pressed, .button:pressed{
     -fx-rotate: 3;
@@ -59,7 +53,7 @@
      -fx-font-size: 30.5px;
     -fx-alignment: TOP_LEFT;
     -fx-text-align: center;
-    -fx-text-fill: black;
+  
 }
 
 .SubScene{
