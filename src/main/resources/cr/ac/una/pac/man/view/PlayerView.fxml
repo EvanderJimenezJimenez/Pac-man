@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.PlayerViewController">
-    
+
+<AnchorPane id="AnchorPane" prefHeight="436.0" prefWidth="615.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.PlayerViewController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="258.0" layoutY="98.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="43.0" prefWidth="590.0">
+               <children>
+                  <Label prefHeight="42.0" prefWidth="52.0" text="Jugador: " />
+                  <Label prefHeight="17.0" prefWidth="57.0" text=".." />
+               </children>
+            </HBox>
+            <VBox prefHeight="103.0" prefWidth="590.0" spacing="15.0" />
+            <VBox alignment="TOP_CENTER" prefHeight="194.0" prefWidth="590.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="66.0" text="Trofeos" />
+               </children>
+            </VBox>
+            <Button mnemonicParsing="false" onAction="#onActionDelete" prefHeight="46.0" prefWidth="101.0" text="Eliminar Datos" />
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>

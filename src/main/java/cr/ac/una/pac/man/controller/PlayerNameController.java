@@ -38,11 +38,11 @@ public class PlayerNameController extends Controller implements Initializable {
 
             String contenido;
 
-            File scoress = new File(".\\src\\main\\resources\\cr\\ac\\una\\cubeproject\\files\\player\\player.txt");
+            File playerName = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player\\player.txt");
 
-            FileWriter scores = new FileWriter(scoress, true);
-            scores.write(nombre + "***");
-            scores.close();
+            FileWriter player = new FileWriter(playerName);
+            player.write(nombre + "***");
+            player.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,6 +54,8 @@ public class PlayerNameController extends Controller implements Initializable {
         
         if(txt_PlayerName.getText().length() > 0){
             addPalyer();
+            getStage().close();
+            
         }else{
             new Mensaje().show(Alert.AlertType.ERROR, "Nombre Jugador", "Ingresa el nombre del jugador.");
         }

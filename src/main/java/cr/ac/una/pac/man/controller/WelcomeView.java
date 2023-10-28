@@ -24,7 +24,7 @@ public class WelcomeView extends Controller implements Initializable {
     }
 
     private boolean archivoNoVacio() {
-        File player = new File(".\\src\\main\\resources\\cr\\ac\\una\\cubeproject\\files\\player\\player.txt");
+        File player = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player\\player.txt");
         return player.exists() && player.length() > 0;
     }
 
@@ -32,20 +32,22 @@ public class WelcomeView extends Controller implements Initializable {
     private void onAction_start(ActionEvent event) {
 
         if (archivoNoVacio()) {
-             FlowController.getInstance().goViewInWindow("GameView");
-        getStage().close();
-            
+            System.out.println("Hoal1");
+            FlowController.getInstance().goViewInWindow("ChooseLevel");
+            getStage().close();
+
         } else {
-             FlowController.getInstance().goViewInWindow("PlayerNameView");
-        getStage().close();
+            System.out.println("hola2");
+            FlowController.getInstance().goViewInWindowModal("PlayerName",getStage(),true);
+            getStage().close();
+
         }
 
-       
     }
 
     @FXML
     private void onAction_player(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("PalyerView");
+        FlowController.getInstance().goViewInWindow("PlayerView");
         getStage().close();
     }
 
