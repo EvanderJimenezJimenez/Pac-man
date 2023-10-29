@@ -187,7 +187,7 @@ public class ChooseLevelController extends Controller implements Initializable {
     
         @FXML
     private void onAction_play(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("Game");
+        FlowController.getInstance().goViewInWindow("GameView");
         getStage().close();
     }
 
