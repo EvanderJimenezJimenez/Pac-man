@@ -1,6 +1,6 @@
 
 *{
-   -fx-text-fill: white;
+    -fx-text-fill: white;
 }
 
 .root{
@@ -8,15 +8,25 @@
     -fx-border-width: 2.5px;
     -fx-border-color: black;
     -fx-font-family: Impact;
-    -fx-min-width: 700px; 
-    -fx-min-height: 600px; 
+    -fx-pref-width: 700px;
+    -fx-pref-height: 600px;
 }
 .SecondPane{
     -fx-background-color: #A78295;
     -fx-border-width: 2.5px;
     -fx-border-color: black;
+    -fx-border-color: black;
 }
+.Bar{
+    -fx-background-color: red;
+}
+.LoadingPane{
+    -fx-background-color: yellow;
+    -fx-border-width: 3px;
+    -fx-border-width: 2.5px;
+    -fx-border-color: black;
 
+}
 /* Buttons  */
 .button,.jfx-button{
     -fx-border-color:  #331D2C;
@@ -27,7 +37,7 @@
     transition: .5s;
     -fx-border-width: 3px;
     -fx-min-width: 100px;
-    -fx-min-height: 10px; 
+    -fx-min-height: 10px;
 }
 
 .jfx-button:hover,.button:hover{
@@ -35,11 +45,11 @@
     -fx-cursor: hand;
     -fx-background-color:#A78295 ;
     -fx-text-fill:white;
-    -fx-scale-x: 1.1; 
-    -fx-scale-y: 1.1; 
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
 }
 .jfx-button:pressed,.button:pressed{
- rotate: 5px;
+    rotate: 5px;
 }
 
 
@@ -50,10 +60,9 @@
 
 /* Label */
 #Title{
-     -fx-font-size: 30.5px;
+    -fx-font-size: 30.5px;
     -fx-alignment: TOP_LEFT;
     -fx-text-align: center;
-  
 }
 
 .SubScene{

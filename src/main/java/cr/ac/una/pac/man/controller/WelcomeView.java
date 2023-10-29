@@ -53,7 +53,7 @@ public class WelcomeView extends Controller implements Initializable {
 
     @FXML
     private void onAction_settings(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("SettingView");
+        FlowController.getInstance().goLoadingView("ChooseLevel");
         getStage().close();
     }
 
