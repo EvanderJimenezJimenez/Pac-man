@@ -2,10 +2,14 @@ cr\ac\una\pac\man\controller\Game.class
 cr\ac\una\pac\man\controller\WelcomeView.class
 cr\ac\una\pac\man\util\Mensaje.class
 cr\ac\una\pac\man\util\FlowController.class
+cr\ac\una\pac\man\controller\GameViewController$1.class
 cr\ac\una\pac\man\controller\PlayerNameController.class
 cr\ac\una\pac\man\controller\GameViewController.class
+cr\ac\una\pac\man\controller\LoadingView.class
+cr\ac\una\pac\man\controller\LoadingView$1.class
 cr\ac\una\pac\man\controller\Controller.class
 cr\ac\una\pac\man\controller\ChooseLevelController.class
+cr\ac\una\pac\man\controller\LevelCompleteController.class
 module-info.class
 cr\ac\una\pac\man\controller\SettingViewController.class
 cr\ac\una\pac\man\controller\Game$1.class

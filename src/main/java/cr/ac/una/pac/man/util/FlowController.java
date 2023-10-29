@@ -1,4 +1,5 @@
 package cr.ac.una.pac.man.util;
+
 import cr.ac.una.pac.man.App;
 import cr.ac.una.pac.man.controller.Controller;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class FlowController {
                         loaders.put(name, loader);
                     } catch (Exception ex) {
                         loader = null;
-                       // java.util.logging.Logger.getLogger(FlowController.class.getName()).log(Level.SEVERE, "Creando loader [" + name + "].", ex);
+                        // java.util.logging.Logger.getLogger(FlowController.class.getName()).log(Level.SEVERE, "Creando loader [" + name + "].", ex);
                     }
                 }
             }
@@ -125,7 +126,29 @@ public class FlowController {
     public void goViewInWindow(String viewName) {
         FXMLLoader loader = getLoader(viewName);
         Controller controller = loader.getController();
-        
+
+        controller.initialize();
+        Stage stage = new Stage();
+        stage.setTitle("PacMan");
+        stage.setOnHidden((WindowEvent event) -> {
+            controller.getStage().getScene().setRoot(new Pane());
+            controller.setStage(null);
+        });
+        controller.setStage(stage);
+        Parent root = loader.getRoot();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
+
+    }
+
+    public void goLoadingView(String NextNamepage) {
+        AppContext.getInstance().delete("NextPage");
+        AppContext.getInstance().set("NextPage", NextNamepage);
+        FXMLLoader loader = getLoader("LoadingView");
+        Controller controller = loader.getController();
+
         controller.initialize();
         Stage stage = new Stage();
         stage.setTitle("PacMan");
@@ -171,7 +194,7 @@ public class FlowController {
     public static void setIdioma(ResourceBundle idioma) {
         FlowController.idioma = idioma;
     }
-    
+
     public void initialize() {
         this.loaders.clear();
     }
