@@ -35,18 +35,6 @@ import javafx.util.Duration;
  */
 public class GameViewController extends Controller implements Initializable {
 
-    //map
-    private Image wallImage;
-    private Image bigPointImage;
-    private Image smallPointImage;
-
-    //
-    private Image pacmanRight;
-
-    //Ghost
-    private Image blinkyImage;
-    private Image clydeImage;
-
     @FXML
     private GridPane gridPaneMap;
     @FXML
@@ -61,6 +49,21 @@ public class GameViewController extends Controller implements Initializable {
     private ImageView imgViewLife5;
     @FXML
     private Label lbl_score;
+
+    //map
+    private Image wallImage;
+    private Image bigPointImage;
+    private Image smallPointImage;
+
+    //
+    private Image pacmanRight;
+    private Image pacmanFeft;
+    private Image pacmanUp;
+    private Image pacmanDown;
+
+    //Ghost
+    private Image blinkyImage;
+    private Image clydeImage;
 
     private ImageView pacmanImageView;
 
@@ -87,13 +90,24 @@ public class GameViewController extends Controller implements Initializable {
 
     int score = 0;
 
+    private int frameCount = 0;
+
+    private int frameDelay = 0; // Controla la velocidad de movimiento, ajusta según tus necesidades
+
+    private int pacmanSpeed = 1; // Velocidad predeterminada
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         wallImage = getIamge("wall");
         smallPointImage = getIamge("smallPoint");
         bigPointImage = getIamge("bigPoint");
+        
+        //pacman
         pacmanRight = getIamge("pacmanRight");
+        pacmanFeft = getIamge("pacmanLeft");
+        pacmanUp = getIamge("pacmanUp");
+        pacmanDown = getIamge("pacmanDown");
 
         //ghost
         blinkyImage = getIamge("blinky");
@@ -113,19 +127,19 @@ public class GameViewController extends Controller implements Initializable {
 
         map = new char[][]{
             {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'W'},
+            {'W', 'D', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
+            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'P', 'S', 'W', 'W', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', ' ', 'W', 'S', 'W', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', ' ', ' ', ' ', 'W', 'S', 'W', 'W'},
             {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'W', 'B', ' ', 'C', 'W', 'S', 'W', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', ' ', ' ', ' ', 'W', 'S', 'W', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
+            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'D', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'S', 'P', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
+            {'W', 'D', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
         };
 
@@ -145,6 +159,8 @@ public class GameViewController extends Controller implements Initializable {
                     smallPoints.add(new Point(x, y));
                 } else if (cell == 'B') {
                     imageView.setImage(blinkyImage);
+                } else if (cell == 'D') {
+                    imageView.setImage(bigPointImage);
                 } else if (cell == 'C') {
                     imageView.setImage(clydeImage);
                 } else if (cell == 'P') {
@@ -168,15 +184,19 @@ public class GameViewController extends Controller implements Initializable {
                 if (keyEvent.getCode() == LEFT) {
                     directionX = -1;
                     directionY = 0;
+                    pacmanImageView.setImage(pacmanFeft);
                 } else if (keyEvent.getCode() == RIGHT) {
                     directionX = 1;
                     directionY = 0;
+                    pacmanImageView.setImage(pacmanRight);
                 } else if (keyEvent.getCode() == UP) {
                     directionX = 0;
                     directionY = -1;
+                    pacmanImageView.setImage(pacmanUp);
                 } else if (keyEvent.getCode() == DOWN) {
                     directionX = 0;
                     directionY = 1;
+                    pacmanImageView.setImage(pacmanDown);
                 }
                 pacManTimeline.play();
             }
@@ -207,6 +227,15 @@ public class GameViewController extends Controller implements Initializable {
             case "pacmanRight":
                 imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanRight.gif");
                 break;
+            case "pacmanLeft":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanLeft.gif");
+                break;
+            case "pacmanUp":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanUp.gif");
+                break;
+            case "pacmanDown":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanDown.gif");
+                break;
             case "clyde":
                 imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Clyde.gif");
                 break;
@@ -226,34 +255,34 @@ public class GameViewController extends Controller implements Initializable {
     }
 
     private void movePacman() {
+    frameCount++;
+
+    if (frameCount >= frameDelay) {
         int newPacmanX = pacmanX + directionX;
         int newPacmanY = pacmanY + directionY;
 
         if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
             char nextCell = map[newPacmanY][newPacmanX];
-
             if (nextCell != 'W') {
-
-                if (nextCell == 'S') {
-
+                if (nextCell == 'S' || nextCell == 'D') {
                     map[newPacmanY][newPacmanX] = ' ';
                     score += 10;
                     lbl_score.setText(String.valueOf(score));
                     if (levelCompleted()) {
-                         FlowController.getInstance().goViewInWindow("LevelComplete");
+                        FlowController.getInstance().goViewInWindow("LevelComplete");
+                        getStage().close();
                         System.out.println("Hola");
                     }
 
+                    ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
+                    gridPaneMap.getChildren().remove(cellImageView);
+
+                    // Reemplazar la imagen de la celda por una celda vacía
+                    ImageView emptyImageView = new ImageView();
+                    emptyImageView.setFitWidth(15);
+                    emptyImageView.setFitHeight(15);
+                    gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
                 }
-
-                ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
-                gridPaneMap.getChildren().remove(cellImageView);
-
-                //reemplaaz la imagen
-                ImageView emptyImageView = new ImageView();
-                emptyImageView.setFitWidth(15);
-                emptyImageView.setFitHeight(15);
-                gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
 
                 gridPaneMap.getChildren().remove(pacmanImageView);
                 pacmanX = newPacmanX;
@@ -263,7 +292,10 @@ public class GameViewController extends Controller implements Initializable {
                 gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
             }
         }
+        frameCount = 0;
     }
+}
+
 
 // Función para obtener una ImageView en una fila y columna específicas
     private Node getNodeByRowColumnIndex(final int row, final int column) {
@@ -286,7 +318,7 @@ public class GameViewController extends Controller implements Initializable {
         if (map != null) {
             for (int y = 0; y < map.length; y++) {
                 for (int x = 0; x < map[y].length; x++) {
-                    if (map[y][x] == 'S') {
+                    if (map[y][x] == 'S' || map[y][x] == 'D') {
                         isComplete = false;
                         break;
                     }
