@@ -1,5 +1,6 @@
 package cr.ac.una.pac.man.controller;
 
+import cr.ac.una.pac.man.util.FlowController;
 import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -57,6 +59,8 @@ public class GameViewController extends Controller implements Initializable {
     private ImageView imgViewLife4;
     @FXML
     private ImageView imgViewLife5;
+    @FXML
+    private Label lbl_score;
 
     private ImageView pacmanImageView;
 
@@ -75,12 +79,14 @@ public class GameViewController extends Controller implements Initializable {
 
     //pocisiones x,y en el grid
     private int pacmanX;
-    private int pacmanY; 
-    
-   char[][] map;
+    private int pacmanY;
 
-    private List<Point> smallPoints = new ArrayList<>(); 
-    
+    char[][] map;
+
+    private List<Point> smallPoints = new ArrayList<>();
+
+    int score = 0;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -105,7 +111,7 @@ public class GameViewController extends Controller implements Initializable {
         imgViewLife4.setImage(life4);
         imgViewLife5.setImage(life5);
 
-        map = new char[][] {
+        map = new char[][]{
             {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
             {'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
@@ -136,7 +142,7 @@ public class GameViewController extends Controller implements Initializable {
                     imageView.setImage(wallImage);
                 } else if (cell == 'S') {
                     imageView.setImage(smallPointImage);
-                     smallPoints.add(new Point(x, y));  
+                    smallPoints.add(new Point(x, y));
                 } else if (cell == 'B') {
                     imageView.setImage(blinkyImage);
                 } else if (cell == 'C') {
@@ -218,57 +224,79 @@ public class GameViewController extends Controller implements Initializable {
             return null;
         }
     }
-    
-       private void movePacman() {
-    int newPacmanX = pacmanX + directionX;
-    int newPacmanY = pacmanY + directionY;
 
-    if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
-        char nextCell = map[newPacmanY][newPacmanX];
+    private void movePacman() {
+        int newPacmanX = pacmanX + directionX;
+        int newPacmanY = pacmanY + directionY;
 
-        if (nextCell != 'W') {
-            
-            if (nextCell == 'S') {
-               
-                map[newPacmanY][newPacmanX] = ' ';
+        if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
+            char nextCell = map[newPacmanY][newPacmanX];
+
+            if (nextCell != 'W') {
+
+                if (nextCell == 'S') {
+
+                    map[newPacmanY][newPacmanX] = ' ';
+                    score += 10;
+                    lbl_score.setText(String.valueOf(score));
+                    if (levelCompleted()) {
+                         FlowController.getInstance().goViewInWindow("LevelComplete");
+                        System.out.println("Hola");
+                    }
+
+                }
+
+                ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
+                gridPaneMap.getChildren().remove(cellImageView);
+
+                //reemplaaz la imagen
+                ImageView emptyImageView = new ImageView();
+                emptyImageView.setFitWidth(15);
+                emptyImageView.setFitHeight(15);
+                gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+
+                gridPaneMap.getChildren().remove(pacmanImageView);
+                pacmanX = newPacmanX;
+                pacmanY = newPacmanY;
+                pacmanImageView.setFitHeight(15);
+                pacmanImageView.setFitWidth(15);
+                gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
             }
-
-           
-            ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
-            gridPaneMap.getChildren().remove(cellImageView);
-
-          //reemplaaz la imagen
-            ImageView emptyImageView = new ImageView();
-            emptyImageView.setFitWidth(15);
-            emptyImageView.setFitHeight(15);
-            gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
-
-         
-            gridPaneMap.getChildren().remove(pacmanImageView);
-            pacmanX = newPacmanX;
-            pacmanY = newPacmanY;
-            pacmanImageView.setFitHeight(15);
-            pacmanImageView.setFitWidth(15);
-            gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
         }
     }
-}
 
 // Función para obtener una ImageView en una fila y columna específicas
-private Node getNodeByRowColumnIndex(final int row, final int column) {
-    Node result = null;
-    ObservableList<Node> children = gridPaneMap.getChildren();
+    private Node getNodeByRowColumnIndex(final int row, final int column) {
+        Node result = null;
+        ObservableList<Node> children = gridPaneMap.getChildren();
 
-    for (Node node : children) {
-        if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-            result = node;
-            break;
+        for (Node node : children) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
         }
+
+        return result;
     }
 
-    return result;
-}
+    public boolean levelCompleted() {
+        boolean isComplete = true;
 
-
+        if (map != null) {
+            for (int y = 0; y < map.length; y++) {
+                for (int x = 0; x < map[y].length; x++) {
+                    if (map[y][x] == 'S') {
+                        isComplete = false;
+                        break;
+                    }
+                }
+                if (!isComplete) {
+                    break;
+                }
+            }
+        }
+        return isComplete;
+    }
 
 }
