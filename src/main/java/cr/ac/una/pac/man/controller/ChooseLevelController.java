@@ -2,6 +2,7 @@ package cr.ac.una.pac.man.controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import cr.ac.una.pac.man.Level;
+import cr.ac.una.pac.man.util.FlowController;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -186,6 +187,8 @@ public class ChooseLevelController extends Controller implements Initializable {
     
         @FXML
     private void onAction_play(ActionEvent event) {
+        FlowController.getInstance().goViewInWindow("Game");
+        getStage().close();
     }
 
     @FXML
