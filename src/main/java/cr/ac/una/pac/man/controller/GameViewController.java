@@ -1,12 +1,17 @@
 package cr.ac.una.pac.man.controller;
 
+import java.awt.Point;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -71,7 +76,11 @@ public class GameViewController extends Controller implements Initializable {
     //pocisiones x,y en el grid
     private int pacmanX;
     private int pacmanY; 
+    
+   char[][] map;
 
+    private List<Point> smallPoints = new ArrayList<>(); 
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -96,7 +105,7 @@ public class GameViewController extends Controller implements Initializable {
         imgViewLife4.setImage(life4);
         imgViewLife5.setImage(life5);
 
-        char[][] map = {
+        map = new char[][] {
             {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
             {'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
@@ -127,6 +136,7 @@ public class GameViewController extends Controller implements Initializable {
                     imageView.setImage(wallImage);
                 } else if (cell == 'S') {
                     imageView.setImage(smallPointImage);
+                     smallPoints.add(new Point(x, y));  
                 } else if (cell == 'B') {
                     imageView.setImage(blinkyImage);
                 } else if (cell == 'C') {
@@ -208,26 +218,57 @@ public class GameViewController extends Controller implements Initializable {
             return null;
         }
     }
+    
+       private void movePacman() {
+    int newPacmanX = pacmanX + directionX;
+    int newPacmanY = pacmanY + directionY;
 
-    private void movePacman() {
-        
-        int newPacmanX = pacmanX + directionX;
-        int newPacmanY = pacmanY + directionY;
+    if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
+        char nextCell = map[newPacmanY][newPacmanX];
 
-       
-        if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
-          
+        if (nextCell != 'W') {
+            
+            if (nextCell == 'S') {
+               
+                map[newPacmanY][newPacmanX] = ' ';
+            }
+
+           
+            ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
+            gridPaneMap.getChildren().remove(cellImageView);
+
+          //reemplaaz la imagen
+            ImageView emptyImageView = new ImageView();
+            emptyImageView.setFitWidth(15);
+            emptyImageView.setFitHeight(15);
+            gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+
+         
             gridPaneMap.getChildren().remove(pacmanImageView);
-
-          
             pacmanX = newPacmanX;
             pacmanY = newPacmanY;
-
-            
             pacmanImageView.setFitHeight(15);
             pacmanImageView.setFitWidth(15);
             gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
         }
     }
+}
+
+// Función para obtener una ImageView en una fila y columna específicas
+private Node getNodeByRowColumnIndex(final int row, final int column) {
+    Node result = null;
+    ObservableList<Node> children = gridPaneMap.getChildren();
+
+    for (Node node : children) {
+        if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+            result = node;
+            break;
+        }
+    }
+
+    return result;
+}
+
+
 
 }
