@@ -1,7 +1,11 @@
 package cr.ac.una.pac.man.controller;
 
+import cr.ac.una.pac.man.util.AppContext;
 import cr.ac.una.pac.man.util.FlowController;
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +76,7 @@ public class GameViewController extends Controller implements Initializable {
     Image life3;
     Image life4;
     Image life5;
+    Image life6;
     @FXML
     private AnchorPane anchorPane;
 
@@ -95,14 +100,45 @@ public class GameViewController extends Controller implements Initializable {
     private int frameDelay = 0; // Controla la velocidad de movimiento, ajusta según tus necesidades
 
     private int pacmanSpeed = 1; // Velocidad predeterminada
+    @FXML
+    private ImageView imgViewLife6;
+    public int nivel;
+    private boolean finJuego = false;
+    @FXML
+    private Label lbl_level;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        this.nivel = (int) AppContext.getInstance().get("Level");
+        cargarImagenes();
+        inicializarVidas();
+        configurarManejoDeTeclado();
+        iniciarAnimacionPacman();
+        cargarMapa(nivel + 1);
+        lbl_level.setText(String.valueOf(nivel + 1));
+    }
 
+    public void setnivelActual(int nivelActual) {
+        this.nivel = nivelActual;
+    }
+
+    public int getNivelActual() {
+        return nivel;
+    }
+
+    public int getNivelAnterior() {
+        return nivel - 1;
+    }
+
+    public boolean isFinjuego() {
+        return this.finJuego;
+    }
+
+    private void cargarImagenes() {
         wallImage = getIamge("wall");
         smallPointImage = getIamge("smallPoint");
         bigPointImage = getIamge("bigPoint");
-        
+
         //pacman
         pacmanRight = getIamge("pacmanRight");
         pacmanFeft = getIamge("pacmanLeft");
@@ -118,67 +154,20 @@ public class GameViewController extends Controller implements Initializable {
         life3 = getIamge("life");
         life4 = getIamge("life");
         life5 = getIamge("life");
+        life6 = getIamge("life");
 
+    }
+
+    private void inicializarVidas() {
         imgViewLife1.setImage(life1);
         imgViewLife2.setImage(life2);
         imgViewLife3.setImage(life3);
         imgViewLife4.setImage(life4);
         imgViewLife5.setImage(life5);
+        imgViewLife6.setImage(life6);
+    }
 
-        map = new char[][]{
-            {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
-            {'W', 'D', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'P', 'S', 'W', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', ' ', 'W', 'S', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', ' ', ' ', ' ', 'W', 'S', 'W', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'W', 'B', ' ', 'C', 'W', 'S', 'W', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', ' ', ' ', ' ', 'W', 'S', 'W', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'D', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
-            {'W', 'D', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
-        };
-
-        double imageSize = 15.0;
-
-        for (int y = 0; y < map.length; y++) {
-            for (int x = 0; x < map[y].length; x++) {
-                char cell = map[y][x];
-                ImageView imageView = new ImageView();
-                imageView.setFitWidth(imageSize);
-                imageView.setFitHeight(imageSize);
-
-                if (cell == 'W') {
-                    imageView.setImage(wallImage);
-                } else if (cell == 'S') {
-                    imageView.setImage(smallPointImage);
-                    smallPoints.add(new Point(x, y));
-                } else if (cell == 'B') {
-                    imageView.setImage(blinkyImage);
-                } else if (cell == 'D') {
-                    imageView.setImage(bigPointImage);
-                } else if (cell == 'C') {
-                    imageView.setImage(clydeImage);
-                } else if (cell == 'P') {
-                    pacmanImageView = new ImageView(pacmanRight);
-                    pacmanImageView.setFitHeight(imageSize);
-                    pacmanImageView.setFitWidth(imageSize);
-                    gridPaneMap.add(pacmanImageView, x, y);
-                    pacmanX = x;
-                    pacmanY = y;
-                }
-
-                gridPaneMap.add(imageView, x, y);
-            }
-        }
-
-        pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
-        pacManTimeline.setCycleCount(Timeline.INDEFINITE);
-
+    private void configurarManejoDeTeclado() {
         anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent keyEvent) {
                 if (keyEvent.getCode() == LEFT) {
@@ -198,14 +187,82 @@ public class GameViewController extends Controller implements Initializable {
                     directionY = 1;
                     pacmanImageView.setImage(pacmanDown);
                 }
-                pacManTimeline.play();
             }
         });
+    }
 
+    private void iniciarAnimacionPacman() {
+        pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
+        pacManTimeline.setCycleCount(Timeline.INDEFINITE);
+        pacManTimeline.play();
     }
 
     @Override
     public void initialize() {
+        
+    }
+
+    private void cargarMapa(int nivel) {
+        double imageSize = 15.0;
+        int cantidadFilas = 15, cantidadColumnas = 15;
+        map = new char[cantidadFilas][cantidadColumnas];
+        gridPaneMap.getChildren().clear();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("src\\main\\resources\\cr\\ac\\una\\pac\\man\\niveles\\nivel (" + nivel + ").txt"));
+            String linea;
+            int fila = 0;
+
+            while ((linea = br.readLine()) != null) {
+                String[] elementos = linea.split(" ");
+
+                for (int columna = 0; columna < cantidadColumnas; columna++) {
+                    map[fila][columna] = elementos[columna].charAt(0);
+                }
+
+                fila++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[y].length; x++) {
+                char cell = map[y][x];
+                ImageView imageView = new ImageView();
+                imageView.setFitWidth(imageSize);
+                imageView.setFitHeight(imageSize);
+
+                switch (cell) {
+                    case 'W':
+                        imageView.setImage(wallImage);
+                        break;
+                    case 'S':
+                        imageView.setImage(smallPointImage);
+                        smallPoints.add(new Point(x, y));
+                        break;
+                    case 'B':
+                        imageView.setImage(blinkyImage);
+                        break;
+                    case 'D':
+                        imageView.setImage(bigPointImage);
+                        break;
+                    case 'C':
+                        imageView.setImage(clydeImage);
+                        break;
+                    case 'P':
+                        pacmanImageView = new ImageView(pacmanRight);
+                        pacmanImageView.setFitHeight(imageSize);
+                        pacmanImageView.setFitWidth(imageSize);
+                        gridPaneMap.add(pacmanImageView, x, y);
+                        pacmanX = x;
+                        pacmanY = y;
+                        break;
+                    default:
+                        break;
+                }
+
+                gridPaneMap.add(imageView, x, y);
+            }
+        }
     }
 
     public Image getIamge(String imageName) {
@@ -255,47 +312,47 @@ public class GameViewController extends Controller implements Initializable {
     }
 
     private void movePacman() {
-    frameCount++;
+        frameCount++;
 
-    if (frameCount >= frameDelay) {
-        int newPacmanX = pacmanX + directionX;
-        int newPacmanY = pacmanY + directionY;
+        if (frameCount >= frameDelay) {
+            int newPacmanX = pacmanX + directionX;
+            int newPacmanY = pacmanY + directionY;
 
-        if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
-            char nextCell = map[newPacmanY][newPacmanX];
-            if (nextCell != 'W') {
-                if (nextCell == 'S' || nextCell == 'D') {
-                    map[newPacmanY][newPacmanX] = ' ';
-                    score += 10;
-                    lbl_score.setText(String.valueOf(score));
-                    if (levelCompleted()) {
-                        FlowController.getInstance().goViewInWindow("LevelComplete");
-                        getStage().close();
-                        System.out.println("Hola");
+            if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
+                char nextCell = map[newPacmanY][newPacmanX];
+                if (nextCell != 'W') {
+                    if (nextCell == 'S' || nextCell == 'D') {
+                        map[newPacmanY][newPacmanX] = ' ';
+                        score += 10;
+                        lbl_score.setText(String.valueOf(score));
+                        if (levelCompleted()) {
+                            FlowController.getInstance().goViewInWindow("LevelComplete");
+                            getStage().close();
+                            FlowController.getInstance().deleteView("GameView");
+                            System.out.println("Hola");
+                        }
+
+                        ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
+                        gridPaneMap.getChildren().remove(cellImageView);
+
+                        // Reemplazar la imagen de la celda por una celda vacía
+                        ImageView emptyImageView = new ImageView();
+                        emptyImageView.setFitWidth(15);
+                        emptyImageView.setFitHeight(15);
+                        gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
                     }
 
-                    ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
-                    gridPaneMap.getChildren().remove(cellImageView);
-
-                    // Reemplazar la imagen de la celda por una celda vacía
-                    ImageView emptyImageView = new ImageView();
-                    emptyImageView.setFitWidth(15);
-                    emptyImageView.setFitHeight(15);
-                    gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+                    gridPaneMap.getChildren().remove(pacmanImageView);
+                    pacmanX = newPacmanX;
+                    pacmanY = newPacmanY;
+                    pacmanImageView.setFitHeight(15);
+                    pacmanImageView.setFitWidth(15);
+                    gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
                 }
-
-                gridPaneMap.getChildren().remove(pacmanImageView);
-                pacmanX = newPacmanX;
-                pacmanY = newPacmanY;
-                pacmanImageView.setFitHeight(15);
-                pacmanImageView.setFitWidth(15);
-                gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
             }
+            frameCount = 0;
         }
-        frameCount = 0;
     }
-}
-
 
 // Función para obtener una ImageView en una fila y columna específicas
     private Node getNodeByRowColumnIndex(final int row, final int column) {

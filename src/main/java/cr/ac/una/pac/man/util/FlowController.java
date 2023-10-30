@@ -191,6 +191,12 @@ public class FlowController {
         return getLoader(viewName).getController();
     }
 
+    public void deleteView(String view) {
+        if (loaders.containsKey(view)) {
+            loaders.remove(view);
+        }
+    }
+
     public static void setIdioma(ResourceBundle idioma) {
         FlowController.idioma = idioma;
     }
