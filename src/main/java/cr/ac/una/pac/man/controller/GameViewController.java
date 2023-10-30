@@ -4,8 +4,14 @@ import cr.ac.una.pac.man.util.FlowController;
 import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
@@ -55,7 +61,7 @@ public class GameViewController extends Controller implements Initializable {
     private Image bigPointImage;
     private Image smallPointImage;
 
-    //
+    //pacman
     private Image pacmanRight;
     private Image pacmanFeft;
     private Image pacmanUp;
@@ -64,9 +70,18 @@ public class GameViewController extends Controller implements Initializable {
     //Ghost
     private Image blinkyImage;
     private Image clydeImage;
+    private Image pinkyImage;
+    private Image inkyImage;
 
-    private ImageView pacmanImageView;
+    private ImageView pacmanImageView; //pacman en el mapa
 
+    private ImageView blinkyImageView; //pacman en el mapa
+
+    private ImageView pinkyImageView; //pacman en el mapa
+
+    private ImageView inkyImageView; //pacman en el mapa
+
+    //vidas
     Image life1;
     Image life2;
     Image life3;
@@ -91,18 +106,48 @@ public class GameViewController extends Controller implements Initializable {
     int score = 0;
 
     private int frameCount = 0;
+    private int frameCountBlinky = 0;
 
-    private int frameDelay = 0; // Controla la velocidad de movimiento, ajusta según tus necesidades
+    private int frameDelay = 1; // Controla la velocidad de movimiento, ajusta según tus necesidades
+    private int frameDelayBlinky = 2;
 
     private int pacmanSpeed = 1; // Velocidad predeterminada
+    private int blinkySpeed = 0;
+
+    private int blinkyX;
+    private int blinkyY;
+    private int blinkyDirectionX;
+    private int blinkyDirectionY;
+
+    private int pinkyX;
+    private int pinkyY;
+    private int pinkyDirectionX;
+    private int pinkyDirectionY;
+
+    private int inkyX;
+    private int inkyY;
+    private int inkyDirectionX;
+    private int inkyDirectionY;
+
+    private Timeline blinkyTimeline;
+
+    int[][] weightedGraph;
+    
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+       
+        // Coordenada Y inicial de Blinky
+        blinkyDirectionX = 1; // Dirección inicial de movimiento de Blinky (derecha)
+        blinkyDirectionY = 0;
 
         wallImage = getIamge("wall");
         smallPointImage = getIamge("smallPoint");
         bigPointImage = getIamge("bigPoint");
-        
+
         //pacman
         pacmanRight = getIamge("pacmanRight");
         pacmanFeft = getIamge("pacmanLeft");
@@ -112,6 +157,8 @@ public class GameViewController extends Controller implements Initializable {
         //ghost
         blinkyImage = getIamge("blinky");
         clydeImage = getIamge("clyde");
+        inkyImage = getIamge("inky");
+        pinkyImage = getIamge("pinky");
 
         life1 = getIamge("life");
         life2 = getIamge("life");
@@ -129,19 +176,21 @@ public class GameViewController extends Controller implements Initializable {
             {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
             {'W', 'D', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'P', 'S', 'W', 'W', 'W'},
+            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', ' ', 'W', 'S', 'W', 'W'},
+            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'B', 'W', 'S', 'W', 'W'},
             {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', ' ', ' ', ' ', 'W', 'S', 'W', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'W', 'B', ' ', 'C', 'W', 'S', 'W', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', ' ', ' ', ' ', 'W', 'S', 'W', 'W'},
+            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'W', ' ', ' ', 'C', 'W', 'S', 'W', 'W'},
+            {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'R', 'I', ' ', 'W', 'S', 'W', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W'},
             {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'D', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
-            {'W', 'D', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
+            {'W', 'P', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
             {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
         };
+
+        weightedGraph = createWeightedGraph(map);
 
         double imageSize = 15.0;
 
@@ -158,7 +207,29 @@ public class GameViewController extends Controller implements Initializable {
                     imageView.setImage(smallPointImage);
                     smallPoints.add(new Point(x, y));
                 } else if (cell == 'B') {
-                    imageView.setImage(blinkyImage);
+                    blinkyImageView = new ImageView(blinkyImage);
+                    blinkyImageView.setFitHeight(imageSize);
+                    blinkyImageView.setFitWidth(imageSize);
+                    gridPaneMap.add(blinkyImageView, x, y);
+                    blinkyX = x; // Coordenada X inicial de Blinky
+                    blinkyY = y;
+
+                } else if (cell == 'I') {
+                    inkyImageView = new ImageView(inkyImage);
+                    inkyImageView.setFitHeight(imageSize);
+                    inkyImageView.setFitWidth(imageSize);
+                    gridPaneMap.add(inkyImageView, x, y);
+                    inkyX = x; // Coordenada X inicial de inky
+                    inkyY = y;
+
+                } else if (cell == 'R') {
+                    pinkyImageView = new ImageView(pinkyImage);
+                    pinkyImageView.setFitHeight(imageSize);
+                    pinkyImageView.setFitWidth(imageSize);
+                    gridPaneMap.add(pinkyImageView, x, y);
+                    pinkyX = x; // Coordenada X inicial de inky
+                    pinkyY = y;
+
                 } else if (cell == 'D') {
                     imageView.setImage(bigPointImage);
                 } else if (cell == 'C') {
@@ -178,6 +249,12 @@ public class GameViewController extends Controller implements Initializable {
 
         pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
         pacManTimeline.setCycleCount(Timeline.INDEFINITE);
+        
+         
+         
+
+        blinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> moveBlinky()));
+        blinkyTimeline.setCycleCount(Timeline.INDEFINITE);
 
         anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent keyEvent) {
@@ -199,13 +276,19 @@ public class GameViewController extends Controller implements Initializable {
                     pacmanImageView.setImage(pacmanDown);
                 }
                 pacManTimeline.play();
+                blinkyTimeline.play();
+                //moveBlinky();
             }
         });
 
+       
+
+        //verMatriz();
     }
 
     @Override
     public void initialize() {
+         //blinkyTimeline.play();
     }
 
     public Image getIamge(String imageName) {
@@ -242,6 +325,12 @@ public class GameViewController extends Controller implements Initializable {
             case "blinky":
                 imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Blinky.gif");
                 break;
+            case "inky":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Inky.gif");
+                break;
+            case "pinky":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Pinky.gif");
+                break;
             default:
                 throw new AssertionError();
         }
@@ -254,48 +343,127 @@ public class GameViewController extends Controller implements Initializable {
         }
     }
 
+    private void moveBlinky() {
+        
+        //System.out.println("Moving Blinky");
+        
+        
+        int blinkyPosition = blinkyY * map.length + blinkyX;
+        int pacmanPosition = pacmanY * map.length + pacmanX;
+
+        //  System.out.println("Blinky: " + blinkyPosition + " - PacMan: " + pacmanPosition);
+        List<Integer> path = shortestPath(blinkyPosition, pacmanPosition, weightedGraph);
+        //System.out.println("path: " + path.size());
+        
+       
+        
+        int size = path.size();
+        
+         for(int i=0; i<size; i++){
+             //System.out.println("Posicion: "+path.get(i));
+         }
+        //System.out.println("Size: "+ size);
+        if (size > 1) {
+            int nextNode = path.get(1); // El siguiente nodo en la ruta
+            int nextX = (nextNode % map.length);
+            int nextY = nextNode / map.length;
+            
+            System.out.println("X: "+ nextX);
+            System.out.println("Y: " + nextY);
+
+            //System.out.println("Fil: "+ nextX + " - Col: "+ nextY);
+            // Calcular la dirección en la que Blinky debe moverse
+            int dx = nextX - blinkyX;
+            int dy = nextY - blinkyY;
+
+            //System.out.println("Fil2: "+ blinkyX + " - Col2: "+ blinkyY);
+            // Actualizar la posición de Blinky
+            blinkyX = nextX;
+            blinkyY = nextY;
+
+            // Actualizar la dirección de movimiento de Blinky
+            blinkyDirectionX = dx;
+            blinkyDirectionY = dy;
+
+            // Mover a Blinky en la dirección calculada
+            moveBlinkyInDirection(blinkyDirectionX, blinkyDirectionY);
+        }
+    }
+
+    private void moveBlinkyInDirection(int dx, int dy) {
+        frameCountBlinky++;
+
+        if (frameCountBlinky >= 2) {
+
+            int newBlinkyX = blinkyX + dx;
+            int newBlinkyY = blinkyY + dy;
+
+            // Verificar si la nueva posición de Blinky es válida y no es una pared
+            if (newBlinkyX >= 0 && newBlinkyX < map.length && newBlinkyY >= 0 && newBlinkyY < map.length
+                    && map[newBlinkyY][newBlinkyX] != 'W') {
+
+                gridPaneMap.getChildren().remove(blinkyImageView);
+                blinkyX = newBlinkyX;
+                blinkyY = newBlinkyY;
+                blinkyImageView.setFitHeight(15);
+                blinkyImageView.setFitWidth(15);
+                gridPaneMap.add(blinkyImageView, blinkyX, blinkyY);
+
+                // Actualizar las coordenadas de Blinky
+                blinkyX = newBlinkyX;
+                blinkyY = newBlinkyY;
+            }
+
+            frameCountBlinky = 0;
+        }
+
+    }
+
     private void movePacman() {
-    frameCount++;
+        frameCount++;
 
-    if (frameCount >= frameDelay) {
-        int newPacmanX = pacmanX + directionX;
-        int newPacmanY = pacmanY + directionY;
+        if (frameCount >= frameDelay) {
+            if (map[pacmanY][pacmanX] != 'B' && map[pacmanY][pacmanX] != 'C') {
+                map[pacmanY][pacmanX] = ' '; // celda vacía
+            }
 
-        if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
-            char nextCell = map[newPacmanY][newPacmanX];
-            if (nextCell != 'W') {
-                if (nextCell == 'S' || nextCell == 'D') {
-                    map[newPacmanY][newPacmanX] = ' ';
-                    score += 10;
-                    lbl_score.setText(String.valueOf(score));
-                    if (levelCompleted()) {
-                        FlowController.getInstance().goViewInWindow("LevelComplete");
-                        getStage().close();
-                        System.out.println("Hola");
+            int newPacmanX = pacmanX + directionX;
+            int newPacmanY = pacmanY + directionY;
+
+            if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) { //rango del mapa
+                char nextCell = map[newPacmanY][newPacmanX];
+                if (nextCell != 'W') { // no es muro
+                    if (nextCell == 'S' || nextCell == 'D') { //si es un punto
+                        map[newPacmanY][newPacmanX] = 'P'; //define la nueva posicion de P
+                        score += 10;
+                        lbl_score.setText(String.valueOf(score));
+                        if (levelCompleted()) {
+                            FlowController.getInstance().goViewInWindow("LevelComplete");
+                            getStage().close();
+                            System.out.println("Hola");
+                        }
+
+                        ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
+                        gridPaneMap.getChildren().remove(cellImageView);
+
+                        // Reemplazar la imagen de la celda por una celda vacía
+                        ImageView emptyImageView = new ImageView();
+                        emptyImageView.setFitWidth(15);
+                        emptyImageView.setFitHeight(15);
+                        gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
                     }
 
-                    ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
-                    gridPaneMap.getChildren().remove(cellImageView);
-
-                    // Reemplazar la imagen de la celda por una celda vacía
-                    ImageView emptyImageView = new ImageView();
-                    emptyImageView.setFitWidth(15);
-                    emptyImageView.setFitHeight(15);
-                    gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+                    gridPaneMap.getChildren().remove(pacmanImageView);
+                    pacmanX = newPacmanX;
+                    pacmanY = newPacmanY;
+                    pacmanImageView.setFitHeight(15);
+                    pacmanImageView.setFitWidth(15);
+                    gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
                 }
-
-                gridPaneMap.getChildren().remove(pacmanImageView);
-                pacmanX = newPacmanX;
-                pacmanY = newPacmanY;
-                pacmanImageView.setFitHeight(15);
-                pacmanImageView.setFitWidth(15);
-                gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
             }
+            frameCount = 0;
         }
-        frameCount = 0;
     }
-}
-
 
 // Función para obtener una ImageView en una fila y columna específicas
     private Node getNodeByRowColumnIndex(final int row, final int column) {
@@ -320,6 +488,7 @@ public class GameViewController extends Controller implements Initializable {
                 for (int x = 0; x < map[y].length; x++) {
                     if (map[y][x] == 'S' || map[y][x] == 'D') {
                         isComplete = false;
+
                         break;
                     }
                 }
@@ -328,7 +497,98 @@ public class GameViewController extends Controller implements Initializable {
                 }
             }
         }
+        verMatriz();
         return isComplete;
+    }
+
+    //matriz adyacencia 
+    private int[][] createWeightedGraph(char[][] map) {
+        int mapSize = map.length;
+        int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
+
+        for (int i = 0; i < mapSize * mapSize; i++) {
+            for (int j = 0; j < mapSize * mapSize; j++) {
+                graph[i][j] = (i == j) ? 0 : Integer.MAX_VALUE; // Inicializar con valor infinito
+            }
+        }
+
+        for (int y = 0; y < mapSize; y++) {
+            for (int x = 0; x < mapSize; x++) {
+                if (map[y][x] != 'W') {
+                    // Comprueba los vecinos arriba, abajo, izquierda y derecha
+                    if (y > 0 && map[y - 1][x] != 'W') {
+                        graph[y * mapSize + x][(y - 1) * mapSize + x] = 1;
+                        graph[(y - 1) * mapSize + x][y * mapSize + x] = 1;
+                    }
+                    if (y < mapSize - 1 && map[y + 1][x] != 'W') {
+                        graph[y * mapSize + x][(y + 1) * mapSize + x] = 1;
+                        graph[(y + 1) * mapSize + x][y * mapSize + x] = 1;
+                    }
+                    if (x > 0 && map[y][x - 1] != 'W') {
+                        graph[y * mapSize + x][y * mapSize + (x - 1)] = 1;
+                        graph[y * mapSize + (x - 1)][y * mapSize + x] = 1;
+                    }
+                    if (x < mapSize - 1 && map[y][x + 1] != 'W') {
+                        graph[y * mapSize + x][y * mapSize + (x + 1)] = 1;
+                        graph[y * mapSize + (x + 1)][y * mapSize + x] = 1;
+                    }
+                }
+            }
+        }
+
+        return graph;
+    }
+
+    private List<Integer> shortestPath(int start, int target, int[][] weightedGraph) { //dijsktra
+        int numNodes = weightedGraph.length;
+        int[] distance = new int[numNodes];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+
+        PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> distance[node]));
+        queue.add(start);
+        distance[start] = 0;
+
+        int[] previous = new int[numNodes];
+        Arrays.fill(previous, -1);
+
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            if (currentNode == target) {
+                break; 
+            }
+
+            for (int neighbor = 0; neighbor < numNodes; neighbor++) {
+                int weight = weightedGraph[currentNode][neighbor];
+                if (weight != Integer.MAX_VALUE) {
+                    int altDistance = distance[currentNode] + weight;
+                    if (altDistance < distance[neighbor]) {
+                        distance[neighbor] = altDistance;
+                        previous[neighbor] = currentNode;
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        List<Integer> path = new ArrayList<>();
+        int current = target;
+        while (current != -1) {
+            path.add(0, current);
+            current = previous[current];
+        }
+
+        return path;
+    }
+
+    public void verMatriz() {
+
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();
+
+        }
     }
 
 }
