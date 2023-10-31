@@ -107,9 +107,11 @@ public class GameViewController extends Controller implements Initializable {
 
     private int frameCount = 0;
     private int frameCountBlinky = 0;
+    private int frameCountPinky = 0;
 
     private int frameDelay = 1; // Controla la velocidad de movimiento, ajusta según tus necesidades
     private int frameDelayBlinky = 2;
+    private int frameDelayPinky = 2;
 
     private int pacmanSpeed = 1; // Velocidad predeterminada
     private int blinkySpeed = 0;
@@ -131,15 +133,13 @@ public class GameViewController extends Controller implements Initializable {
 
     private Timeline blinkyTimeline;
 
+    private Timeline pinkyTimeline;
+
     int[][] weightedGraph;
-    
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-       
+
         // Coordenada Y inicial de Blinky
         blinkyDirectionX = 1; // Dirección inicial de movimiento de Blinky (derecha)
         blinkyDirectionY = 0;
@@ -249,12 +249,13 @@ public class GameViewController extends Controller implements Initializable {
 
         pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
         pacManTimeline.setCycleCount(Timeline.INDEFINITE);
-        
-         
-         
 
-        blinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> moveBlinky()));
+        blinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> blinkyMove()));
         blinkyTimeline.setCycleCount(Timeline.INDEFINITE);
+
+
+        pinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> pinkyMove()));
+        pinkyTimeline.setCycleCount(Timeline.INDEFINITE);
 
         anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent keyEvent) {
@@ -276,19 +277,18 @@ public class GameViewController extends Controller implements Initializable {
                     pacmanImageView.setImage(pacmanDown);
                 }
                 pacManTimeline.play();
-                blinkyTimeline.play();
+                //blinkyTimeline.play();
+                pinkyTimeline.play();
                 //moveBlinky();
             }
         });
-
-       
 
         //verMatriz();
     }
 
     @Override
     public void initialize() {
-         //blinkyTimeline.play();
+        //blinkyTimeline.play();
     }
 
     public Image getIamge(String imageName) {
@@ -343,78 +343,64 @@ public class GameViewController extends Controller implements Initializable {
         }
     }
 
-    private void moveBlinky() {
-        
-        //System.out.println("Moving Blinky");
-        
-        
-        int blinkyPosition = blinkyY * map.length + blinkyX;
-        int pacmanPosition = pacmanY * map.length + pacmanX;
-
-        //  System.out.println("Blinky: " + blinkyPosition + " - PacMan: " + pacmanPosition);
-        List<Integer> path = shortestPath(blinkyPosition, pacmanPosition, weightedGraph);
-        //System.out.println("path: " + path.size());
-        
-       
-        
-        int size = path.size();
-        
-         for(int i=0; i<size; i++){
-             //System.out.println("Posicion: "+path.get(i));
-         }
-        //System.out.println("Size: "+ size);
-        if (size > 1) {
-            int nextNode = path.get(1); // El siguiente nodo en la ruta
-            int nextX = (nextNode % map.length);
-            int nextY = nextNode / map.length;
-            
-            System.out.println("X: "+ nextX);
-            System.out.println("Y: " + nextY);
-
-            //System.out.println("Fil: "+ nextX + " - Col: "+ nextY);
-            // Calcular la dirección en la que Blinky debe moverse
-            int dx = nextX - blinkyX;
-            int dy = nextY - blinkyY;
-
-            //System.out.println("Fil2: "+ blinkyX + " - Col2: "+ blinkyY);
-            // Actualizar la posición de Blinky
-            blinkyX = nextX;
-            blinkyY = nextY;
-
-            // Actualizar la dirección de movimiento de Blinky
-            blinkyDirectionX = dx;
-            blinkyDirectionY = dy;
-
-            // Mover a Blinky en la dirección calculada
-            moveBlinkyInDirection(blinkyDirectionX, blinkyDirectionY);
-        }
-    }
-
-    private void moveBlinkyInDirection(int dx, int dy) {
+    private void blinkyMove() {
         frameCountBlinky++;
 
-        if (frameCountBlinky >= 2) {
+        if (frameCountBlinky >= frameDelayBlinky) {
+            // Calcula el camino más corto desde la posición actual de Blinky a la posición de Pac-Man
+            int startNode = blinkyY * 15 + blinkyX; // Convierte las coordenadas de Blinky en un nodo
+            int targetNode = pacmanY * 15 + pacmanX; // Convierte las coordenadas de Pac-Man en un nodo
+            List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
 
-            int newBlinkyX = blinkyX + dx;
-            int newBlinkyY = blinkyY + dy;
+            if (shortestPath != null && shortestPath.size() > 1) {
+                // Obtiene el siguiente nodo en el camino más corto
+                int nextNode = shortestPath.get(1);
+                int nextX = nextNode % 15; // Convierte el nodo en coordenadas X
+                int nextY = nextNode / 15; // Convierte el nodo en coordenadas Y
 
-            // Verificar si la nueva posición de Blinky es válida y no es una pared
-            if (newBlinkyX >= 0 && newBlinkyX < map.length && newBlinkyY >= 0 && newBlinkyY < map.length
-                    && map[newBlinkyY][newBlinkyX] != 'W') {
+                // Actualiza la posición de Blinky
+                blinkyX = nextX;
+                blinkyY = nextY;
 
+                // Mueve la imagen de Blinky en el GridPane
                 gridPaneMap.getChildren().remove(blinkyImageView);
-                blinkyX = newBlinkyX;
-                blinkyY = newBlinkyY;
-                blinkyImageView.setFitHeight(15);
-                blinkyImageView.setFitWidth(15);
                 gridPaneMap.add(blinkyImageView, blinkyX, blinkyY);
-
-                // Actualizar las coordenadas de Blinky
-                blinkyX = newBlinkyX;
-                blinkyY = newBlinkyY;
             }
 
             frameCountBlinky = 0;
+        }
+    }
+
+    public void pinkyMove() {
+
+        frameCountPinky++;
+
+        if (frameCountPinky >= frameDelayPinky) {
+            // Calcula el camino más corto desde la posición actual de Blinky a la posición de Pac-Man
+            int startNode = pinkyX * 15 + pinkyY; // Convierte las coordenadas de Blinky en un nodo
+            int targetNode = pacmanY * 15 + pacmanX; // Convierte las coordenadas de Pac-Man en un nodo
+            List<Integer> loguestPath = longestPath(startNode, targetNode, weightedGraph);
+
+            int size = loguestPath.size();
+            
+            System.out.println("L: "+ size);
+            
+            if (loguestPath != null && loguestPath.size() > 1) {
+                // Obtiene el siguiente nodo en el camino más corto
+                int nextNode = loguestPath.get(1);
+                int nextX = nextNode % 15; // Convierte el nodo en coordenadas X
+                int nextY = nextNode / 15; // Convierte el nodo en coordenadas Y
+
+                // Actualiza la posición de Blinky
+                pinkyX = nextX;
+                pinkyY = nextY;
+
+                // Mueve la imagen de Blinky en el GridPane
+                gridPaneMap.getChildren().remove(pinkyImageView);
+                gridPaneMap.add(pinkyImageView, pinkyX, pinkyY);
+            }
+
+            frameCountPinky = 0;
         }
 
     }
@@ -554,7 +540,7 @@ public class GameViewController extends Controller implements Initializable {
         while (!queue.isEmpty()) {
             int currentNode = queue.poll();
             if (currentNode == target) {
-                break; 
+                break;
             }
 
             for (int neighbor = 0; neighbor < numNodes; neighbor++) {
@@ -580,11 +566,60 @@ public class GameViewController extends Controller implements Initializable {
         return path;
     }
 
+   private List<Integer> longestPath(int start, int target, int[][] weightedGraph) {
+    int numNodes = weightedGraph.length;
+    int[] distance = new int[numNodes];
+    Arrays.fill(distance, Integer.MIN_VALUE);
+
+    PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node]));
+    queue.add(start);
+    distance[start] = 0;
+
+    int[] previous = new int[numNodes];
+    Arrays.fill(previous, -1);
+
+    while (!queue.isEmpty()) {
+        System.out.println("Lista: " + queue.size());
+        int currentNode = queue.poll();
+
+        for (int neighbor = 0; neighbor < numNodes; neighbor++) {
+            //System.out.println("valor: "+neighbor);
+            int weight = weightedGraph[currentNode][neighbor];
+            if (weight != Integer.MAX_VALUE) {
+                int altDistance = distance[currentNode] + weight;
+                if (altDistance > distance[neighbor]) {
+                    distance[neighbor] = altDistance;
+                    previous[neighbor] = currentNode;
+                    queue.add(neighbor);
+                }
+            }
+        }
+    }
+
+    // Reconstruir el camino más largo desde el nodo de inicio
+    int current = target;
+    List<Integer> longestPath = new ArrayList<>();
+    while (current != -1) {
+        longestPath.add(current);
+        current = previous[current];
+    }
+
+    if (longestPath.size() > 1) {
+        return longestPath;
+    } else {
+        return null; // No se encontró un camino válido
+    }
+}
+
+
+
+
+
     public void verMatriz() {
 
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                System.out.print(map[i][j] + " ");
+                System.out.print(weightedGraph[i][j] + " ");
             }
             System.out.println();
 
