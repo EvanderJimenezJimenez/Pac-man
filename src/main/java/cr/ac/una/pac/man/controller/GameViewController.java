@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -81,6 +82,8 @@ public class GameViewController extends Controller implements Initializable {
 
     private ImageView inkyImageView; //pacman en el mapa
 
+    private ImageView clydeImageView; //pacman en el mapa
+
     //vidas
     Image life1;
     Image life2;
@@ -108,10 +111,12 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCount = 0;
     private int frameCountBlinky = 0;
     private int frameCountPinky = 0;
+    private int frameCountClyde = 0;
 
     private int frameDelay = 1; // Controla la velocidad de movimiento, ajusta según tus necesidades
-    private int frameDelayBlinky = 2;
-    private int frameDelayPinky = 2;
+    private int frameDelayBlinky = 3;
+    private int frameDelayPinky = 4;
+    private int frameDelayClyde = 5;
 
     private int pacmanSpeed = 1; // Velocidad predeterminada
     private int blinkySpeed = 0;
@@ -131,19 +136,28 @@ public class GameViewController extends Controller implements Initializable {
     private int inkyDirectionX;
     private int inkyDirectionY;
 
+    private int clydeX;
+    private int clydeY;
+    private int clydeDirectionX;
+    private int clydeDirectionY;
+
     private Timeline blinkyTimeline;
 
     private Timeline pinkyTimeline;
+    private Timeline clydeTimeline;
 
     int[][] weightedGraph;
+
+    int[][] floydMatriz;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         // Coordenada Y inicial de Blinky
-        blinkyDirectionX = 1; // Dirección inicial de movimiento de Blinky (derecha)
-        blinkyDirectionY = 0;
-
+        //blinkyDirectionX = 1; // Dirección inicial de movimiento de Blinky (derecha)
+        //blinkyDirectionY = 0;
+        //pinkyDirectionX = 1; // Dirección inicial de movimiento de Blinky (derecha)
+        //pinkyDirectionY = 0;
         wallImage = getIamge("wall");
         smallPointImage = getIamge("smallPoint");
         bigPointImage = getIamge("bigPoint");
@@ -192,6 +206,8 @@ public class GameViewController extends Controller implements Initializable {
 
         weightedGraph = createWeightedGraph(map);
 
+        floydMatriz = floydWarshall(weightedGraph);
+
         double imageSize = 15.0;
 
         for (int y = 0; y < map.length; y++) {
@@ -233,7 +249,14 @@ public class GameViewController extends Controller implements Initializable {
                 } else if (cell == 'D') {
                     imageView.setImage(bigPointImage);
                 } else if (cell == 'C') {
-                    imageView.setImage(clydeImage);
+
+                    clydeImageView = new ImageView(clydeImage);
+                    clydeImageView.setFitHeight(imageSize);
+                    clydeImageView.setFitWidth(imageSize);
+                    gridPaneMap.add(clydeImageView, x, y);
+                    clydeX = x; // Coordenada X inicial de Blinky
+                    clydeY = y;
+
                 } else if (cell == 'P') {
                     pacmanImageView = new ImageView(pacmanRight);
                     pacmanImageView.setFitHeight(imageSize);
@@ -253,9 +276,11 @@ public class GameViewController extends Controller implements Initializable {
         blinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> blinkyMove()));
         blinkyTimeline.setCycleCount(Timeline.INDEFINITE);
 
-
         pinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> pinkyMove()));
         pinkyTimeline.setCycleCount(Timeline.INDEFINITE);
+
+        clydeTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> clydeMove()));
+        clydeTimeline.setCycleCount(Timeline.INDEFINITE);
 
         anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent keyEvent) {
@@ -277,12 +302,14 @@ public class GameViewController extends Controller implements Initializable {
                     pacmanImageView.setImage(pacmanDown);
                 }
                 pacManTimeline.play();
-                //blinkyTimeline.play();
-                pinkyTimeline.play();
-                //moveBlinky();
+                // blinkyTimeline.play();
+                //pinkyTimeline.play();
+                clydeTimeline.play();
+
             }
         });
 
+        //System.out.println("p:" + smallPoints);
         //verMatriz();
     }
 
@@ -343,13 +370,73 @@ public class GameViewController extends Controller implements Initializable {
         }
     }
 
+    private Point currentRandomPoint; // Punto aleatorio actual
+    private boolean isMovingToRandomPoint = false;
+
+    private Point selectRandomPoint() {
+
+        int randomIndex = (int) (Math.random() * smallPoints.size());
+        System.out.println("Randon: " + randomIndex);
+        return smallPoints.get(randomIndex);
+    }
+
+    private void clydeMove() {
+        frameCountClyde++;
+
+        if (frameCountClyde >= frameDelayClyde) {
+            if (!isMovingToRandomPoint) {
+                currentRandomPoint = selectRandomPoint();
+                isMovingToRandomPoint = true;
+            }
+
+            int startNode = clydeY * 15 + clydeX;
+            int randomX = currentRandomPoint.x;
+            int randomY = currentRandomPoint.y;
+            int targetNode = randomY * 15 + randomX;
+
+            int shortestDistance = floydMatriz[startNode][targetNode];
+
+            if (shortestDistance != Integer.MAX_VALUE) {
+                int nextX = clydeX;
+                int nextY = clydeY;
+
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        int newX = clydeX + dx;
+                        int newY = clydeY + dy;
+                        int neighborNode = newY * 15 + newX;
+
+                        if (newX >= 0 && newX < 15 && newY >= 0 && newY < 15
+                                && floydMatriz[neighborNode][targetNode] < shortestDistance) {
+                            shortestDistance = floydMatriz[neighborNode][targetNode];
+                            nextX = newX;
+                            nextY = newY;
+                        }
+                    }
+                }
+
+                // Si Clyde ha llegado al punto aleatorio, cambia la bandera de movimiento
+                if (nextX == randomX && nextY == randomY) {
+                    isMovingToRandomPoint = false;
+                }
+
+                // Actualiza la posición de Clyde
+                gridPaneMap.getChildren().remove(clydeImageView);
+                clydeX = nextX;
+                clydeY = nextY;
+                gridPaneMap.add(clydeImageView, clydeX, clydeY);
+            }
+
+            frameCountClyde = 0;
+        }
+    }
+
     private void blinkyMove() {
         frameCountBlinky++;
 
         if (frameCountBlinky >= frameDelayBlinky) {
-            // Calcula el camino más corto desde la posición actual de Blinky a la posición de Pac-Man
-            int startNode = blinkyY * 15 + blinkyX; // Convierte las coordenadas de Blinky en un nodo
-            int targetNode = pacmanY * 15 + pacmanX; // Convierte las coordenadas de Pac-Man en un nodo
+            int startNode = blinkyY * 15 + blinkyX; 
+            int targetNode = pacmanY * 15 + pacmanX;
             List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
 
             if (shortestPath != null && shortestPath.size() > 1) {
@@ -362,7 +449,6 @@ public class GameViewController extends Controller implements Initializable {
                 blinkyX = nextX;
                 blinkyY = nextY;
 
-                // Mueve la imagen de Blinky en el GridPane
                 gridPaneMap.getChildren().remove(blinkyImageView);
                 gridPaneMap.add(blinkyImageView, blinkyX, blinkyY);
             }
@@ -371,38 +457,48 @@ public class GameViewController extends Controller implements Initializable {
         }
     }
 
-    public void pinkyMove() {
-
+    private void pinkyMove() {
         frameCountPinky++;
 
         if (frameCountPinky >= frameDelayPinky) {
-            // Calcula el camino más corto desde la posición actual de Blinky a la posición de Pac-Man
-            int startNode = pinkyX * 15 + pinkyY; // Convierte las coordenadas de Blinky en un nodo
-            int targetNode = pacmanY * 15 + pacmanX; // Convierte las coordenadas de Pac-Man en un nodo
-            List<Integer> loguestPath = longestPath(startNode, targetNode, weightedGraph);
+            // Calcula la posición anticipada de Pac-Man
+            int anticipatedPacmanX = pacmanX;
+            int anticipatedPacmanY = pacmanY;
+            int stepsToAnticipate = 4; // Anticipa 4 pasos por delante
 
-            int size = loguestPath.size();
-            
-            System.out.println("L: "+ size);
-            
-            if (loguestPath != null && loguestPath.size() > 1) {
-                // Obtiene el siguiente nodo en el camino más corto
-                int nextNode = loguestPath.get(1);
-                int nextX = nextNode % 15; // Convierte el nodo en coordenadas X
-                int nextY = nextNode / 15; // Convierte el nodo en coordenadas Y
+            for (int i = 0; i < stepsToAnticipate; i++) {
+                anticipatedPacmanX += directionX;
+                anticipatedPacmanY += directionY;
 
-                // Actualiza la posición de Blinky
+              
+                if (map[anticipatedPacmanY][anticipatedPacmanX] == 'W') {
+                   
+                    anticipatedPacmanX -= directionX;
+                    anticipatedPacmanY -= directionY;
+                    break;
+                }
+            }
+
+            int startNode = pinkyY * 15 + pinkyX;
+            int targetNode = anticipatedPacmanY * 15 + anticipatedPacmanX;
+            List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
+
+            if (shortestPath != null && shortestPath.size() > 1) {
+
+                int nextNode = shortestPath.get(1);
+                int nextX = nextNode % 15;
+                int nextY = nextNode / 15;
+
+                // Actualiza la posición de Pinky
                 pinkyX = nextX;
                 pinkyY = nextY;
 
-                // Mueve la imagen de Blinky en el GridPane
                 gridPaneMap.getChildren().remove(pinkyImageView);
                 gridPaneMap.add(pinkyImageView, pinkyX, pinkyY);
             }
 
             frameCountPinky = 0;
         }
-
     }
 
     private void movePacman() {
@@ -483,7 +579,7 @@ public class GameViewController extends Controller implements Initializable {
                 }
             }
         }
-        verMatriz();
+        // verMatriz();
         return isComplete;
     }
 
@@ -566,54 +662,46 @@ public class GameViewController extends Controller implements Initializable {
         return path;
     }
 
-   private List<Integer> longestPath(int start, int target, int[][] weightedGraph) {
-    int numNodes = weightedGraph.length;
-    int[] distance = new int[numNodes];
-    Arrays.fill(distance, Integer.MIN_VALUE);
+    private List<Integer> longestPath(int start, int target, int[][] weightedGraph) {
+       
 
-    PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node]));
-    queue.add(start);
-    distance[start] = 0;
+     
+        List<Integer> longestPath = new ArrayList<>();
+        
+        return longestPath;
+    }
 
-    int[] previous = new int[numNodes];
-    Arrays.fill(previous, -1);
+    public int[][] floydWarshall(int[][] graph) {
+        int V = graph.length;
+        int[][] dist = new int[V][V];
 
-    while (!queue.isEmpty()) {
-        System.out.println("Lista: " + queue.size());
-        int currentNode = queue.poll();
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                dist[i][j] = graph[i][j];
+            }
+        }
 
-        for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-            //System.out.println("valor: "+neighbor);
-            int weight = weightedGraph[currentNode][neighbor];
-            if (weight != Integer.MAX_VALUE) {
-                int altDistance = distance[currentNode] + weight;
-                if (altDistance > distance[neighbor]) {
-                    distance[neighbor] = altDistance;
-                    previous[neighbor] = currentNode;
-                    queue.add(neighbor);
+        for (int k = 0; k < V; k++) {
+            for (int i = 0; i < V; i++) {
+                for (int j = 0; j < V; j++) {
+                    if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE
+                            && dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
                 }
             }
         }
+
+//        System.out.println("Matriz floyd");
+//
+//        for (int i = 0; i < V; i++) {
+//            for (int j = 0; j < V; j++) {
+//                System.out.print(dist[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+        return dist;
     }
-
-    // Reconstruir el camino más largo desde el nodo de inicio
-    int current = target;
-    List<Integer> longestPath = new ArrayList<>();
-    while (current != -1) {
-        longestPath.add(current);
-        current = previous[current];
-    }
-
-    if (longestPath.size() > 1) {
-        return longestPath;
-    } else {
-        return null; // No se encontró un camino válido
-    }
-}
-
-
-
-
 
     public void verMatriz() {
 
@@ -625,5 +713,4 @@ public class GameViewController extends Controller implements Initializable {
 
         }
     }
-
 }
