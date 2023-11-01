@@ -1,5 +1,6 @@
 package cr.ac.una.pac.man.controller;
 
+import cr.ac.una.pac.man.util.AppContext;
 import cr.ac.una.pac.man.util.FlowController;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,15 +28,23 @@ public class LevelCompleteController extends Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
+    int nivel = (int) AppContext.getInstance().get("Level");
 
     @FXML
     private void onAction_continue(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("WelcomeView");
-        getStage().close();
+        if (nivel != 10) {
+            AppContext.getInstance().set("Level", nivel + 1);
+            FlowController.getInstance().goViewInWindow("GameView");
+            getStage().close();
+        } else {
+            FlowController.getInstance().goViewInWindow("WelcomeView");
+            getStage().close();
+        }
     }
-    
+
 }
