@@ -172,11 +172,7 @@ public class GameViewController extends Controller implements Initializable {
         lbl_level.setText(String.valueOf(nivel + 1));
     }
 
-        // Coordenada Y inicial de Blinky
-        //blinkyDirectionX = 1; // Dirección inicial de movimiento de Blinky (derecha)
-        //blinkyDirectionY = 0;
-        //pinkyDirectionX = 1; // Dirección inicial de movimiento de Blinky (derecha)
-        //pinkyDirectionY = 0;
+
     public void setnivelActual(int nivelActual) {
         this.nivel = nivelActual;
     }
@@ -228,31 +224,90 @@ public class GameViewController extends Controller implements Initializable {
         imgViewLife6.setImage(life6);
     }
 
-        map = new char[][]{
-            {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
-            {'W', 'D', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'S', 'W', 'S', 'S', 'S', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', 'W', 'W', 'B', 'W', 'S', 'W', 'W'},
-            {'W', 'W', 'S', 'W', 'S', 'W', 'S', 'W', ' ', ' ', ' ', 'W', 'S', 'W', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'W', ' ', ' ', 'C', 'W', 'S', 'W', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'R', 'I', ' ', 'W', 'S', 'W', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W'},
-            {'W', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'D', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'S', 'W', 'W', 'W', 'W', 'W', 'S', 'W', 'S', 'W'},
-            {'W', 'P', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'W'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
-        };
 
-        weightedGraph = createWeightedGraph(map);
 
-        floydMatriz = floydWarshall(weightedGraph);
 
+
+
+    private void configurarManejoDeTeclado() {
+        anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == LEFT) {
+                    directionX = -1;
+                    directionY = 0;
+                    pacmanImageView.setImage(pacmanFeft);
+                } else if (keyEvent.getCode() == RIGHT) {
+                    directionX = 1;
+                    directionY = 0;
+                    pacmanImageView.setImage(pacmanRight);
+                } else if (keyEvent.getCode() == UP) {
+                    directionX = 0;
+                    directionY = -1;
+                    pacmanImageView.setImage(pacmanUp);
+                } else if (keyEvent.getCode() == DOWN) {
+                    directionX = 0;
+                    directionY = 1;
+                    pacmanImageView.setImage(pacmanDown);
+                }
+                pacManTimeline.play();
+                 blinkyTimeline.play();
+                pinkyTimeline.play();
+                clydeTimeline.play();
+
+            }
+        });
+    }
+
+        //System.out.println("p:" + smallPoints);
+        //verMatriz();
+    private void iniciarAnimacionPacman() {
+        
+        pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
+        pacManTimeline.setCycleCount(Timeline.INDEFINITE);
+
+        blinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> blinkyMove()));
+        blinkyTimeline.setCycleCount(Timeline.INDEFINITE);
+
+        pinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> pinkyMove()));
+        pinkyTimeline.setCycleCount(Timeline.INDEFINITE);
+
+        clydeTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> clydeMove()));
+        clydeTimeline.setCycleCount(Timeline.INDEFINITE);
+        
+        pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
+        pacManTimeline.setCycleCount(Timeline.INDEFINITE);
+       // pacManTimeline.play();
+    }
+
+    @Override
+    public void initialize() {
+        //blinkyTimeline.play();
+        
+    }
+
+    private void cargarMapa(int nivel) {
         double imageSize = 15.0;
+        int cantidadFilas = 15, cantidadColumnas = 15;
+        map = new char[cantidadFilas][cantidadColumnas];
+        gridPaneMap.getChildren().clear();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("src\\main\\resources\\cr\\ac\\una\\pac\\man\\niveles\\nivel (" + nivel + ").txt"));
+            String linea;
+            int fila = 0;
 
-        for (int y = 0; y < map.length; y++) {
+            while ((linea = br.readLine()) != null) {
+                String[] elementos = linea.split(" ");
+
+                for (int columna = 0; columna < cantidadColumnas; columna++) {
+                    map[fila][columna] = elementos[columna].charAt(0);
+                }
+
+                fila++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[y].length; x++) {
                 char cell = map[y][x];
                 ImageView imageView = new ImageView();
@@ -312,122 +367,10 @@ public class GameViewController extends Controller implements Initializable {
             }
         }
 
-        pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
-        pacManTimeline.setCycleCount(Timeline.INDEFINITE);
+         weightedGraph = createWeightedGraph(map);
 
-        blinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> blinkyMove()));
-        blinkyTimeline.setCycleCount(Timeline.INDEFINITE);
+        floydMatriz = floydWarshall(weightedGraph);
 
-        pinkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> pinkyMove()));
-        pinkyTimeline.setCycleCount(Timeline.INDEFINITE);
-
-        clydeTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> clydeMove()));
-        clydeTimeline.setCycleCount(Timeline.INDEFINITE);
-
-    private void configurarManejoDeTeclado() {
-        anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == LEFT) {
-                    directionX = -1;
-                    directionY = 0;
-                    pacmanImageView.setImage(pacmanFeft);
-                } else if (keyEvent.getCode() == RIGHT) {
-                    directionX = 1;
-                    directionY = 0;
-                    pacmanImageView.setImage(pacmanRight);
-                } else if (keyEvent.getCode() == UP) {
-                    directionX = 0;
-                    directionY = -1;
-                    pacmanImageView.setImage(pacmanUp);
-                } else if (keyEvent.getCode() == DOWN) {
-                    directionX = 0;
-                    directionY = 1;
-                    pacmanImageView.setImage(pacmanDown);
-                }
-                pacManTimeline.play();
-                // blinkyTimeline.play();
-                //pinkyTimeline.play();
-                clydeTimeline.play();
-
-            }
-        });
-    }
-
-        //System.out.println("p:" + smallPoints);
-        //verMatriz();
-    private void iniciarAnimacionPacman() {
-        pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
-        pacManTimeline.setCycleCount(Timeline.INDEFINITE);
-        pacManTimeline.play();
-    }
-
-    @Override
-    public void initialize() {
-        //blinkyTimeline.play();
-        
-    }
-
-    private void cargarMapa(int nivel) {
-        double imageSize = 15.0;
-        int cantidadFilas = 15, cantidadColumnas = 15;
-        map = new char[cantidadFilas][cantidadColumnas];
-        gridPaneMap.getChildren().clear();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("src\\main\\resources\\cr\\ac\\una\\pac\\man\\niveles\\nivel (" + nivel + ").txt"));
-            String linea;
-            int fila = 0;
-
-            while ((linea = br.readLine()) != null) {
-                String[] elementos = linea.split(" ");
-
-                for (int columna = 0; columna < cantidadColumnas; columna++) {
-                    map[fila][columna] = elementos[columna].charAt(0);
-                }
-
-                fila++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (int y = 0; y < map.length; y++) {
-            for (int x = 0; x < map[y].length; x++) {
-                char cell = map[y][x];
-                ImageView imageView = new ImageView();
-                imageView.setFitWidth(imageSize);
-                imageView.setFitHeight(imageSize);
-
-                switch (cell) {
-                    case 'W':
-                        imageView.setImage(wallImage);
-                        break;
-                    case 'S':
-                        imageView.setImage(smallPointImage);
-                        smallPoints.add(new Point(x, y));
-                        break;
-                    case 'B':
-                        imageView.setImage(blinkyImage);
-                        break;
-                    case 'D':
-                        imageView.setImage(bigPointImage);
-                        break;
-                    case 'C':
-                        imageView.setImage(clydeImage);
-                        break;
-                    case 'P':
-                        pacmanImageView = new ImageView(pacmanRight);
-                        pacmanImageView.setFitHeight(imageSize);
-                        pacmanImageView.setFitWidth(imageSize);
-                        gridPaneMap.add(pacmanImageView, x, y);
-                        pacmanX = x;
-                        pacmanY = y;
-                        break;
-                    default:
-                        break;
-                }
-
-                gridPaneMap.add(imageView, x, y);
-            }
-        }
     }
 
     public Image getIamge(String imageName) {
@@ -631,9 +574,10 @@ public class GameViewController extends Controller implements Initializable {
                         map[newPacmanY][newPacmanX] = 'P'; //define la nueva posicion de P
                         score += 10;
                         lbl_score.setText(String.valueOf(score));
-                        if (levelCompleted()) {
+if (levelCompleted()) {
                             FlowController.getInstance().goViewInWindow("LevelComplete");
                             getStage().close();
+                            FlowController.getInstance().deleteView("GameView");
                             System.out.println("Hola");
                         }
 
