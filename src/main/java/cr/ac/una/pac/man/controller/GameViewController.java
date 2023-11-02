@@ -14,6 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -117,11 +119,13 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCountBlinky = 0;
     private int frameCountPinky = 0;
     private int frameCountClyde = 0;
+    private int frameCountInky = 0;
 
-    private int frameDelay = -2; // Controla la velocidad de movimiento, ajusta según tus necesidades
+    private int frameDelay = 1; // Controla la velocidad de movimiento, ajusta según tus necesidades
     private int frameDelayBlinky = 3;
     private int frameDelayPinky = 4;
-    private int frameDelayClyde = 5;
+    private int frameDelayClyde = 2;
+    private int frameDelayInky = 5;
 
     private int pacmanSpeed = 1; // Velocidad predeterminada
     private int blinkySpeed = 0;
@@ -151,30 +155,39 @@ public class GameViewController extends Controller implements Initializable {
     private Timeline pinkyTimeline;
     private Timeline clydeTimeline;
 
+    private Timeline inkyTimeline;
+
     int[][] weightedGraph;
 
     int[][] floydMatriz;
     @FXML
     private ImageView imgViewLife6;
-    public int nivel ;
-    
+    public int nivel;
+
     private boolean finJuego = false;
     @FXML
     private Label lbl_level;
 
+    private Point currentRandomPoint;
+    private boolean isMovingToRandomPoint = false;
+
+    private boolean inkyMovingToRandomPoint = false;
+    private Point inkyTargetPoint;
+    private Timer inkyTimer;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
+
         this.nivel = (int) AppContext.getInstance().get("Level");
         cargarImagenes();
         inicializarVidas();
         configurarManejoDeTeclado();
         iniciarAnimacionPacman();
-        System.out.println("Nievl GV"+ nivel);
+        System.out.println("Nievl GV" + nivel);
         cargarMapa(nivel);
         lbl_level.setText(String.valueOf(nivel));
-    }
 
+    }
 
     public void setnivelActual(int nivelActual) {
         this.nivel = nivelActual;
@@ -227,11 +240,6 @@ public class GameViewController extends Controller implements Initializable {
         imgViewLife6.setImage(life6);
     }
 
-
-
-
-
-
     private void configurarManejoDeTeclado() {
         anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent keyEvent) {
@@ -253,18 +261,19 @@ public class GameViewController extends Controller implements Initializable {
                     pacmanImageView.setImage(pacmanDown);
                 }
                 pacManTimeline.play();
-                 blinkyTimeline.play();
+                blinkyTimeline.play();
                 pinkyTimeline.play();
                 clydeTimeline.play();
+                inkyTimeline.play();
 
             }
         });
     }
 
-        //System.out.println("p:" + smallPoints);
-        //verMatriz();
+    //System.out.println("p:" + smallPoints);
+    //verMatriz();
     private void iniciarAnimacionPacman() {
-        
+
         pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
         pacManTimeline.setCycleCount(Timeline.INDEFINITE);
 
@@ -276,16 +285,29 @@ public class GameViewController extends Controller implements Initializable {
 
         clydeTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> clydeMove()));
         clydeTimeline.setCycleCount(Timeline.INDEFINITE);
-        
+
         pacManTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> movePacman()));
         pacManTimeline.setCycleCount(Timeline.INDEFINITE);
-       // pacManTimeline.play();
+
+        inkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> inkymove()));
+        inkyTimeline.setCycleCount(Timeline.INDEFINITE);
+        // pacManTimeline.play();
     }
 
     @Override
     public void initialize() {
         //blinkyTimeline.play();
-        
+
+        inkyTimer = new Timer();
+
+        inkyTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                inkyTargetPoint = selectRandomPointInky();
+                inkyMovingToRandomPoint = true;
+            }
+        }, 0, 5000);
+
     }
 
     private void cargarMapa(int nivel) {
@@ -311,7 +333,7 @@ public class GameViewController extends Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-for (int y = 0; y < map.length; y++) {
+        for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[y].length; x++) {
                 char cell = map[y][x];
                 ImageView imageView = new ImageView();
@@ -371,7 +393,7 @@ for (int y = 0; y < map.length; y++) {
             }
         }
 
-         weightedGraph = createWeightedGraph(map);
+        weightedGraph = createWeightedGraph(map);
 
         floydMatriz = floydWarshall(weightedGraph);
 
@@ -429,14 +451,61 @@ for (int y = 0; y < map.length; y++) {
         }
     }
 
-    private Point currentRandomPoint; // Punto aleatorio actual
-    private boolean isMovingToRandomPoint = false;
-
     private Point selectRandomPoint() {
 
         int randomIndex = (int) (Math.random() * smallPoints.size());
-        //System.out.println("Randon: " + randomIndex);
+        System.out.println("Randon: " + randomIndex);
         return smallPoints.get(randomIndex);
+    }
+    
+private Point selectRandomPointInky() {
+    int randomChoice = (int) (Math.random() * 5);
+    Point randomPoint;
+
+    if (randomChoice == 0) {
+        int randomIndex = (int) (Math.random() * smallPoints.size());
+        randomPoint = smallPoints.get(randomIndex);
+    } else if (randomChoice == 1) {
+        
+        randomPoint = new Point(pacmanX, pacmanY);
+    } else if (randomChoice == 2) {
+      
+        randomPoint = new Point(blinkyX, blinkyY);
+    } else if(randomChoice == 3) {
+       
+        randomPoint = new Point(clydeX, clydeY);
+    } else {
+        randomPoint = new Point(pinkyX, pinkyY);
+    }
+
+    System.out.println("Random Inky: " + randomPoint);
+    return randomPoint;
+}
+
+
+    private void inkymove() {
+        frameCountInky++;
+
+        if (frameCountInky >= frameDelayInky) {
+            if (inkyMovingToRandomPoint) {
+                int startNode = inkyY * 15 + inkyX;
+                int targetNode = inkyTargetPoint.y * 15 + inkyTargetPoint.x;
+                List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
+
+                if (shortestPath != null && shortestPath.size() > 1) {
+                    int nextNode = shortestPath.get(1);
+                    int nextX = nextNode % 15;
+                    int nextY = nextNode / 15;
+
+                    inkyX = nextX;
+                    inkyY = nextY;
+
+                    gridPaneMap.getChildren().remove(inkyImageView);
+                    gridPaneMap.add(inkyImageView, inkyX, inkyY);
+                }
+            }
+            frameCountInky = 0;
+        }
     }
 
     private void clydeMove() {
@@ -494,7 +563,7 @@ for (int y = 0; y < map.length; y++) {
         frameCountBlinky++;
 
         if (frameCountBlinky >= frameDelayBlinky) {
-            int startNode = blinkyY * 15 + blinkyX; 
+            int startNode = blinkyY * 15 + blinkyX;
             int targetNode = pacmanY * 15 + pacmanX;
             List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
 
@@ -529,9 +598,8 @@ for (int y = 0; y < map.length; y++) {
                 anticipatedPacmanX += directionX;
                 anticipatedPacmanY += directionY;
 
-              
                 if (map[anticipatedPacmanY][anticipatedPacmanX] == 'W') {
-                   
+
                     anticipatedPacmanX -= directionX;
                     anticipatedPacmanY -= directionY;
                     break;
@@ -578,7 +646,7 @@ for (int y = 0; y < map.length; y++) {
                         map[newPacmanY][newPacmanX] = 'P'; //define la nueva posicion de P
                         score += 10;
                         lbl_score.setText(String.valueOf(score));
-if (levelCompleted()) {
+                        if (levelCompleted()) {
                             FlowController.getInstance().goViewInWindow("LevelComplete");
                             getStage().close();
                             FlowController.getInstance().deleteView("GameView");
@@ -723,11 +791,9 @@ if (levelCompleted()) {
     }
 
     private List<Integer> longestPath(int start, int target, int[][] weightedGraph) {
-       
 
-     
         List<Integer> longestPath = new ArrayList<>();
-        
+
         return longestPath;
     }
 
