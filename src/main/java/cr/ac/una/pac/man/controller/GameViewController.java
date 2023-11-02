@@ -118,7 +118,7 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCountPinky = 0;
     private int frameCountClyde = 0;
 
-    private int frameDelay = 1; // Controla la velocidad de movimiento, ajusta según tus necesidades
+    private int frameDelay = -2; // Controla la velocidad de movimiento, ajusta según tus necesidades
     private int frameDelayBlinky = 3;
     private int frameDelayPinky = 4;
     private int frameDelayClyde = 5;
@@ -156,20 +156,23 @@ public class GameViewController extends Controller implements Initializable {
     int[][] floydMatriz;
     @FXML
     private ImageView imgViewLife6;
-    public int nivel;
+    public int nivel ;
+    
     private boolean finJuego = false;
     @FXML
     private Label lbl_level;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+       
         this.nivel = (int) AppContext.getInstance().get("Level");
         cargarImagenes();
         inicializarVidas();
         configurarManejoDeTeclado();
         iniciarAnimacionPacman();
-        cargarMapa(nivel + 1);
-        lbl_level.setText(String.valueOf(nivel + 1));
+        System.out.println("Nievl GV"+ nivel);
+        cargarMapa(nivel);
+        lbl_level.setText(String.valueOf(nivel));
     }
 
 
@@ -290,6 +293,7 @@ public class GameViewController extends Controller implements Initializable {
         int cantidadFilas = 15, cantidadColumnas = 15;
         map = new char[cantidadFilas][cantidadColumnas];
         gridPaneMap.getChildren().clear();
+        System.out.println("NiveL.: " + nivel);
         try {
             BufferedReader br = new BufferedReader(new FileReader("src\\main\\resources\\cr\\ac\\una\\pac\\man\\niveles\\nivel (" + nivel + ").txt"));
             String linea;
@@ -431,7 +435,7 @@ for (int y = 0; y < map.length; y++) {
     private Point selectRandomPoint() {
 
         int randomIndex = (int) (Math.random() * smallPoints.size());
-        System.out.println("Randon: " + randomIndex);
+        //System.out.println("Randon: " + randomIndex);
         return smallPoints.get(randomIndex);
     }
 

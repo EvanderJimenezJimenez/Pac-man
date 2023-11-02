@@ -188,7 +188,14 @@ public class ChooseLevelController extends Controller implements Initializable {
     
         @FXML
     private void onAction_play(ActionEvent event) {
-        AppContext.getInstance().set("Level", cbx_level.getSelectionModel().getSelectedIndex());
+        int level = cbx_level.getSelectionModel().getSelectedIndex() ;
+        
+        if(level == 0){
+            level = 1;
+        }
+        
+        AppContext.getInstance().set("Level", level);
+            System.out.println("CL: "+ cbx_level.getSelectionModel().getSelectedIndex());
         FlowController.getInstance().goViewInWindow("GameView");
         getStage().close();
     }
