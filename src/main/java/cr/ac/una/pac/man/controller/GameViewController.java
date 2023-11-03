@@ -114,8 +114,17 @@ public class GameViewController extends Controller implements Initializable {
         inicializarVidas();
         configurarManejoDeTeclado();
         iniciarAnimacionPacman();
-        cargarMapa(nivel + 1);
-        lbl_level.setText(String.valueOf(nivel + 1));
+        
+        
+    }
+    
+    
+    @Override
+    public void initialize() {
+        GameData gameData = (GameData) AppContext.getInstance().get("GameData");
+        cargarMapa(gameData.getLabelLevel());
+        lbl_level.setText(String.valueOf(gameData.getLabelLevel()));
+        
     }
 
     public void setnivelActual(int nivelActual) {
@@ -197,10 +206,7 @@ public class GameViewController extends Controller implements Initializable {
         pacManTimeline.play();
     }
 
-    @Override
-    public void initialize() {
-        
-    }
+    
 
     private void cargarMapa(int nivel) {
         double imageSize = 15.0;
@@ -326,9 +332,10 @@ public class GameViewController extends Controller implements Initializable {
                         score += 10;
                         lbl_score.setText(String.valueOf(score));
                         if (levelCompleted()) {
+                            cargarDatos();//Joshua
                             FlowController.getInstance().goViewInWindow("LevelComplete");
                             getStage().close();
-                            FlowController.getInstance().deleteView("GameView");
+                           // FlowController.getInstance().deleteView("GameView");
                             System.out.println("Hola");
                         }
 
@@ -388,4 +395,15 @@ public class GameViewController extends Controller implements Initializable {
         return isComplete;
     }
 
+
+
+    private void cargarDatos(){
+        GameData gameData = new GameData();//instanceo la clase GameData  
+            gameData.setLabelScore(lbl_score.getText());//asigno el valor del label en setLabelScore
+            gameData.setLabelLevel(Integer.parseInt(lbl_level.getText())+1);
+            AppContext.getInstance().set("GameData", gameData);
+    }
+
+    
+    
 }

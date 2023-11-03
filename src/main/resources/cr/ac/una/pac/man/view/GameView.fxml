@@ -12,9 +12,26 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="449.0" prefWidth="644.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.GameViewController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="300.0" layoutY="200.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <VBox alignment="TOP_CENTER" layoutX="8.0" layoutY="8.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="8.0">
          <children>
-            <Label prefHeight="54.0" prefWidth="56.0" text="PAC-MAN" />
+            <HBox prefHeight="82.0" prefWidth="680.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Jugar: " />
+                        <Label fx:id="NombrePlayerGameView" />
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label prefHeight="54.0" prefWidth="56.0" text="PAC-MAN" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
             <HBox prefHeight="46.0" prefWidth="685.0" style="-fx-background-color: fffeeff;" stylesheets="@styles.css">
                <children>
                   <Label prefHeight="46.0" prefWidth="79.0" text="Puntaje: " />
