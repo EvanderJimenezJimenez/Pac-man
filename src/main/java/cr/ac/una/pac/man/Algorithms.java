@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -15,6 +16,8 @@ import javafx.scene.layout.GridPane;
  * @author dario
  */
 public class Algorithms {
+   
+                            
 
     public Algorithms() {
     }
@@ -196,4 +199,35 @@ public class Algorithms {
         return randomPoint;
     }
 
+    //
+        public void kill(int lifes ,ImageView imgViewLife1,ImageView imgViewLife2,
+                ImageView imgViewLife3,ImageView imgViewLife4,ImageView imgViewLife5,ImageView imgViewLife6  ) {
+
+        switch (lifes) {
+
+            case 0:
+                imgViewLife1.setImage(null);
+                break;
+            case 1:
+                imgViewLife2.setImage(null);
+                break;
+            case 2:
+                imgViewLife3.setImage(null);
+                break;
+            case 3:
+                imgViewLife4.setImage(null);
+                break;
+            case 4:
+                imgViewLife5.setImage(null);
+                break;
+            case 5:
+                imgViewLife6.setImage(null);
+                break;
+
+            default:
+                throw new AssertionError();
+        }
+
+    }
+    
 }

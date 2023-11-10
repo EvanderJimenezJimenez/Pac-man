@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="449.0" prefWidth="644.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.GameViewController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="449.0" prefWidth="644.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.GameViewController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="300.0" layoutY="200.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -53,8 +53,8 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="101.0" text="Reiniciar" />
-                  <Button layoutX="302.0" layoutY="28.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="101.0" text="Pausa" />
+                  <Button mnemonicParsing="false" onAction="#onAction_encierro" prefHeight="64.0" prefWidth="101.0" text="Encierro" />
+                  <Button layoutX="302.0" layoutY="28.0" mnemonicParsing="false" onAction="#onAction_velocidad" prefHeight="64.0" prefWidth="123.0" text="Super velocidad" />
                </children>
             </HBox>
          </children>
