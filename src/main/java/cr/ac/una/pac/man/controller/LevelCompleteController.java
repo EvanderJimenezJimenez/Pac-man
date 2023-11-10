@@ -38,7 +38,9 @@ public class LevelCompleteController extends Controller implements Initializable
     @FXML
     private void onAction_continue(ActionEvent event) {
         if (nivel != 10) {
-            AppContext.getInstance().set("Level", nivel + 1);
+            nivel += 1;
+            AppContext.getInstance().set("Level", nivel);
+            System.out.println("Level lc: " + nivel);
             FlowController.getInstance().goViewInWindow("GameView");
             getStage().close();
         } else {
