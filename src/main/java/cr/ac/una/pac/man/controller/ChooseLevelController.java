@@ -62,6 +62,16 @@ public class ChooseLevelController extends Controller implements Initializable {
        loadLevelDataFromFile();
         setDataLevel(levelList.get(index));
         // TODO
+        //inicializaPistachoose();
+        //A prueba
+        
+        GameData gameData = new GameData();//instanceo la clase GameData  
+            gameData.setLabelLevel((0));//problema  
+        AppContext.getInstance().set("GameData", gameData);
+        
+        //A prueba 
+        
+        
     }
 
     private void loadLevelDataFromFile() {
@@ -167,6 +177,7 @@ public class ChooseLevelController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
+        
     }
 
     @FXML
@@ -192,12 +203,6 @@ public class ChooseLevelController extends Controller implements Initializable {
         @FXML
     private void onAction_play(ActionEvent event) {
         AppContext.getInstance().set("Level", cbx_level.getSelectionModel().getSelectedIndex());
-       
-        
-        GameData gameData = new GameData();//instanceo la clase GameData  
-            gameData.setLabelLevel((index+1));//problema
-            AppContext.getInstance().set("GameData", gameData);
-            
             FlowController.getInstance().goViewInWindow("GameView");
             getStage().close();
     }
@@ -212,6 +217,13 @@ public class ChooseLevelController extends Controller implements Initializable {
 
         setDataLevel(lev);
 
+    }
+    
+    private void inicializaPistachoose (){
+     GameData gameData = new GameData();//instanceo la clase GameData  
+           // gameData.setLabelLevel((index+1));//problema  
+            AppContext.getInstance().set("GameData", gameData);
+    
     }
 
 }

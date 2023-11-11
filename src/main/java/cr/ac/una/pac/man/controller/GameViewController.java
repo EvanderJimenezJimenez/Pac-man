@@ -106,7 +106,7 @@ public class GameViewController extends Controller implements Initializable {
     private boolean finJuego = false;
     @FXML
     private Label lbl_level;
-
+    int level = 0;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.nivel = (int) AppContext.getInstance().get("Level");
@@ -122,9 +122,19 @@ public class GameViewController extends Controller implements Initializable {
     @Override
     public void initialize() {
         GameData gameData = (GameData) AppContext.getInstance().get("GameData");
-        cargarMapa(gameData.getLabelLevel());
-        lbl_level.setText(String.valueOf(gameData.getLabelLevel()));
+        //cargarMapa(gameData.getLabelLevel());
+        if (gameData.getLabelLevel() == 0){
+        lbl_level.setText("1");
         
+        cargarMapa(gameData.getLabelLevel()+1);
+        System.out.println("Opcion 1: " +gameData.getLabelLevel());
+        }
+        else {
+         lbl_level.setText(Integer.toString(gameData.getLabelLevel()));
+         cargarMapa(gameData.getLabelLevel());
+          System.out.println("Opcion 2: " +gameData.getLabelLevel());
+        }
+
     }
 
     public void setnivelActual(int nivelActual) {
@@ -333,6 +343,19 @@ public class GameViewController extends Controller implements Initializable {
                         lbl_score.setText(String.valueOf(score));
                         if (levelCompleted()) {
                             cargarDatos();//Joshua
+                            
+                            //Choquit
+                            GameData gameData = (GameData) AppContext.getInstance().get("GameData");
+                            int incremento = gameData.getLabelLevel(); //Joshua
+                            System.out.println("Sin Incremento: "+gameData.getLabelLevel());
+                            incremento +=1;
+                            gameData.setLabelLevel(incremento);
+                            
+                            
+                            System.out.println("Incremento: "+gameData.getLabelLevel());
+                            //Choquit
+                             
+                             
                             FlowController.getInstance().goViewInWindow("LevelComplete");
                             getStage().close();
                            // FlowController.getInstance().deleteView("GameView");
@@ -400,7 +423,7 @@ public class GameViewController extends Controller implements Initializable {
     private void cargarDatos(){
         GameData gameData = new GameData();//instanceo la clase GameData  
             gameData.setLabelScore(lbl_score.getText());//asigno el valor del label en setLabelScore
-            gameData.setLabelLevel(Integer.parseInt(lbl_level.getText())+1);
+           // gameData.setLabelLevel(Integer.parseInt(lbl_level.getText())+1);
             AppContext.getInstance().set("GameData", gameData);
     }
 

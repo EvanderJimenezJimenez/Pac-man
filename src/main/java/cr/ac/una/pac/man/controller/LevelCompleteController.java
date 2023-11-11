@@ -39,7 +39,9 @@ public class LevelCompleteController extends Controller implements Initializable
        // GameViewController gameData = (GameData) AppContext.getInstance().get("GameData");
         
         lbl_score.setText (gameData.getLabelScore() + " pts");
-        lbl_level.setText( String.valueOf(gameData.getLabelLevel()));
+       // lbl_level.setText( String.valueOf(gameData.getLabelLevel()));
+       lbl_level.setText( Integer.toString (gameData.getLabelLevel()));
+       System.out.println("Prueba: " + gameData.getLabelLevel());
        
     }
 
@@ -51,10 +53,10 @@ public class LevelCompleteController extends Controller implements Initializable
     @FXML
     private void onAction_continue(ActionEvent event) {
         if ( gameData.getLabelLevel() <= 10) {
-             int nivel = gameData.getLabelLevel();
-             int Chulada = (nivel+1);//problema
+             //int nivel = gameData.getLabelLevel();
+            /* int Chulada = (nivel+1);//problema
             gameData.setLabelLevel(Chulada);
-            System.out.println(Chulada);
+            System.out.println(Chulada);*/
             AppContext.getInstance().set("GameData", gameData);
             
             FlowController.getInstance().goViewInWindow("GameView");
