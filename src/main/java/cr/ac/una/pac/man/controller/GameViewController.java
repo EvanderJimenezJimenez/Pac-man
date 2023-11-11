@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -33,6 +34,7 @@ import static javafx.scene.input.KeyCode.LEFT;
 import static javafx.scene.input.KeyCode.RIGHT;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyCode.DOWN;
+import javafx.scene.layout.Background;
 import javafx.util.Duration;
 
 /**
@@ -181,6 +183,10 @@ public class GameViewController extends Controller implements Initializable {
     boolean clydeEnc = false;
     boolean inkyEnc = false;
     boolean encierro = false;
+    @FXML
+    private Button btn_encierro;
+    @FXML
+    private Button btn_velocidad;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -415,6 +421,7 @@ public class GameViewController extends Controller implements Initializable {
                     if (inkyX == inkyXHouse && inkyY == inkyYHouse) {
                         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
                             shockInky = false;
+                            inkyEnc = false;
                             frameDelayInky = 4;
                         }));
                         timeline.play();
@@ -431,7 +438,7 @@ public class GameViewController extends Controller implements Initializable {
                     inkyX = nextX;
                     inkyY = nextY;
 
-                    if (checkInkyCollision() && !isPoweredUp) {
+                    if (checkInkyCollision() && !isPoweredUp && !inkyEnc) {
                         //reinicio;
                         handleCollision();
                     }
@@ -465,6 +472,7 @@ public class GameViewController extends Controller implements Initializable {
                 if (clydeX == clydeXHouse && clydeY == clydeYHouse) {
                     Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
                         shockClyde = false;
+                        clydeEnc = false;
                         frameDelayClyde = 5;
                     }));
                     timeline.play();
@@ -503,7 +511,7 @@ public class GameViewController extends Controller implements Initializable {
                 clydeY = nextY;
                 gridPaneMap.add(clydeImageView, clydeX, clydeY);
 
-                if (checkClydeCollision() && !isPoweredUp) {
+                if (checkClydeCollision() && !isPoweredUp && clydeEnc) {
                     handleCollision();
                 }
             }
@@ -528,6 +536,7 @@ public class GameViewController extends Controller implements Initializable {
                 if (blinkyX == blinkyXHouse && blinkyY == blinkyYHouse) {
                     Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
                         shockBlinky = false;
+                        blinkyEnc = false;
                         frameDelayBlinky = 3;
                     }));
                     timeline.play();
@@ -536,7 +545,7 @@ public class GameViewController extends Controller implements Initializable {
             List<Integer> shortestPath = algorithms.shortestPath(startNode, targetNode, weightedGraph);
 
             System.out.println("BB: " + shortestPath.size());
-            if (shortestPath.size() == 1 && !isPoweredUp) {
+            if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc) {
                 handleCollision();
             }
             if (shortestPath != null && shortestPath.size() > 1 && lifes > 1) {
@@ -588,6 +597,7 @@ public class GameViewController extends Controller implements Initializable {
                 if (pinkyX == pinkyXHouse && pinkyY == pinkyYHouse) {
                     Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
                         shockPinky = false;
+                        pinkyEnc = false;
                         frameDelayPinky = 4;
                     }));
                     timeline.play();
@@ -596,8 +606,8 @@ public class GameViewController extends Controller implements Initializable {
 
             List<Integer> shortestPath = algorithms.shortestPath(startNode, targetNode, weightedGraph);
 
-            if (shortestPath.size() == 1 && !isPoweredUp) {
-                 handleCollision();
+            if (shortestPath.size() == 1 && !isPoweredUp && !pinkyEnc) {
+                handleCollision();
             }
             if (shortestPath != null && shortestPath.size() > 1) {
 
@@ -774,6 +784,9 @@ public class GameViewController extends Controller implements Initializable {
             algorithms.kill(lifes, imgViewLife1, imgViewLife2, imgViewLife3, imgViewLife4, imgViewLife5, imgViewLife6);
             restartGhost();
             paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
+        }else{
+            FlowController.getInstance().goViewInWindow("GameOverView");
+            
         }
 
     }
@@ -836,38 +849,37 @@ public class GameViewController extends Controller implements Initializable {
     @FXML
     private void onAction_encierro(ActionEvent event) {
 
-        //encierro = !encierro;
+        if (!encierro) {
+           btn_encierro.setStyle("-fx-background-color: green;");
+            Set<Integer> selectedIndices = new HashSet<>();
+            Random random = new Random();
+            int count = 0;
 
-        Set<Integer> selectedIndices = new HashSet<>();
-        Random random = new Random();
-        int count = 0;
+            while (count < 2) {
+                System.out.println("-w-");
+                int randomGhost = random.nextInt(4);
+                System.out.println(randomGhost);
 
-        
-        while (count < 2) {
-            System.out.println("-w-");
-            int randomGhost = random.nextInt(4); 
-     System.out.println(randomGhost);
-            
-            if (selectedIndices.add(randomGhost)) {
-               
-                switch (randomGhost) {
-                    case 0:
-                        blinkyEnc = true;
-                        break;
-                    case 1:
-                        pinkyEnc = true;
-                        break;
-                    case 2:
-                        clydeEnc = true;
-                        break;
-                    case 3:
-                        inkyEnc = true;
-                        break;
+                if (selectedIndices.add(randomGhost)) {
+
+                    switch (randomGhost) {
+                        case 0:
+                            blinkyEnc = true;
+                            break;
+                        case 1:
+                            pinkyEnc = true;
+                            break;
+                        case 2:
+                            clydeEnc = true;
+                            break;
+                        case 3:
+                            inkyEnc = true;
+                            break;
+                    }
+                    count++;
                 }
-                count++;
             }
         }
-
     }
 
     @FXML

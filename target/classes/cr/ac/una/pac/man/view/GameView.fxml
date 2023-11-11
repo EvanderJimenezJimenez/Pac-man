@@ -53,8 +53,8 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onAction_encierro" prefHeight="64.0" prefWidth="101.0" text="Encierro" />
-                  <Button layoutX="302.0" layoutY="28.0" mnemonicParsing="false" onAction="#onAction_velocidad" prefHeight="64.0" prefWidth="123.0" text="Super velocidad" />
+                  <Button fx:id="btn_encierro" mnemonicParsing="false" onAction="#onAction_encierro" prefHeight="64.0" prefWidth="101.0" text="Encierro" />
+                  <Button fx:id="btn_velocidad" layoutX="302.0" layoutY="28.0" mnemonicParsing="false" onAction="#onAction_velocidad" prefHeight="64.0" prefWidth="123.0" text="Super velocidad" />
                </children>
             </HBox>
          </children>
