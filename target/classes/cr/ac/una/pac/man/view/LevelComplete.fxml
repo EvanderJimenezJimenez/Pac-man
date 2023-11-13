@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="294.0" prefWidth="448.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.LevelCompleteController">
+<AnchorPane prefHeight="543.0" prefWidth="649.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.LevelCompleteController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="15.0" layoutY="15.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
+      <VBox alignment="CENTER" layoutX="39.0" layoutY="64.0" prefHeight="479.0" prefWidth="628.0" spacing="15.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
             <Label prefHeight="51.0" prefWidth="91.0" text="Nivel Completado" />
             <VBox alignment="CENTER" prefHeight="82.0" prefWidth="665.0" spacing="10.0">

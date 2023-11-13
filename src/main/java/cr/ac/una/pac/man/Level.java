@@ -11,6 +11,9 @@ public class Level {
     boolean available;
     boolean complete;
     String score;
+    String scoreLife;
+    String play;
+    String time;
 
     public Level() {
     }

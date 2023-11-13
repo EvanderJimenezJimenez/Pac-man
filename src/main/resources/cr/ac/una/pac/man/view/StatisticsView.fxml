@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="583.0" prefWidth="692.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.StatisticsViewController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="376.0" layoutY="268.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <Label prefHeight="66.0" prefWidth="78.0" text="Estadisticas" textAlignment="CENTER" underline="true" />
+            <Separator prefWidth="200.0" />
+            <Label prefHeight="19.0" prefWidth="55.0" text="Generales" />
+            <HBox alignment="CENTER" prefHeight="71.0" prefWidth="685.0" spacing="5.0">
+               <children>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <VBox alignment="TOP_CENTER" prefHeight="71.0" prefWidth="95.0">
+                     <children>
+                        <Label prefHeight="37.0" prefWidth="84.0" text="Tiempo jugado:" />
+                        <Label layoutX="24.0" layoutY="45.0" prefHeight="37.0" prefWidth="84.0" text="00:10:00" />
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <VBox alignment="TOP_CENTER" layoutX="288.0" layoutY="10.0" prefHeight="71.0" prefWidth="145.0">
+                     <children>
+                        <Label prefHeight="36.0" prefWidth="131.0" text="Total de puntos ganados" />
+                        <Label layoutX="24.0" layoutY="45.0" prefHeight="37.0" prefWidth="35.0" text="1500" />
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <VBox alignment="TOP_CENTER" layoutX="353.0" layoutY="10.0" prefHeight="71.0" prefWidth="163.0">
+                     <children>
+                        <Label prefHeight="36.0" prefWidth="140.0" text="Cantidad de fantas comidos" />
+                        <Label layoutX="24.0" layoutY="45.0" prefHeight="36.0" prefWidth="21.0" text="10" />
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <VBox alignment="TOP_CENTER" layoutX="391.0" layoutY="10.0" prefHeight="71.0" prefWidth="132.0">
+                     <children>
+                        <Label prefHeight="36.0" prefWidth="122.0" text="Total de vidas perdidas" />
+                        <Label layoutX="24.0" layoutY="45.0" prefHeight="36.0" prefWidth="21.0" text="10" />
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <Label prefHeight="38.0" prefWidth="50.0" text="Por nivel" />
+            <TableView prefHeight="232.0" prefWidth="685.0" style="-fx-background-color: gray;">
+              <columns>
+                <TableColumn prefWidth="105.0" text="Nivel" />
+                <TableColumn prefWidth="104.0" text="Total de puntos" />
+                  <TableColumn prefWidth="169.0" text="Puntos sin perder una vida" />
+                  <TableColumn prefWidth="75.0" text="Cantidad Jugada" />
+                  <TableColumn prefWidth="75.0" text="Mejor Tiempo" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <Separator prefWidth="200.0" />
+            <Button disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="122.0" text="Ver top 10" />
+         </children>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

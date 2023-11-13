@@ -34,7 +34,6 @@ import static javafx.scene.input.KeyCode.LEFT;
 import static javafx.scene.input.KeyCode.RIGHT;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyCode.DOWN;
-import javafx.scene.layout.Background;
 import javafx.util.Duration;
 
 /**

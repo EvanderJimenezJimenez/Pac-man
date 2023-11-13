@@ -112,47 +112,38 @@ public class PlayerNameController extends Controller implements Initializable {
 
     }
 
-public void marcarCompletado(int index) {
-    try {
-        // Obtén el trofeo correspondiente
-        Trophie trofeo = trophiesList.get(index);
+    public void marcarCompletado(int index) {
+        try {
 
-        // Modifica el estado del trofeo
-        trofeo.setComplete(true);
+            Trophie trofeo = trophiesList.get(index);
 
-        // Actualiza el archivo de trofeos con la nueva información
-        updateTrophiesFile(index);
+            trofeo.setComplete(true);
 
-        // Actualiza la interfaz según sea necesario
-        // trophiesAvailable();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
+            updateTrophiesFile(index);
 
-
-
-private void updateTrophiesFile(int trofeoIndex) {
-    try {
-        // Guarda la lista actualizada en el archivo
-        String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt";
-        FileWriter writer = new FileWriter(filePath);
-
-        for (Trophie trofeo : trophiesList) {
-            String trofeoString = trofeo.getName() + "(//)" + trofeo.getScore() + "(//)" + trofeo.isComplete() + "***";
-            writer.write(trofeoString);
+            // trophiesAvailable();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        writer.close();
-    } catch (IOException e) {
-        e.printStackTrace();
     }
-}
 
+    private void updateTrophiesFile(int trofeoIndex) {
+        try {
+          
+            String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt";
+            FileWriter writer = new FileWriter(filePath);
 
+            for (Trophie trofeo : trophiesList) {
+                String trofeoString = trofeo.getName() + "(//)" + trofeo.getScore() + "(//)" + trofeo.isComplete() + "***";
+                writer.write(trofeoString);
+            }
 
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    
     public void trophiesAvailable() {
 
         for (int i = 0; i < 6; i++) {
@@ -166,7 +157,7 @@ private void updateTrophiesFile(int trofeoIndex) {
                     }
                     break;
                 case 1:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >=5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
                         vbox_2.setDisable(false);
                         vbox_2.setOpacity(100);
                         marcarCompletado(i);
@@ -183,25 +174,24 @@ private void updateTrophiesFile(int trofeoIndex) {
                     if (Integer.parseInt(trophiesList.get(i).getScore()) != 5) {
                         vbox_4.setDisable(false);
                         vbox_4.setOpacity(100);
-                         marcarCompletado(i);
+                        marcarCompletado(i);
                     }
                     break;
                 case 4:
                     if (Integer.parseInt(trophiesList.get(i).getScore()) >= 0) {
                         vbox_5.setDisable(false);
                         vbox_5.setOpacity(100);
-                         marcarCompletado(i);
-                        
+                        marcarCompletado(i);
+
                     }
                     break;
                 case 5:
                     if (Integer.parseInt(trophiesList.get(i).getScore()) != 10) {
                         vbox_6.setDisable(false);
                         vbox_6.setOpacity(100);
-                         marcarCompletado(i);
+                        marcarCompletado(i);
                     }
                     break;
-                    
 
             }
 
