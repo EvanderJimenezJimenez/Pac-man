@@ -32,12 +32,26 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox prefHeight="46.0" prefWidth="685.0" style="-fx-background-color: fffeeff;" stylesheets="@styles.css">
+            <HBox alignment="CENTER" prefHeight="46.0" prefWidth="685.0" style="-fx-background-color: fffeeff;" stylesheets="@styles.css">
                <children>
-                  <Label prefHeight="46.0" prefWidth="79.0" text="Puntaje: " />
-                  <Label fx:id="lbl_score" prefHeight="46.0" prefWidth="491.0" text="0" />
-                  <Label prefHeight="46.0" prefWidth="52.0" text="Nivel:" />
-                  <Label fx:id="lbl_level" prefHeight="46.0" prefWidth="74.0" text="1" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="46.0" prefWidth="52.0" text="Puntaje: " />
+                        <Label fx:id="lbl_score" prefHeight="46.0" prefWidth="123.0" text="0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="16.0" prefWidth="83.0" text="Tiempo: " />
+                        <Label fx:id="lblTime" prefHeight="16.0" prefWidth="81.0" text="00:00" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="46.0" prefWidth="33.0" text="Nivel:" />
+                        <Label fx:id="lbl_level" prefHeight="46.0" prefWidth="74.0" text="1" />
+                     </children>
+                  </HBox>
                </children>
             </HBox>
             <VBox prefHeight="249.0" prefWidth="685.0" spacing="10.0">

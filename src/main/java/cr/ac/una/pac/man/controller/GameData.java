@@ -14,6 +14,14 @@ import javafx.fxml.Initializable;
  */
 class GameData extends Controller implements Initializable {
 
+     String labelScore; 
+     int labelLevel;
+     int time;//Cambio Joshua
+     int horas;//Cambio Joshua
+     int minutos;//Cambio Joshua
+     int segundos;//Cambio Joshua
+    
+    
     public String getLabelScore() {
         return labelScore;
     }
@@ -29,8 +37,41 @@ class GameData extends Controller implements Initializable {
     public void setLabelLevel(int labelLevel) {
         this.labelLevel = labelLevel;
     }
-     String labelScore; 
-     int labelLevel; 
+    ////////////Cambio Joshua/////////////////
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getHoras() {
+        return horas;
+    }
+
+    public void setHoras(int horas) {
+        this.horas = horas;
+    }
+
+    public int getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(int minutos) {
+        this.minutos = minutos;
+    }
+
+    public int getSegundos() {
+        return segundos;
+    }
+
+    public void setSegundos(int segundos) {
+        this.segundos = segundos;
+    }
+    
+    
+    
 
     @Override
     public void initialize() {
@@ -40,4 +81,5 @@ class GameData extends Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         //Todo
     }
+    /////////////////////////////////////////////////////////////////////////
 }

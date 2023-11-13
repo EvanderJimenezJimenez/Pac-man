@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -174,6 +175,14 @@ public class GameViewController extends Controller implements Initializable {
     private boolean inkyMovingToRandomPoint = false;
     private Point inkyTargetPoint;
     private Timer inkyTimer;
+    @FXML
+    private Label NombrePlayerGameView;
+    @FXML
+    private Label lblTime;
+    private Timeline timeline;
+    private int segundos = 0;//Cambio Joshua
+    private int minutos = 0;//Cambio Joshua
+    private int horas = 0;//Cambio Joshua
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -186,6 +195,7 @@ public class GameViewController extends Controller implements Initializable {
         System.out.println("Nievl GV" + nivel);
         cargarMapa(nivel);
         lbl_level.setText(String.valueOf(nivel));
+         startTime(lblTime);//Cambio Joshua 
 
     }
 
@@ -294,6 +304,7 @@ public class GameViewController extends Controller implements Initializable {
         // pacManTimeline.play();
     }
 
+   
     @Override
     public void initialize() {
         //blinkyTimeline.play();
@@ -308,7 +319,43 @@ public class GameViewController extends Controller implements Initializable {
             }
         }, 0, 5000);
 
+       
+        
+        
+        
     }
+    ///////////////////////////Cambio Joshua////////////////////////////////////////////////
+     private void startTime(Label label) {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                segundos++;
+                
+                label.setText(String.format("%02d:%02d:%02d",horas,minutos, segundos));
+                if (segundos == 60){
+                    segundos = 0;
+                    minutos++;
+                    
+                    if (minutos == 60){
+                        minutos = 0;
+                        horas++;
+                    }
+                }
+                
+                
+            GameData gameData = new GameData();//instanceo la clase GameData  
+            gameData.setHoras(horas);
+            gameData.setMinutos(minutos);
+            gameData.setSegundos(segundos);
+            AppContext.getInstance().set("tiempo", gameData);
+  
+            }
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();        
+    }
+//////////////////////////////////////////////////////////////////////////////////
+    
+    
 
     private void cargarMapa(int nivel) {
         double imageSize = 15.0;
