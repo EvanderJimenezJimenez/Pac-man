@@ -134,38 +134,20 @@ public void marcarCompletado(int index) {
 
 private void updateTrophiesFile(int trofeoIndex) {
     try {
-        // Lee el contenido actual del archivo trophies.txt
-        List<String> lines = Files.readAllLines(Paths.get(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt"));
+        // Guarda la lista actualizada en el archivo
+        String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt";
+        FileWriter writer = new FileWriter(filePath);
 
-        // Verifica si el índice está dentro de los límites del archivo
-        if (trofeoIndex >= 0 && trofeoIndex < lines.size()) {
-            // Obtiene la línea correspondiente al trofeo
-            String trofeoLine = lines.get(trofeoIndex);
-
-            // Separa los campos del trofeo
-            String[] trofeoData = trofeoLine.split("\\(//\\)");
-
-            // Modifica el estado del trofeo en el archivo
-            System.out.println(trofeoData[2]);
-            trofeoData[2] = "true";
-            System.out.println(trofeoData[2]);
-
-            // Une los campos del trofeo con el formato correcto
-            String trofeoUpdatedLine = String.join("(//)", trofeoData);
-
-            // Actualiza solo la línea del trofeo en la lista
-            lines.set(trofeoIndex, trofeoUpdatedLine);
-
-            // Escribe las líneas actualizadas de vuelta al archivo trophies.txt
-            //Files.write(Paths.get(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt"), lines);
-        } else {
-            System.out.println("Índice de trofeo fuera de límites.");
+        for (Trophie trofeo : trophiesList) {
+            String trofeoString = trofeo.getName() + "(//)" + trofeo.getScore() + "(//)" + trofeo.isComplete() + "***";
+            writer.write(trofeoString);
         }
-    } catch (IOException ex) {
-        ex.printStackTrace();
+
+        writer.close();
+    } catch (IOException e) {
+        e.printStackTrace();
     }
 }
-
 
 
 
@@ -198,22 +180,25 @@ private void updateTrophiesFile(int trofeoIndex) {
                     }
                     break;
                 case 3:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) != 5) {
                         vbox_4.setDisable(false);
                         vbox_4.setOpacity(100);
+                         marcarCompletado(i);
                     }
                     break;
                 case 4:
                     if (Integer.parseInt(trophiesList.get(i).getScore()) >= 0) {
                         vbox_5.setDisable(false);
                         vbox_5.setOpacity(100);
+                         marcarCompletado(i);
                         
                     }
                     break;
                 case 5:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 10) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) != 10) {
                         vbox_6.setDisable(false);
                         vbox_6.setOpacity(100);
+                         marcarCompletado(i);
                     }
                     break;
                     

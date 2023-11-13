@@ -187,6 +187,15 @@ public class GameViewController extends Controller implements Initializable {
     private Button btn_encierro;
     @FXML
     private Button btn_velocidad;
+    @FXML
+    private Label NombrePlayerGameView;
+    @FXML
+    private Label lblTime;
+       private Timeline timeline;
+    private int segundos = 0;
+    private int minutos = 0;
+    private int horas = 0;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -212,8 +221,36 @@ public class GameViewController extends Controller implements Initializable {
             }
             System.out.println();  // Nueva línea después de cada fila
         }
+        startTime(lblTime);
     }
-
+     private void startTime(Label label) {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                segundos++;
+                
+                label.setText(String.format("%02d:%02d:%02d",horas,minutos, segundos));
+                if (segundos == 60){
+                    segundos = 0;
+                    minutos++;
+                    
+                    if (minutos == 60){
+                        minutos = 0;
+                        horas++;
+                    }
+                }
+                
+                
+            GameData gameData = new GameData();//instanceo la clase GameData  
+            gameData.setHoras(horas);
+            gameData.setMinutos(minutos);
+            gameData.setSegundos(segundos);
+            AppContext.getInstance().set("tiempo", gameData);
+  
+            }
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();        
+    }
     public void setnivelActual(int nivelActual) {
         this.nivel = nivelActual;
     }
@@ -265,6 +302,8 @@ public class GameViewController extends Controller implements Initializable {
                 //pinkyTimeline.play();
                 //clydeTimeline.play();
                 //inkyTimeline.play();
+                
+                
                 {
 
                 }
