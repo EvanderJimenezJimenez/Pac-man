@@ -8,8 +8,8 @@ W W S W S W S W S S W S W S W
 W S S S S S S W S W P S S S W
 W S W S W W S W S S S S W S W
 W W W W S W S W W W S W S W W
-W D W S S S S S W S S S S S W
-W S W S W S W W W W W S W S W
-W S W W W S W B C N W S W S W
-W S S S S S W N N N N S S D W
+W D W S S N N N W N N N S S W
+W S W S W N W W W W W N W S W
+W S W W W N W B C N W N W S W
+W S S S S N W N N N N N S D W
 W W W W W W W W W W W W W W W
