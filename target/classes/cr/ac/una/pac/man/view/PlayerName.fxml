@@ -1,20 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="275.0" prefWidth="374.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.PlayerNameController">
+<AnchorPane id="AnchorPane" prefHeight="275.0" prefWidth="374.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.PlayerNameController">
    <children>
-      <VBox alignment="CENTER" layoutX="21.0" layoutY="14.0" prefHeight="246.0" prefWidth="329.0" spacing="15.0">
+      <VBox alignment="TOP_CENTER" layoutX="10.5" layoutY="10.5" prefHeight="585.0" prefWidth="714.0" spacing="8.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="8.0">
          <children>
             <Label prefHeight="39.0" prefWidth="94.0" text="Nombre Jugador" />
             <TextField fx:id="txt_PlayerName" prefHeight="40.0" prefWidth="329.0" />
             <JFXButton onAction="#onAction_savePlayer" prefHeight="45.0" prefWidth="111.0" text="Guardar" />
+            <Separator prefWidth="200.0" />
+            <Label prefHeight="39.0" prefWidth="50.0" text="Trofeos" />
+            <Separator prefWidth="200.0" />
+            <HBox fx:id="hbox_0" prefHeight="262.0" prefWidth="698.0" spacing="10.0">
+               <children>
+                  <VBox fx:id="vbox_1" alignment="CENTER" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
+                     <children>
+                        <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
+                           <children>
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <Label prefHeight="40.0" prefWidth="44.0" text="Clasico" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vbox_2" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
+                     <children>
+                        <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
+                           <children>
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <Label prefHeight="40.0" prefWidth="44.0" text="Cazador" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vbox_3" alignment="CENTER" layoutX="128.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
+                     <children>
+                        <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
+                           <children>
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <Label prefHeight="40.0" prefWidth="44.0" text="Experto" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vbox_4" alignment="CENTER" layoutX="246.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
+                     <children>
+                        <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
+                           <children>
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <Label prefHeight="40.0" prefWidth="44.0" text="Encierro" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vbox_5" alignment="CENTER" layoutX="364.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
+                     <children>
+                        <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
+                           <children>
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <Label prefHeight="40.0" prefWidth="44.0" text="Flash" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vbox_6" alignment="CENTER" layoutX="482.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
+                     <children>
+                        <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
+                           <children>
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <Label prefHeight="41.0" prefWidth="81.0" text="Rey del Pacman" />
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <Button fx:id="btn_deleteData" mnemonicParsing="false" onAction="#onAction_deleteData" prefHeight="52.0" prefWidth="101.0" text="Eliminar Datos" />
          </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets top="8.0" />
+         </padding>
       </VBox>
    </children>
 </AnchorPane>

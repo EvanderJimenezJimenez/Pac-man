@@ -47,7 +47,7 @@ public class WelcomeView extends Controller implements Initializable {
 
     @FXML
     private void onAction_player(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("PlayerView");
+        FlowController.getInstance().goViewInWindow("PlayerName");
         getStage().close();
     }
 
