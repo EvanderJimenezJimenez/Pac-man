@@ -97,13 +97,13 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCountClyde = 0;
     private int frameCountInky = 0;
 
-    private int frameDelay = 1; // Controla la velocidad de movimiento, ajusta según tus necesidades
+    private int frameDelay = 2; // Controla la velocidad de movimiento, ajusta según tus necesidades
     private int frameDelayBlinky = 5;
     private int frameDelayPinky = 4;
     private int frameDelayClyde = 4;
     private int frameDelayInky = 5;
 
-    private int pacmanSpeed = 1; // Velocidad predeterminada
+    private int pacmanSpeed = 3; // Velocidad predeterminada
     private int blinkySpeed = 0;
 
     private int blinkyX;
@@ -141,7 +141,7 @@ public class GameViewController extends Controller implements Initializable {
 
     private Timeline inkyTimeline;
 
-    int[][] weightedGraph;
+    int[][] matrizAdyacentePesos;
 
     int[][] floydMatriz;
     @FXML
@@ -262,9 +262,9 @@ public class GameViewController extends Controller implements Initializable {
                 pacManTimeline.play();
 
                 blinkyTimeline.play();
-                pinkyTimeline.play();
-                clydeTimeline.play();
-                inkyTimeline.play();
+                //pinkyTimeline.play();
+                //clydeTimeline.play();
+                //inkyTimeline.play();
                 {
 
                 }
@@ -399,9 +399,9 @@ public class GameViewController extends Controller implements Initializable {
             }
         }
 
-        weightedGraph = algorithms.createWeightedGraph(map);
+        matrizAdyacentePesos = algorithms.matrizAdyacentePesos(map);
 
-        floydMatriz = algorithms.floydWarshall(weightedGraph);
+        floydMatriz = algorithms.floydWarshall(matrizAdyacentePesos);
 
     }
 
@@ -428,7 +428,7 @@ public class GameViewController extends Controller implements Initializable {
                     }
                 }
 
-                List<Integer> shortestPath = algorithms.shortestPath(startNode, targetNode, weightedGraph);
+                List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
 
                 if (shortestPath != null && shortestPath.size() > 1) {
                     int nextNode = shortestPath.get(1);
@@ -542,7 +542,7 @@ public class GameViewController extends Controller implements Initializable {
                     timeline.play();
                 }
             }
-            List<Integer> shortestPath = algorithms.shortestPath(startNode, targetNode, weightedGraph);
+            List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
 
             System.out.println("BB: " + shortestPath.size());
             if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc) {
@@ -604,7 +604,7 @@ public class GameViewController extends Controller implements Initializable {
                 }
             }
 
-            List<Integer> shortestPath = algorithms.shortestPath(startNode, targetNode, weightedGraph);
+            List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
 
             if (shortestPath.size() == 1 && !isPoweredUp && !pinkyEnc) {
                 handleCollision();
