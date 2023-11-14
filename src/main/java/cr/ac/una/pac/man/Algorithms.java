@@ -29,7 +29,7 @@ public class Algorithms {
         if (map != null) {
             for (int y = 0; y < map.length; y++) {
                 for (int x = 0; x < map[y].length; x++) {
-                    if (map[y][x] == 'S' || map[y][x] == 'D') {
+                    if (map[y][x] == 'S') {
                         isComplete = false;
 
                         break;

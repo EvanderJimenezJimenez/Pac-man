@@ -80,7 +80,7 @@ public class ChooseLevelController extends Controller implements Initializable {
 
                     String[] parts = levelString.split("\\(//\\)");
 
-                    if (parts.length >= 5) {
+                    if (parts.length >= 8) {
                         String name = parts[0];
                         String levelNumber = parts[1];
 
@@ -88,8 +88,14 @@ public class ChooseLevelController extends Controller implements Initializable {
                         boolean complete = state(parts[3]);
 
                         String score = parts[4];
+                        
+                        String scoreLife = parts[5];
+                        
+                        String play = parts[6];
+                        
+                        String time = parts[7];
 
-                        Level level = new Level(name, levelNumber, available, complete, score);
+                        Level level = new Level(name, levelNumber, available, complete, score,scoreLife,play,time);
                         levels.add(level);
                     }
                 }
@@ -209,15 +215,21 @@ public class ChooseLevelController extends Controller implements Initializable {
 
     @FXML
     private void onAction_play(ActionEvent event) {
+        
         int level = cbx_level.getSelectionModel().getSelectedIndex();
-
+System.out.println("Level: " + level);
         if (level == 0) {
             level = 1;
+        }else{
+            level++;
         }
 
         if (available()) {
+             System.out.println("Level: " + level);
             AppContext.getInstance().set("Level", level);
-            FlowController.getInstance().goLoadingView("GameView");
+            //FlowController.getInstance().goLoadingView("GameView");
+           
+            FlowController.getInstance().goViewInWindow("GameView");
             getStage().close();
         } else {
             new Mensaje().show(Alert.AlertType.ERROR, "No disponible", "Nivel aun sin desbloquear.");

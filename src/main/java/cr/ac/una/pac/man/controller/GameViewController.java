@@ -96,7 +96,7 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCountClyde = 0;
     private int frameCountInky = 0;
 
-    private int frameDelay = 2; // Controla la velocidad de movimiento, ajusta según tus necesidades
+    private int frameDelay = 0; // Controla la velocidad de movimiento, ajusta según tus necesidades
     private int frameDelayBlinky = 5;
     private int frameDelayPinky = 4;
     private int frameDelayClyde = 4;
@@ -190,11 +190,10 @@ public class GameViewController extends Controller implements Initializable {
     private Label NombrePlayerGameView;
     @FXML
     private Label lblTime;
-       private Timeline timeline;
+    private Timeline timeline;
     private int segundos = 0;
     private int minutos = 0;
     private int horas = 0;
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -222,34 +221,35 @@ public class GameViewController extends Controller implements Initializable {
         }
         startTime(lblTime);
     }
-     private void startTime(Label label) {
+
+    private void startTime(Label label) {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 segundos++;
-                
-                label.setText(String.format("%02d:%02d:%02d",horas,minutos, segundos));
-                if (segundos == 60){
+
+                label.setText(String.format("%02d:%02d:%02d", horas, minutos, segundos));
+                if (segundos == 60) {
                     segundos = 0;
                     minutos++;
-                    
-                    if (minutos == 60){
+
+                    if (minutos == 60) {
                         minutos = 0;
                         horas++;
                     }
                 }
-                
-                
-            GameData gameData = new GameData();//instanceo la clase GameData  
-            gameData.setHoras(horas);
-            gameData.setMinutos(minutos);
-            gameData.setSegundos(segundos);
-            AppContext.getInstance().set("tiempo", gameData);
-  
+
+                GameData gameData = new GameData();//instanceo la clase GameData  
+                gameData.setHoras(horas);
+                gameData.setMinutos(minutos);
+                gameData.setSegundos(segundos);
+                AppContext.getInstance().set("tiempo", gameData);
+
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();        
+        timeline.play();
     }
+
     public void setnivelActual(int nivelActual) {
         this.nivel = nivelActual;
     }
@@ -297,12 +297,10 @@ public class GameViewController extends Controller implements Initializable {
                 }
                 pacManTimeline.play();
 
-                blinkyTimeline.play();
+                // blinkyTimeline.play();
                 //pinkyTimeline.play();
                 //clydeTimeline.play();
                 //inkyTimeline.play();
-                
-                
                 {
 
                 }
@@ -696,11 +694,15 @@ public class GameViewController extends Controller implements Initializable {
                     pacmanX = t1.x;
                     pacmanY = t1.y;
                 }
+                
+                defineTunel();
 
                 ImageView cellImageView = (ImageView) algorithms.getNodeByRowColumnIndex(newPacmanY, newPacmanX, gridPaneMap);
                 gridPaneMap.getChildren().remove(cellImageView);
 
                 gridPaneMap.add(pacmanImageView, newPacmanX, newPacmanY);
+                
+                
 
             }
         }
@@ -708,10 +710,18 @@ public class GameViewController extends Controller implements Initializable {
     }
 
     private void movePacman() {
+         for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();  // Nueva línea después de cada fila
+        }
+        defineTunel();
         frameCount++;
 
         if (frameCount >= frameDelay) {
-            if (map[pacmanY][pacmanX] != 'B' && map[pacmanY][pacmanX] != 'C' && map[pacmanY][pacmanX] != 'T') {
+            if (map[pacmanY][pacmanX] != 'B' && map[pacmanY][pacmanX] != 'C' && map[pacmanY][pacmanX] != 'T' && map[pacmanY][pacmanX] != 'S'
+                    && map[pacmanY][pacmanX] != 'D') {
                 map[pacmanY][pacmanX] = ' '; // celda vacía
             }
 
@@ -721,6 +731,7 @@ public class GameViewController extends Controller implements Initializable {
             if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) { //rango del mapa
                 char nextCell = map[newPacmanY][newPacmanX];
                 if (nextCell != 'W') { // no es muro
+
                     //tunnel
                     tunnels();
                     if (nextCell == 'S') { //si es un punto
@@ -728,10 +739,7 @@ public class GameViewController extends Controller implements Initializable {
                         score += 10;
                         lbl_score.setText(String.valueOf(score));
                         if (algorithms.levelCompleted(map)) {
-                            FlowController.getInstance().goViewInWindow("LevelComplete");
-                            getStage().close();
-                            FlowController.getInstance().deleteView("GameView");
-
+                            completeLevel();
                         }
 
                         ImageView cellImageView = (ImageView) algorithms.getNodeByRowColumnIndex(newPacmanY, newPacmanX, gridPaneMap);
@@ -751,12 +759,8 @@ public class GameViewController extends Controller implements Initializable {
                         score += 10;
                         lbl_score.setText(String.valueOf(score));
                         if (algorithms.levelCompleted(map)) {
-                            FlowController.getInstance().goViewInWindow("LevelComplete");
-                            getStage().close();
-                            FlowController.getInstance().deleteView("GameView");
-
+                            completeLevel();
                         }
-
                         ImageView cellImageView = (ImageView) algorithms.getNodeByRowColumnIndex(newPacmanY, newPacmanX, gridPaneMap);
                         gridPaneMap.getChildren().remove(cellImageView);
 
@@ -766,6 +770,8 @@ public class GameViewController extends Controller implements Initializable {
                         emptyImageView.setFitHeight(15);
                         gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
 
+                    } else if(nextCell != 'T'){
+                       map[newPacmanY][newPacmanX] = 'P';
                     }
 
                     gridPaneMap.getChildren().remove(pacmanImageView);
@@ -775,40 +781,7 @@ public class GameViewController extends Controller implements Initializable {
                     pacmanImageView.setFitWidth(15);
                     gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
 
-                    if (checkGhostCollision(blinkyX, blinkyY)) {
-                        if (isPoweredUp) {
-                            shockBlinky = true;
-                            blinkyImageView.setImage(gameMap.getImage("ojos"));
-                        } else {
-
-                            handleCollision();
-                        }
-                    }
-                    if (checkGhostCollision(pinkyX, pinkyY)) {
-                        if (isPoweredUp) {
-                            shockPinky = true;
-                            pinkyImageView.setImage(gameMap.getImage("ojos"));
-                        } else {
-
-                            handleCollision();
-                        }
-                    }
-                    if (checkGhostCollision(inkyX, inkyY)) {
-                        if (isPoweredUp) {
-                            shockInky = true;
-                            inkyImageView.setImage(gameMap.getImage("ojos"));
-                        } else {
-                            handleCollision();
-                        }
-                    }
-                    if (checkGhostCollision(clydeX, clydeY)) {
-                        if (isPoweredUp) {
-                            shockClyde = true;
-                            clydeImageView.setImage(gameMap.getImage("ojos"));
-                        } else {
-                            handleCollision();
-                        }
-                    }
+                    houseGosht();
 
                 }
             }
@@ -822,11 +795,28 @@ public class GameViewController extends Controller implements Initializable {
             algorithms.kill(lifes, imgViewLife1, imgViewLife2, imgViewLife3, imgViewLife4, imgViewLife5, imgViewLife6);
             restartGhost();
             paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
-        }else{
+        } else {
             FlowController.getInstance().goViewInWindow("GameOverView");
-            
+
         }
 
+    }
+
+    public void defineTunel(){
+        map[tunnels.get(0).x][tunnels.get(0).y] = 'T';
+         map[tunnels.get(1).x][tunnels.get(1).y] = 'T';
+    }
+    
+    public void completeLevel() {
+        String time = lblTime.getText();
+        AppContext.getInstance().set("GameTime", time);
+        AppContext.getInstance().set("GameScore", score);
+        AppContext.getInstance().set("GameLife", lifes);
+        paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
+        FlowController.getInstance().goViewInWindow("LevelComplete");
+        getStage().close();
+        FlowController.getInstance().deleteView("GameView");
+        
     }
 
     private boolean checkClydeCollision() {
@@ -835,6 +825,43 @@ public class GameViewController extends Controller implements Initializable {
 
     private boolean checkInkyCollision() {
         return inkyX == pacmanX && inkyY == pacmanY;
+    }
+
+    public void houseGosht() {
+        if (checkGhostCollision(blinkyX, blinkyY)) {
+            if (isPoweredUp) {
+                shockBlinky = true;
+                blinkyImageView.setImage(gameMap.getImage("ojos"));
+            } else {
+
+                handleCollision();
+            }
+        }
+        if (checkGhostCollision(pinkyX, pinkyY)) {
+            if (isPoweredUp) {
+                shockPinky = true;
+                pinkyImageView.setImage(gameMap.getImage("ojos"));
+            } else {
+
+                handleCollision();
+            }
+        }
+        if (checkGhostCollision(inkyX, inkyY)) {
+            if (isPoweredUp) {
+                shockInky = true;
+                inkyImageView.setImage(gameMap.getImage("ojos"));
+            } else {
+                handleCollision();
+            }
+        }
+        if (checkGhostCollision(clydeX, clydeY)) {
+            if (isPoweredUp) {
+                shockClyde = true;
+                clydeImageView.setImage(gameMap.getImage("ojos"));
+            } else {
+                handleCollision();
+            }
+        }
     }
 
     public void restartGhost() {
@@ -888,7 +915,7 @@ public class GameViewController extends Controller implements Initializable {
     private void onAction_encierro(ActionEvent event) {
 
         if (!encierro) {
-           btn_encierro.setStyle("-fx-background-color: green;");
+            btn_encierro.setStyle("-fx-background-color: green;");
             Set<Integer> selectedIndices = new HashSet<>();
             Random random = new Random();
             int count = 0;
