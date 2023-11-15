@@ -2,6 +2,7 @@ package cr.ac.una.pac.man.controller;
 
 import cr.ac.una.pac.man.Algorithms;
 import cr.ac.una.pac.man.GameMap;
+import cr.ac.una.pac.man.Level;
 import cr.ac.una.pac.man.Pacman;
 import cr.ac.una.pac.man.util.AppContext;
 import cr.ac.una.pac.man.util.FlowController;
@@ -25,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -182,18 +184,14 @@ public class GameViewController extends Controller implements Initializable {
     boolean clydeEnc = false;
     boolean inkyEnc = false;
     boolean encierro = false;
-    @FXML
     private Button btn_encierro;
-    @FXML
-    private Button btn_velocidad;
-    @FXML
-    private Label NombrePlayerGameView;
-    @FXML
     private Label lblTime;
     private Timeline timeline;
     private int segundos = 0;
     private int minutos = 0;
     private int horas = 0;
+    @FXML
+    private ImageView imgTemaNivel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -209,7 +207,7 @@ public class GameViewController extends Controller implements Initializable {
         inicializarVidas();
         configurarManejoDeTeclado();
         iniciarAnimacionPacman();
-
+        imgTemaNivel.setImage(imageLevel(String.valueOf(nivel)));
         cargarMapa(nivel);
         lbl_level.setText(String.valueOf(nivel));
 
@@ -694,15 +692,13 @@ public class GameViewController extends Controller implements Initializable {
                     pacmanX = t1.x;
                     pacmanY = t1.y;
                 }
-                
-                defineTunel();
+
+//                defineTunel();
 
                 ImageView cellImageView = (ImageView) algorithms.getNodeByRowColumnIndex(newPacmanY, newPacmanX, gridPaneMap);
                 gridPaneMap.getChildren().remove(cellImageView);
 
                 gridPaneMap.add(pacmanImageView, newPacmanX, newPacmanY);
-                
-                
 
             }
         }
@@ -710,13 +706,13 @@ public class GameViewController extends Controller implements Initializable {
     }
 
     private void movePacman() {
-         for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 System.out.print(map[i][j] + " ");
             }
             System.out.println();  // Nueva línea después de cada fila
         }
-        defineTunel();
+//        defineTunel();
         frameCount++;
 
         if (frameCount >= frameDelay) {
@@ -770,8 +766,8 @@ public class GameViewController extends Controller implements Initializable {
                         emptyImageView.setFitHeight(15);
                         gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
 
-                    } else if(nextCell != 'T'){
-                       map[newPacmanY][newPacmanX] = 'P';
+                    } else if (nextCell != 'T') {
+                        map[newPacmanY][newPacmanX] = 'P';
                     }
 
                     gridPaneMap.getChildren().remove(pacmanImageView);
@@ -802,11 +798,11 @@ public class GameViewController extends Controller implements Initializable {
 
     }
 
-    public void defineTunel(){
-        map[tunnels.get(0).x][tunnels.get(0).y] = 'T';
-         map[tunnels.get(1).x][tunnels.get(1).y] = 'T';
-    }
-    
+//    public void defineTunel() {
+//        map[tunnels.get(0).x][tunnels.get(0).y] = 'T';
+//        map[tunnels.get(1).x][tunnels.get(1).y] = 'T';
+//    }
+
     public void completeLevel() {
         String time = lblTime.getText();
         AppContext.getInstance().set("GameTime", time);
@@ -816,7 +812,7 @@ public class GameViewController extends Controller implements Initializable {
         FlowController.getInstance().goViewInWindow("LevelComplete");
         getStage().close();
         FlowController.getInstance().deleteView("GameView");
-        
+
     }
 
     private boolean checkClydeCollision() {
@@ -911,7 +907,6 @@ public class GameViewController extends Controller implements Initializable {
         return pacmanX == ghostX && pacmanY == ghostY;
     }
 
-    @FXML
     private void onAction_encierro(ActionEvent event) {
 
         if (!encierro) {
@@ -947,7 +942,49 @@ public class GameViewController extends Controller implements Initializable {
         }
     }
 
-    @FXML
-    private void onAction_velocidad(ActionEvent event) {
+    public Image imageLevel(String levelNumber) {
+        URL imageURL = null;
+        switch (levelNumber) {
+            case "1":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/jokerr.gif");
+                break;
+            case "2":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/simpsons.gif");
+                break;
+            case "3":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/ironman.gif");
+                break;
+            case "4":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/spiderman.gif");
+                break;
+            case "5":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/batman.gif");
+                break;
+            case "6":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/superman.gif");
+                break;
+            case "7":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/deadPool.gif");
+                break;
+            case "8":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/onePiece.gif");
+                break;
+            case "9":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/naruto.gif");
+                break;
+            case "10":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/dragonBall.gif");
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        if (imageURL != null) {
+            return new Image(imageURL.toExternalForm());
+        } else {
+            System.out.println("F");
+            return null;
+        }
     }
+
 }

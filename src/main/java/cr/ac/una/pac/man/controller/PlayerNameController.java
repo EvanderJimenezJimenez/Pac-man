@@ -1,6 +1,7 @@
 package cr.ac.una.pac.man.controller;
 
 import cr.ac.una.pac.man.Trophie;
+import cr.ac.una.pac.man.util.FlowController;
 import cr.ac.una.pac.man.util.Mensaje;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,8 +24,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -53,6 +57,8 @@ public class PlayerNameController extends Controller implements Initializable {
     ObservableList<Trophie> trophiesList;
     @FXML
     private HBox hbox_0;
+    @FXML
+    private ImageView img_retroceder;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -253,6 +259,13 @@ public class PlayerNameController extends Controller implements Initializable {
 
     @FXML
     private void onAction_deleteData(ActionEvent event) {
+    }
+
+    @FXML
+    private void onMouseAtras(MouseEvent event) {
+        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
+        currentStage.close();
+        FlowController.getInstance().goMain();
     }
 
 }

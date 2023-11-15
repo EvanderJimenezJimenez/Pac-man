@@ -3,13 +3,12 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="700.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.WelcomeView">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="700.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.WelcomeView">
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
@@ -19,25 +18,81 @@
             <Insets top="5.0" />
          </padding>
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="42.0" prefWidth="100.0">
+            <VBox alignment="TOP_CENTER" prefHeight="236.0" prefWidth="675.0">
                <children>
-                  <Label id="Title" prefHeight="38.0" prefWidth="116.0" text="PAC-MAN" />
+                  <ImageView fitHeight="129.0" fitWidth="287.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/logoPacman.png" />
+                     </image>
+                  </ImageView>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="43.0" fitWidth="62.0" layoutX="618.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/smallPoint.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="31.0" fitWidth="34.0" layoutX="322.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/bigPoint.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="184.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/smallPoint.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="44.0" fitWidth="52.0" layoutX="69.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/pacmanRight.gif" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="539.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/Clyde.gif" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="43.0" fitWidth="54.0" layoutX="436.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/smallPoint.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="392.0" prefWidth="494.0" spacing="15.0">
                <children>
-                  <ImageView fitHeight="115.0" fitWidth="146.0" pickOnBounds="true" preserveRatio="true">
+                  <Button mnemonicParsing="false" onAction="#onAction_start" prefHeight="50.0" prefWidth="100.0" text="I N I C I A R" />
+                  <Button layoutX="207.0" layoutY="85.0" mnemonicParsing="false" onAction="#onAction_player" prefHeight="50.0" prefWidth="100.0" text="J U G A D O R" />
+                  <Button layoutX="207.0" layoutY="110.0" mnemonicParsing="false" onAction="#onAction_settings" prefHeight="50.0" prefWidth="126.0" text="CONFIGURACIÓN" />
+                  <Button layoutX="207.0" layoutY="135.0" mnemonicParsing="false" onAction="#onAction_exit" prefHeight="50.0" prefWidth="100.0" text="S A L I R" />
+               </children>
+            </VBox>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <ImageView fitHeight="43.0" fitWidth="62.0" layoutX="56.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/blueghost.gif" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="44.0" fitWidth="66.0" layoutX="338.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/Pinky.gif" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="72.0" fitWidth="51.0" layoutX="575.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/Inky.gif" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="72.0" fitWidth="59.0" layoutX="186.0" layoutY="-29.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../resources/ImagesForPacman/5IPe.gif" />
                      </image>
                   </ImageView>
-                  <Button mnemonicParsing="false" onAction="#onAction_start" prefHeight="50.0" prefWidth="100.0" text="Iniciar" />
-                  <Button layoutX="207.0" layoutY="85.0" mnemonicParsing="false" onAction="#onAction_player" prefHeight="50.0" prefWidth="100.0" text="Jugador" />
-                  <Button layoutX="298.0" layoutY="214.0" mnemonicParsing="false" onAction="#onAction_statistics" prefHeight="50.0" prefWidth="100.0" text="Estadisticas" />
-                  <Button layoutX="207.0" layoutY="110.0" mnemonicParsing="false" onAction="#onAction_settings" prefHeight="50.0" prefWidth="100.0" text="Configuracion" />
-                  <Button layoutX="207.0" layoutY="135.0" mnemonicParsing="false" onAction="#onAction_exit" prefHeight="50.0" prefWidth="100.0" text="Salir" />
                </children>
-            </VBox>
+            </AnchorPane>
          </children>
       </VBox>
    </children>

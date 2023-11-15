@@ -6,28 +6,32 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="275.0" prefWidth="374.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.PlayerNameController">
+<AnchorPane id="AnchorPane" prefHeight="275.0" prefWidth="374.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.PlayerNameController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="10.5" layoutY="10.5" prefHeight="585.0" prefWidth="714.0" spacing="8.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="8.0">
          <children>
-            <Label prefHeight="39.0" prefWidth="94.0" text="Nombre Jugador" />
-            <TextField fx:id="txt_PlayerName" prefHeight="40.0" prefWidth="329.0" />
-            <JFXButton onAction="#onAction_savePlayer" prefHeight="45.0" prefWidth="111.0" text="Guardar" />
+            <Label prefHeight="39.0" prefWidth="93.0" text="J U G A D O R" />
+            <TextField fx:id="txt_PlayerName" prefHeight="28.0" prefWidth="542.0" />
+            <JFXButton onAction="#onAction_savePlayer" prefHeight="28.0" prefWidth="111.0" text="Guardar" />
             <Separator prefWidth="200.0" />
-            <Label prefHeight="39.0" prefWidth="50.0" text="Trofeos" />
+            <Label prefHeight="39.0" prefWidth="94.0" text="T R O F E O S" />
             <Separator prefWidth="200.0" />
             <HBox fx:id="hbox_0" prefHeight="262.0" prefWidth="698.0" spacing="10.0">
                <children>
-                  <VBox fx:id="vbox_1" alignment="CENTER" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
+                  <VBox fx:id="vbox_1" alignment="CENTER" prefHeight="262.0" prefWidth="150.0" style="-fx-border-color: gray;">
                      <children>
                         <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
                            <children>
-                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/classic.png" />
+                                 </image></ImageView>
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -36,14 +40,17 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </VBox>
-                        <Label prefHeight="40.0" prefWidth="44.0" text="Clasico" />
+                        <Label prefHeight="40.0" prefWidth="82.0" text="CLÁSICO" />
                      </children>
                   </VBox>
                   <VBox fx:id="vbox_2" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
                      <children>
                         <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
                            <children>
-                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/hunter.png" />
+                                 </image></ImageView>
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -52,14 +59,17 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </VBox>
-                        <Label prefHeight="40.0" prefWidth="44.0" text="Cazador" />
+                        <Label prefHeight="40.0" prefWidth="73.0" text="CAZADOR" />
                      </children>
                   </VBox>
                   <VBox fx:id="vbox_3" alignment="CENTER" layoutX="128.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
                      <children>
                         <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
                            <children>
-                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/expert.png" />
+                                 </image></ImageView>
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -68,14 +78,17 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </VBox>
-                        <Label prefHeight="40.0" prefWidth="44.0" text="Experto" />
+                        <Label prefHeight="40.0" prefWidth="67.0" text="EXPERTO" />
                      </children>
                   </VBox>
                   <VBox fx:id="vbox_4" alignment="CENTER" layoutX="246.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
                      <children>
                         <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
                            <children>
-                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/lockdown.png" />
+                                 </image></ImageView>
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -84,14 +97,17 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </VBox>
-                        <Label prefHeight="40.0" prefWidth="44.0" text="Encierro" />
+                        <Label prefHeight="40.0" prefWidth="74.0" text="ENCIERRO" />
                      </children>
                   </VBox>
                   <VBox fx:id="vbox_5" alignment="CENTER" layoutX="364.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
                      <children>
                         <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
                            <children>
-                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/flash.png" />
+                                 </image></ImageView>
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -100,14 +116,17 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </VBox>
-                        <Label prefHeight="40.0" prefWidth="44.0" text="Flash" />
+                        <Label prefHeight="40.0" prefWidth="49.0" text="FLASH" />
                      </children>
                   </VBox>
                   <VBox fx:id="vbox_6" alignment="CENTER" layoutX="482.0" layoutY="10.0" prefHeight="212.0" prefWidth="89.0" style="-fx-border-color: gray;">
                      <children>
                         <VBox prefHeight="119.0" prefWidth="90.0" style="-fx-border-color: black;">
                            <children>
-                              <ImageView fitHeight="107.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fitHeight="118.0" fitWidth="74.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/mazzking.png" />
+                                 </image></ImageView>
                            </children>
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -116,7 +135,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </VBox>
-                        <Label prefHeight="41.0" prefWidth="81.0" text="Rey del Pacman" />
+                        <Label prefHeight="42.0" prefWidth="92.0" text="REY PACMAN" />
                      </children>
                   </VBox>
                </children>
@@ -125,7 +144,16 @@
                </VBox.margin>
             </HBox>
             <Separator prefWidth="200.0" />
-            <Button fx:id="btn_deleteData" mnemonicParsing="false" onAction="#onAction_deleteData" prefHeight="52.0" prefWidth="101.0" text="Eliminar Datos" />
+            <Button fx:id="btn_deleteData" mnemonicParsing="false" onAction="#onAction_deleteData" prefHeight="30.0" prefWidth="172.0" text="ELIMINAR INFORMACIÓN" />
+            <HBox prefHeight="42.0" prefWidth="680.0">
+               <children>
+                  <ImageView fx:id="img_retroceder" fitHeight="52.0" fitWidth="53.0" onMouseClicked="#onMouseAtras" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/atras.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
          </children>
          <opaqueInsets>
             <Insets />

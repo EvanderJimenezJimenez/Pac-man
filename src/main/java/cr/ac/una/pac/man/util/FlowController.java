@@ -74,7 +74,7 @@ public class FlowController {
 
     public void goMain() {
         try {
-            this.mainStage.setScene(new Scene(FXMLLoader.load(App.class.getResource("/cr/ac/una/cubeproject/view/MainCubePage.fxml"), this.idioma)));
+            this.mainStage.setScene(new Scene(FXMLLoader.load(App.class.getResource("/cr/ac/una/pac/man/view/WelcomeView.fxml"), this.idioma)));
             this.mainStage.show();
         } catch (IOException ex) {
         }

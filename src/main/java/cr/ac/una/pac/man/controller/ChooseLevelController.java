@@ -23,6 +23,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -56,6 +58,8 @@ public class ChooseLevelController extends Controller implements Initializable {
     int index = 0;
     @FXML
     private Button btn_play;
+    @FXML
+    private ImageView img_retroceder;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -246,6 +250,13 @@ System.out.println("Level: " + level);
 
         setDataLevel(lev);
 
+    }
+
+    @FXML
+    private void onMouseAtras(MouseEvent event) {
+        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
+        currentStage.close();
+        FlowController.getInstance().goMain();
     }
 
 }
