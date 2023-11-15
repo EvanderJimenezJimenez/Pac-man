@@ -11,17 +11,56 @@ public class Level {
     boolean available;
     boolean complete;
     String score;
+    String scoreLife;
+    String play;
+    String time;
 
     public Level() {
     }
 
-    public Level(String name, String levelNumber, boolean available, boolean complete, String score) {
+//    public Level(String name, String levelNumber, boolean available, boolean complete, String score) {
+//        this.name = name;
+//        this.levelNumber = levelNumber;
+//        this.available = available;
+//        this.complete = complete;
+//        this.score = score;
+//    }
+
+    public Level(String name, String levelNumber, boolean available, boolean complete, String score, String scoreLife, String play, String time) {
         this.name = name;
         this.levelNumber = levelNumber;
         this.available = available;
         this.complete = complete;
         this.score = score;
+        this.scoreLife = scoreLife;
+        this.play = play;
+        this.time = time;
     }
+
+    public String getScoreLife() {
+        return scoreLife;
+    }
+
+    public void setScoreLife(String scoreLife) {
+        this.scoreLife = scoreLife;
+    }
+
+    public String getPlay() {
+        return play;
+    }
+
+    public void setPlay(String play) {
+        this.play = play;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+    
 
     public String getName() {
         return name;

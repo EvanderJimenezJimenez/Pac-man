@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -15,6 +16,8 @@ import javafx.scene.layout.GridPane;
  * @author dario
  */
 public class Algorithms {
+   
+                            
 
     public Algorithms() {
     }
@@ -26,7 +29,7 @@ public class Algorithms {
         if (map != null) {
             for (int y = 0; y < map.length; y++) {
                 for (int x = 0; x < map[y].length; x++) {
-                    if (map[y][x] == 'S' || map[y][x] == 'D') {
+                    if (map[y][x] == 'S') {
                         isComplete = false;
 
                         break;
@@ -42,7 +45,7 @@ public class Algorithms {
     }
 
     //matriz adyacencia 
-    public int[][] createWeightedGraph(char[][] map) {
+    public int[][] matrizAdyacentePesos(char[][] map) {
         int mapSize = map.length;
         int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
 
@@ -61,16 +64,16 @@ public class Algorithms {
                         graph[(y - 1) * mapSize + x][y * mapSize + x] = 1;
                     }
                     if (y < mapSize - 1 && map[y + 1][x] != 'W') {
-                        graph[y * mapSize + x][(y + 1) * mapSize + x] = 1;
-                        graph[(y + 1) * mapSize + x][y * mapSize + x] = 1;
+                        graph[y * mapSize + x][(y + 1) * mapSize + x] = 2;
+                        graph[(y + 1) * mapSize + x][y * mapSize + x] = 2;
                     }
                     if (x > 0 && map[y][x - 1] != 'W') {
-                        graph[y * mapSize + x][y * mapSize + (x - 1)] = 1;
-                        graph[y * mapSize + (x - 1)][y * mapSize + x] = 1;
+                        graph[y * mapSize + x][y * mapSize + (x - 1)] = 3;
+                        graph[y * mapSize + (x - 1)][y * mapSize + x] = 3;
                     }
                     if (x < mapSize - 1 && map[y][x + 1] != 'W') {
-                        graph[y * mapSize + x][y * mapSize + (x + 1)] = 1;
-                        graph[y * mapSize + (x + 1)][y * mapSize + x] = 1;
+                        graph[y * mapSize + x][y * mapSize + (x + 1)] = 4;
+                        graph[y * mapSize + (x + 1)][y * mapSize + x] = 4;
                     }
                 }
             }
@@ -79,8 +82,8 @@ public class Algorithms {
         return graph;
     }
 
-    public List<Integer> shortestPath(int start, int target, int[][] weightedGraph) { //dijsktra
-        int numNodes = weightedGraph.length;
+    public List<Integer> dijisktraShortPath(int start, int target, int[][] matrizAdyacentePesos) { //dijsktra
+        int numNodes = matrizAdyacentePesos.length;
         int[] distance = new int[numNodes];
         Arrays.fill(distance, Integer.MAX_VALUE);
 
@@ -98,7 +101,7 @@ public class Algorithms {
             }
 
             for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-                int weight = weightedGraph[currentNode][neighbor];
+                int weight = matrizAdyacentePesos[currentNode][neighbor];
                 if (weight != Integer.MAX_VALUE) {
                     int altDistance = distance[currentNode] + weight;
                     if (altDistance < distance[neighbor]) {
@@ -119,8 +122,51 @@ public class Algorithms {
 
         return path;
     }
+    
+    
+        public List<Integer> dijisktraLongestPath(int start, int target, int[][] matrizAdyacentePesos) {
+        int numNodes = matrizAdyacentePesos.length;
+        int[] distance = new int[numNodes];
+        Arrays.fill(distance, Integer.MIN_VALUE);
 
-    private List<Integer> longestPath(int start, int target) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node])); // Usamos el opuesto para maximizar en lugar de minimizar
+        queue.add(start);
+        distance[start] = 0;
+
+        int[] previous = new int[numNodes];
+        Arrays.fill(previous, -1);
+
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            if (currentNode == target) {
+                break;
+            }
+
+            for (int neighbor = 0; neighbor < numNodes; neighbor++) {
+                int weight = matrizAdyacentePesos[currentNode][neighbor];
+                if (weight != 0) {
+                    int altDistance = distance[currentNode] + weight;
+                    if (altDistance > distance[neighbor]) {
+                        distance[neighbor] = altDistance;
+                        previous[neighbor] = currentNode;
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        List<Integer> longestPath = new ArrayList<>();
+        int current = target;
+        while (current != -1) {
+            longestPath.add(0, current);
+            current = previous[current];
+        }
+
+        return longestPath;
+    }
+
+
+    public List<Integer> longestPath(int start, int target, int[][] matrizFloyd) {
 
         List<Integer> longestPath = new ArrayList<>();
 
@@ -196,4 +242,35 @@ public class Algorithms {
         return randomPoint;
     }
 
+    //
+        public void kill(int lifes ,ImageView imgViewLife1,ImageView imgViewLife2,
+                ImageView imgViewLife3,ImageView imgViewLife4,ImageView imgViewLife5,ImageView imgViewLife6  ) {
+
+        switch (lifes) {
+
+            case 0:
+                imgViewLife1.setImage(null);
+                break;
+            case 1:
+                imgViewLife2.setImage(null);
+                break;
+            case 2:
+                imgViewLife3.setImage(null);
+                break;
+            case 3:
+                imgViewLife4.setImage(null);
+                break;
+            case 4:
+                imgViewLife5.setImage(null);
+                break;
+            case 5:
+                imgViewLife6.setImage(null);
+                break;
+
+            default:
+                throw new AssertionError();
+        }
+
+    }
+    
 }

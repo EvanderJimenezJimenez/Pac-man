@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
@@ -14,7 +15,11 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="300.0" layoutY="200.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
-            <Label prefHeight="54.0" prefWidth="56.0" text="PAC-MAN" />
+            <ImageView fitHeight="87.0" fitWidth="148.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/logoPacman.png" />
+               </image>
+            </ImageView>
             <HBox prefHeight="46.0" prefWidth="685.0" style="-fx-background-color: fffeeff;" stylesheets="@styles.css">
                <children>
                   <Label prefHeight="46.0" prefWidth="79.0" text="Puntaje: " />
@@ -37,7 +42,7 @@
                   </GridPane>
                </children>
             </VBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="78.0" prefWidth="685.0" spacing="10.0" style="-fx-border-color: white;">
+            <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="686.0" spacing="10.0" style="-fx-border-color: white;">
                <children>
                   <Label prefHeight="56.0" prefWidth="82.0" text="Vidas:" />
                   <ImageView fx:id="imgViewLife1" fitHeight="35.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
@@ -51,10 +56,11 @@
                   <Insets left="10.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <HBox alignment="CENTER" prefHeight="43.0" prefWidth="686.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="101.0" text="Reiniciar" />
-                  <Button layoutX="302.0" layoutY="28.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="101.0" text="Pausa" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="102.0" text="REINICIAR" />
+                  <ImageView fx:id="imgTemaNivel" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button layoutX="302.0" layoutY="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="102.0" text="PAUSA" />
                </children>
             </HBox>
          </children>

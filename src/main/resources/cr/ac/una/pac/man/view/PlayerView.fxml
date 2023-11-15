@@ -2,28 +2,42 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="436.0" prefWidth="615.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.PlayerViewController">
+<AnchorPane id="AnchorPane" prefHeight="436.0" prefWidth="615.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.PlayerViewController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="258.0" layoutY="98.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
             <HBox alignment="CENTER" prefHeight="43.0" prefWidth="590.0">
                <children>
-                  <Label prefHeight="42.0" prefWidth="52.0" text="Jugador: " />
-                  <Label prefHeight="17.0" prefWidth="57.0" text=".." />
+                  <Label prefHeight="42.0" prefWidth="142.0" text="J U G A D O R :" />
+                  <Label prefHeight="30.0" prefWidth="143.0" text=".." />
                </children>
             </HBox>
-            <VBox prefHeight="103.0" prefWidth="590.0" spacing="15.0" />
-            <VBox alignment="TOP_CENTER" prefHeight="194.0" prefWidth="590.0">
+            <ImageView fitHeight="103.0" fitWidth="115.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/jugadores.gif" />
+               </image>
+            </ImageView>
+            <VBox alignment="TOP_CENTER" prefHeight="362.0" prefWidth="675.0">
                <children>
-                  <Label prefHeight="25.0" prefWidth="66.0" text="Trofeos" />
+                  <Label prefHeight="30.0" prefWidth="116.0" text="T R O F E O S" />
                </children>
             </VBox>
-            <Button mnemonicParsing="false" onAction="#onActionDelete" prefHeight="46.0" prefWidth="101.0" text="Eliminar Datos" />
+            <Button mnemonicParsing="false" onAction="#onActionDelete" prefHeight="34.0" prefWidth="166.0" text="ELIMINAR INFORMACIÓN" />
+            <HBox prefHeight="42.0" prefWidth="680.0">
+               <children>
+                  <ImageView fx:id="img_retroceder" fitHeight="52.0" fitWidth="53.0" onMouseClicked="#onMouseAtras" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/atras.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>

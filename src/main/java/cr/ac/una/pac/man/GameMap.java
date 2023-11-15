@@ -19,6 +19,7 @@ public class GameMap {
     // Variables relacionadas con el mapa
     private char[][] map;
     private List<Point> smallPoints = new ArrayList<>();
+    
 
     //map
     private Image wallImage;
@@ -67,7 +68,7 @@ public class GameMap {
         clydeImage = getImage("clyde");
         inkyImage = getImage("inky");
         pinkyImage = getImage("pinky");
-        
+
         //life
         life1 = getImage("life");
         life2 = getImage("life");
@@ -116,6 +117,12 @@ public class GameMap {
                 break;
             case "pinky":
                 imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Pinky.gif");
+                break;
+            case "blue":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/blueghost.gif");
+                break;
+                case "ojos":
+                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/ojos.png");
                 break;
             default:
                 throw new AssertionError();
@@ -312,7 +319,5 @@ public class GameMap {
     public void setLife6(Image life6) {
         this.life6 = life6;
     }
-    
-    
 
 }

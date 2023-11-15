@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXComboBox;
 import cr.ac.una.pac.man.Level;
 import cr.ac.una.pac.man.util.AppContext;
 import cr.ac.una.pac.man.util.FlowController;
+import cr.ac.una.pac.man.util.Mensaje;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,9 +18,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -51,6 +56,10 @@ public class ChooseLevelController extends Controller implements Initializable {
     );
 
     int index = 0;
+    @FXML
+    private Button btn_play;
+    @FXML
+    private ImageView img_retroceder;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -60,7 +69,7 @@ public class ChooseLevelController extends Controller implements Initializable {
 
         loadLevelDataFromFile();
         setDataLevel(levelList.get(index));
-        // TODO
+        
     }
 
     private void loadLevelDataFromFile() {
@@ -75,7 +84,7 @@ public class ChooseLevelController extends Controller implements Initializable {
 
                     String[] parts = levelString.split("\\(//\\)");
 
-                    if (parts.length >= 5) {
+                    if (parts.length >= 8) {
                         String name = parts[0];
                         String levelNumber = parts[1];
 
@@ -83,8 +92,14 @@ public class ChooseLevelController extends Controller implements Initializable {
                         boolean complete = state(parts[3]);
 
                         String score = parts[4];
+                        
+                        String scoreLife = parts[5];
+                        
+                        String play = parts[6];
+                        
+                        String time = parts[7];
 
-                        Level level = new Level(name, levelNumber, available, complete, score);
+                        Level level = new Level(name, levelNumber, available, complete, score,scoreLife,play,time);
                         levels.add(level);
                     }
                 }
@@ -95,9 +110,9 @@ public class ChooseLevelController extends Controller implements Initializable {
 
         levelList = FXCollections.observableArrayList(levels);
 
-        System.out.println("Item: " + levelList.get(1).getName()
-                + levelList.get(1).getLevelNumber() + levelList.get(1).isAvailable()
-                + levelList.get(1).isComplete());
+        System.out.println("Item: " + levelList.get(0).getName()
+                + levelList.get(0).getLevelNumber() + levelList.get(0).isAvailable()
+                + levelList.get(0).isComplete());
     }
 
     public boolean state(String state) {
@@ -109,6 +124,12 @@ public class ChooseLevelController extends Controller implements Initializable {
         img_level.setImage(imageLevel(levelData.getLevelNumber()));
         System.out.println("Level: " + levelData.getLevelNumber());
         newSelectCbx(Integer.valueOf(levelData.getLevelNumber()));
+        
+        if(levelData.isAvailable()){
+            btn_play.setText("Jugar");
+        }else{
+            btn_play.setText("Bloqueado");
+        }
 
     }
 
@@ -168,6 +189,16 @@ public class ChooseLevelController extends Controller implements Initializable {
     public void initialize() {
     }
 
+    boolean available() {
+
+        if (levelList.get(index).isAvailable()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     @FXML
     private void onAction_back(ActionEvent event) {
         if (index > 0) {
@@ -185,19 +216,28 @@ public class ChooseLevelController extends Controller implements Initializable {
         }
 
     }
-    
-        @FXML
+
+    @FXML
     private void onAction_play(ActionEvent event) {
-        int level = cbx_level.getSelectionModel().getSelectedIndex() ;
         
-        if(level == 0){
+        int level = cbx_level.getSelectionModel().getSelectedIndex();
+System.out.println("Level: " + level);
+        if (level == 0) {
             level = 1;
+        }else{
+            level++;
         }
-        
-        AppContext.getInstance().set("Level", level);
-            System.out.println("CL: "+ cbx_level.getSelectionModel().getSelectedIndex());
-        FlowController.getInstance().goViewInWindow("GameView");
-        getStage().close();
+
+        if (available()) {
+             System.out.println("Level: " + level);
+            AppContext.getInstance().set("Level", level);
+            //FlowController.getInstance().goLoadingView("GameView");
+           
+            FlowController.getInstance().goViewInWindow("GameView");
+            getStage().close();
+        } else {
+            new Mensaje().show(Alert.AlertType.ERROR, "No disponible", "Nivel aun sin desbloquear.");
+        }
     }
 
     @FXML
@@ -210,6 +250,13 @@ public class ChooseLevelController extends Controller implements Initializable {
 
         setDataLevel(lev);
 
+    }
+
+    @FXML
+    private void onMouseAtras(MouseEvent event) {
+        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
+        currentStage.close();
+        FlowController.getInstance().goMain();
     }
 
 }
