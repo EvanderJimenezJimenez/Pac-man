@@ -167,7 +167,7 @@ public class PlayerNameController extends Controller implements Initializable {
                         vbox_2.setDisable(false);
                         vbox_2.setOpacity(100);
                         marcarCompletado(i);
-                    }
+                    } 
                     break;
                 case 2:
                     if (Integer.parseInt(trophiesList.get(i).getScore()) >= 3) {
@@ -248,7 +248,7 @@ public class PlayerNameController extends Controller implements Initializable {
     private void onAction_savePlayer(ActionEvent event) {
 
         if (txt_PlayerName.getText().length() > 0) {
-            addPalyer();
+            //addPalyer();
             getStage().close();
 
         } else {

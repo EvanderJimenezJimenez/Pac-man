@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="700.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.WelcomeView">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="700.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.WelcomeView">
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
@@ -65,6 +65,7 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#onAction_start" prefHeight="50.0" prefWidth="100.0" text="I N I C I A R" />
                   <Button layoutX="207.0" layoutY="85.0" mnemonicParsing="false" onAction="#onAction_player" prefHeight="50.0" prefWidth="100.0" text="J U G A D O R" />
+                  <Button layoutX="298.0" layoutY="80.0" mnemonicParsing="false" onAction="#onAction_Estadisticas" prefHeight="50.0" prefWidth="100.0" text="Estadisticas" />
                   <Button layoutX="207.0" layoutY="110.0" mnemonicParsing="false" onAction="#onAction_settings" prefHeight="50.0" prefWidth="126.0" text="CONFIGURACIÓN" />
                   <Button layoutX="207.0" layoutY="135.0" mnemonicParsing="false" onAction="#onAction_exit" prefHeight="50.0" prefWidth="100.0" text="S A L I R" />
                </children>

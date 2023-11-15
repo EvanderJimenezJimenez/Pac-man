@@ -63,8 +63,8 @@ public class WelcomeView extends Controller implements Initializable {
     }
 
     @FXML
-    private void onAction_statistics(ActionEvent event) {
-         FlowController.getInstance().goLoadingView("StatisticsView");
+    private void onAction_Estadisticas(ActionEvent event) {
+        FlowController.getInstance().goLoadingView("StatisticsView");
         getStage().close();
     }
 

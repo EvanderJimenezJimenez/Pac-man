@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="543.0" prefWidth="649.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.LevelCompleteController">
+<AnchorPane prefHeight="543.0" prefWidth="649.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.LevelCompleteController">
    <children>
       <VBox alignment="CENTER" layoutX="39.0" layoutY="64.0" prefHeight="479.0" prefWidth="628.0" spacing="15.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -21,7 +21,7 @@
             <Label prefHeight="51.0" prefWidth="183.0" text="¡Nivel finalizado con éxito!" />
             <VBox alignment="CENTER" prefHeight="82.0" prefWidth="665.0" spacing="10.0">
                <children>
-                  <Label text="N I V E L " />
+                  <Label fx:id="lbl_level" text="N I V E L " />
                   <Label fx:id="lbl_level" prefHeight="42.0" prefWidth="155.0" style="-fx-border-color: black;" textAlignment="CENTER" textFill="WHITE" />
                </children>
             </VBox>
@@ -29,7 +29,7 @@
                <children>
                   <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label text="P U N T A J E ">
+                        <Label fx:id="lbl_score" text="P U N T A J E ">
                            <VBox.margin>
                               <Insets right="15.0" />
                            </VBox.margin>
@@ -42,7 +42,7 @@
                   </VBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="106.0" prefWidth="0.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label text="T I E M P O ">
+                        <Label fx:id="lbl_time" text="T I E M P O ">
                            <VBox.margin>
                               <Insets left="15.0" />
                            </VBox.margin>

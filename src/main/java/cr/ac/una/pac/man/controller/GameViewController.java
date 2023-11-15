@@ -185,6 +185,7 @@ public class GameViewController extends Controller implements Initializable {
     boolean inkyEnc = false;
     boolean encierro = false;
     private Button btn_encierro;
+    @FXML
     private Label lblTime;
     private Timeline timeline;
     private int segundos = 0;
