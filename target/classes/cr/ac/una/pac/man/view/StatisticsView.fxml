@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="640.0" prefWidth="901.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.StatisticsViewController">
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="800.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.StatisticsViewController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="10.5" layoutY="16.5" prefHeight="575.0" prefWidth="692.0" spacing="10.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="14.0">
+      <VBox alignment="TOP_CENTER" layoutX="10.5" layoutY="10.5" prefHeight="630.0" prefWidth="685.0" spacing="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
          <children>
             <Label prefHeight="22.0" prefWidth="97.0" text="ESTADÍSTICAS" textAlignment="CENTER" underline="true" />
             <HBox prefHeight="83.0" prefWidth="686.0">
@@ -46,34 +46,35 @@
             </HBox>
             <Separator prefWidth="200.0" />
             <Label prefHeight="30.0" prefWidth="94.0" text="GENERALES" />
+            <Separator prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="71.0" prefWidth="685.0" spacing="5.0">
                <children>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox alignment="TOP_CENTER" prefHeight="71.0" prefWidth="158.0">
                      <children>
                         <Label prefHeight="36.0" prefWidth="109.0" text="Tiempo jugado" />
-                        <Label layoutX="24.0" layoutY="45.0" prefHeight="37.0" prefWidth="84.0" text="00:10:00" />
+                        <Label fx:id="lbl_generalTime" layoutX="24.0" layoutY="45.0" prefHeight="37.0" prefWidth="84.0" text="00:10:00" />
                      </children>
                   </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox alignment="TOP_CENTER" layoutX="288.0" layoutY="10.0" prefHeight="71.0" prefWidth="145.0">
                      <children>
                         <Label prefHeight="36.0" prefWidth="131.0" text="Puntos ganados" />
-                        <Label layoutX="24.0" layoutY="45.0" prefHeight="37.0" prefWidth="35.0" text="1500" />
+                        <Label fx:id="lbl_generalScore" layoutX="24.0" layoutY="45.0" prefHeight="37.0" prefWidth="35.0" text="1500" />
                      </children>
                   </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox alignment="TOP_CENTER" layoutX="353.0" layoutY="10.0" prefHeight="71.0" prefWidth="163.0">
                      <children>
                         <Label prefHeight="36.0" prefWidth="140.0" text="Fantasmas comidos" />
-                        <Label layoutX="24.0" layoutY="45.0" prefHeight="36.0" prefWidth="21.0" text="10" />
+                        <Label fx:id="lbl_generalGhost" layoutX="24.0" layoutY="45.0" prefHeight="30.0" prefWidth="58.0" text="10" />
                      </children>
                   </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
                   <VBox alignment="TOP_CENTER" layoutX="391.0" layoutY="10.0" prefHeight="71.0" prefWidth="132.0">
                      <children>
                         <Label prefHeight="36.0" prefWidth="122.0" text="Vidas perdidas" />
-                        <Label layoutX="24.0" layoutY="45.0" prefHeight="36.0" prefWidth="21.0" text="10" />
+                        <Label fx:id="lbl_generalLifes" layoutX="24.0" layoutY="45.0" prefHeight="36.0" prefWidth="21.0" text="10" />
                      </children>
                   </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
@@ -81,29 +82,39 @@
             </HBox>
             <Separator prefWidth="200.0" />
             <Label prefHeight="15.0" prefWidth="82.0" text="POR NIVEL" />
-            <TableView prefHeight="232.0" prefWidth="685.0" style="-fx-background-color: gray;">
+            <TableView fx:id="tbv_levels" prefHeight="269.0" prefWidth="749.0" style="-fx-background-color: gray;" tableMenuButtonVisible="true">
               <columns>
-                <TableColumn prefWidth="92.80002021789551" text="Nivel" />
-                <TableColumn prefWidth="121.60002899169922" text="Total de puntos" />
-                  <TableColumn prefWidth="209.5999755859375" text="Puntos sin perder una vida" />
-                  <TableColumn prefWidth="125.60006713867188" text="Cantidad Jugada" />
-                  <TableColumn prefWidth="104.7999267578125" text="Mejor Tiempo" />
+                <TableColumn fx:id="columnLevel" prefWidth="83.0" text="Nivel" />
+                <TableColumn fx:id="columnScore" prefWidth="188.0" text="Total de puntos" />
+                  <TableColumn fx:id="columnScoresp" prefWidth="209.5999755859375" text="Puntos sin perder una vida" />
+                  <TableColumn fx:id="columnPLays" prefWidth="125.60006713867188" text="Cantidad Jugada" />
+                  <TableColumn fx:id="columnTime" prefWidth="104.7999267578125" text="Mejor Tiempo" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
             <Separator prefWidth="200.0" />
-            <Button disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="122.0" text="Ver top 10" />
+            <HBox prefHeight="59.0" prefWidth="679.0" spacing="5.0">
+               <children>
+                  <HBox prefHeight="78.0" prefWidth="263.0">
+                     <children>
+                        <ImageView fx:id="img_retroceder" fitHeight="52.0" fitWidth="53.0" onMouseClicked="#onMouseAtras" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/atras.png" />
+                           </image>
+                        </ImageView>
+                     </children></HBox>
+                  <Button fx:id="btn_top10" disable="true" mnemonicParsing="false" onAction="#onAction_top" prefHeight="54.0" prefWidth="122.0" text="Ver top 10" />
+               </children>
+               <padding>
+                  <Insets bottom="2.0" top="2.0" />
+               </padding>
+            </HBox>
          </children>
          <padding>
             <Insets top="5.0" />
          </padding>
       </VBox>
-      <ImageView fx:id="img_retroceder" fitHeight="52.0" fitWidth="53.0" layoutX="98.0" layoutY="555.0" onMouseClicked="#onMouseAtras" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../resources/atras.png" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

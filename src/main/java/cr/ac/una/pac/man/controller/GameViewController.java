@@ -214,7 +214,7 @@ public class GameViewController extends Controller implements Initializable {
 
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                System.out.print(map[i][j] + " ");
+                //System.out.print(map[i][j] + " ");
             }
             System.out.println();  // Nueva línea después de cada fila
         }
