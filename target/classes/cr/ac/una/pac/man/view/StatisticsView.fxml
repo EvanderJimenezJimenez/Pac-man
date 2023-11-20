@@ -60,7 +60,7 @@
                   <VBox alignment="TOP_CENTER" layoutX="288.0" layoutY="10.0" prefHeight="71.0" prefWidth="145.0">
                      <children>
                         <Label prefHeight="36.0" prefWidth="131.0" text="Puntos ganados" />
-                        <Label fx:id="lbl_generalScore" layoutX="24.0" layoutY="45.0" prefHeight="37.0" prefWidth="35.0" text="1500" />
+                        <Label fx:id="lbl_generalScore" layoutX="24.0" layoutY="45.0" prefHeight="22.0" prefWidth="63.0" text="1500" />
                      </children>
                   </VBox>
                   <Separator orientation="VERTICAL" prefHeight="200.0" />

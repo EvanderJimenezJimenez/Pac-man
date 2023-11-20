@@ -16,14 +16,11 @@ import javafx.scene.layout.GridPane;
  * @author dario
  */
 public class Algorithms {
-   
-                            
 
     public Algorithms() {
     }
-    
-    
-        public boolean levelCompleted(char map[][]) {
+
+    public boolean levelCompleted(char map[][]) {
         boolean isComplete = true;
 
         if (map != null) {
@@ -122,48 +119,52 @@ public class Algorithms {
 
         return path;
     }
-    
-    
-        public List<Integer> dijisktraLongestPath(int start, int target, int[][] matrizAdyacentePesos) {
-        int numNodes = matrizAdyacentePesos.length;
-        int[] distance = new int[numNodes];
-        Arrays.fill(distance, Integer.MIN_VALUE);
 
-        PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node])); // Usamos el opuesto para maximizar en lugar de minimizar
-        queue.add(start);
-        distance[start] = 0;
 
-        int[] previous = new int[numNodes];
-        Arrays.fill(previous, -1);
 
-        while (!queue.isEmpty()) {
-            int currentNode = queue.poll();
-            if (currentNode == target) {
-                break;
-            }
+public List<Integer> longestPathDijkstra(int start, int target, int[][] matrizAdyacentePesos) {
+    int numNodes = matrizAdyacentePesos.length;
+    int[] distance = new int[numNodes];
+    Arrays.fill(distance, Integer.MIN_VALUE);
 
-            for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-                int weight = matrizAdyacentePesos[currentNode][neighbor];
-                if (weight != 0) {
-                    int altDistance = distance[currentNode] + weight;
-                    if (altDistance > distance[neighbor]) {
-                        distance[neighbor] = altDistance;
-                        previous[neighbor] = currentNode;
-                        queue.add(neighbor);
-                    }
+    PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node]));
+    queue.add(start);
+    distance[start] = 0;
+
+    int[] previous = new int[numNodes];
+    Arrays.fill(previous, -1);
+
+    while (!queue.isEmpty()) {
+        int currentNode = queue.poll();
+        if (currentNode == target) {
+            break;
+        }
+
+        for (int neighbor = 0; neighbor < numNodes; neighbor++) {
+            int weight = matrizAdyacentePesos[currentNode][neighbor];
+            if (weight != Integer.MAX_VALUE) {
+                int altDistance = distance[currentNode] + weight;
+                if (altDistance > distance[neighbor]) {
+                    distance[neighbor] = altDistance;
+                    previous[neighbor] = currentNode;
+                    queue.add(neighbor);
                 }
             }
         }
-
-        List<Integer> longestPath = new ArrayList<>();
-        int current = target;
-        while (current != -1) {
-            longestPath.add(0, current);
-            current = previous[current];
-        }
-
-        return longestPath;
     }
+
+    List<Integer> path = new ArrayList<>();
+    int current = target;
+    while (current != -1) {
+        path.add(0, current);
+        current = previous[current];
+    }
+
+    System.out.println("Longitud del camino: " + path.size());
+    System.out.println("Camino: " + path);
+
+    return path;
+}
 
 
     public List<Integer> longestPath(int start, int target, int[][] matrizFloyd) {
@@ -198,7 +199,7 @@ public class Algorithms {
     }
 
     // Función para obtener una ImageView en una fila y columna específicas
-    public Node getNodeByRowColumnIndex(final int row, final int column,GridPane gridPaneMap) {
+    public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPaneMap) {
         Node result = null;
         ObservableList<Node> children = gridPaneMap.getChildren();
 
@@ -211,15 +212,15 @@ public class Algorithms {
 
         return result;
     }
-    
-        public Point selectRandomPoint(List<Point> smallPoints) {
+
+    public Point selectRandomPoint(List<Point> smallPoints) {
 
         int randomIndex = (int) (Math.random() * smallPoints.size());
 
         return smallPoints.get(randomIndex);
     }
 
-    public Point selectRandomPointInky(List<Point> smallPoints,int pacmanX,int pacmanY,int blinkyX,int blinkyY,int clydeX,int clydeY,int pinkyX,int pinkyY) {
+    public Point selectRandomPointInky(List<Point> smallPoints, int pacmanX, int pacmanY, int blinkyX, int blinkyY, int clydeX, int clydeY, int pinkyX, int pinkyY) {
         int randomChoice = (int) (Math.random() * 5);
         Point randomPoint;
 
@@ -243,8 +244,8 @@ public class Algorithms {
     }
 
     //
-        public void kill(int lifes ,ImageView imgViewLife1,ImageView imgViewLife2,
-                ImageView imgViewLife3,ImageView imgViewLife4,ImageView imgViewLife5,ImageView imgViewLife6  ) {
+    public void kill(int lifes, ImageView imgViewLife1, ImageView imgViewLife2,
+            ImageView imgViewLife3, ImageView imgViewLife4, ImageView imgViewLife5, ImageView imgViewLife6) {
 
         switch (lifes) {
 
@@ -272,5 +273,5 @@ public class Algorithms {
         }
 
     }
-    
+
 }

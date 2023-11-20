@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public class LevelCompleteController extends Controller implements Initializable
 
     int lifes = (int) AppContext.getInstance().get("GameLife");
 
+    int scporeDead = (int) AppContext.getInstance().get("GameScoreDead");
+
     String time = (String) AppContext.getInstance().get("GameTime");
     int nivel = (int) AppContext.getInstance().get("Level");
 
@@ -62,7 +65,7 @@ public class LevelCompleteController extends Controller implements Initializable
         getStatistics();
         levelUpdate();
         updateStatistics();
-       
+
     }
 
     @Override
@@ -73,18 +76,17 @@ public class LevelCompleteController extends Controller implements Initializable
         statistics = statisticsList.get(0);
 
         int vidas = Integer.parseInt(statistics.getLifes());
+        int ghostD = Integer.parseInt(statistics.getGhost());
         System.out.println("Vidas: " + statistics.getLifes());
-         System.out.println("Vidas int: " + vidas);
-        
+        System.out.println("Vidas int: " + vidas);
+
         int scoreG = Integer.parseInt(statistics.getScore()) + score;
         statistics.setScore(String.valueOf(scoreG));
 
         int deadG = Integer.parseInt(statistics.getGhost());
         statistics.setLifes(String.valueOf(deadG + deadGhost));
 
-      
-
-         String tiempoExistenteStr = statistics.getTime();
+        String tiempoExistenteStr = statistics.getTime();
         LocalTime tiempoExistente = LocalTime.parse(tiempoExistenteStr, DateTimeFormatter.ofPattern("HH:mm:ss"));
         LocalTime tiempoNuevo = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm:ss"));
         LocalTime tiempoSumado = tiempoExistente.plusHours(tiempoNuevo.getHour())
@@ -92,16 +94,16 @@ public class LevelCompleteController extends Controller implements Initializable
                 .plusSeconds(tiempoNuevo.getSecond());
 
         statistics.setTime(tiempoSumado.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-        
-       
 
         // Suma las vidas actuales con las nuevas
-        int totalLifes = vidas + (6-lifes);
-         System.out.println("Vidas existentes: " + vidas);
-         System.out.println("Vidas totales: " + totalLifes);
+        int totalLifes = vidas + (6 - lifes);
+        System.out.println("Vidas existentes: " + vidas);
+        System.out.println("Vidas totales: " + totalLifes);
 
         // Actualiza las estadísticas con el nuevo total de vidas
         statistics.setLifes(String.valueOf(totalLifes));
+
+        statistics.setGhost(String.valueOf(deadG + deadGhost));
 
         System.out.println("Lifes: " + totalLifes);
 
@@ -222,6 +224,25 @@ public class LevelCompleteController extends Controller implements Initializable
             levelList.get(nivel).setAvailable(true);
         }
 
+        //tbhh
+        String tiempoExistenteStr = lev.getTime();
+        LocalTime tiempoExistente = "00:00:00".equals(tiempoExistenteStr) ? LocalTime.MIN : LocalTime.parse(tiempoExistenteStr, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LocalTime tiempoNuevo = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        if (tiempoExistente.equals(LocalTime.MIN) || tiempoNuevo.isBefore(tiempoExistente)) {
+
+            lev.setTime(tiempoNuevo.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        } else {
+
+            lev.setTime(tiempoExistente.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        }
+
+        int scoreD = Integer.parseInt(lev.getScoreLife());
+
+        if (scoreD < scporeDead) {
+            lev.setScoreLife(String.valueOf(scporeDead));
+        }
+
         updateLevelFile();
 
     }
@@ -232,11 +253,9 @@ public class LevelCompleteController extends Controller implements Initializable
             String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\statistics.txt";
             FileWriter writer = new FileWriter(filePath);
 
-           
-                String statisticsString = statis.getScore() + "(//)" + statis.getTime() + "(//)" + statis.getLifes() + "(//)"
-                        + statis.getGhost() + "***";
-                writer.write(statisticsString);
-            
+            String statisticsString = statis.getScore() + "(//)" + statis.getTime() + "(//)" + statis.getLifes() + "(//)"
+                    + statis.getGhost() + "***";
+            writer.write(statisticsString);
 
             writer.close();
         } catch (IOException e) {
@@ -264,4 +283,3 @@ public class LevelCompleteController extends Controller implements Initializable
     }
 
 }
-
