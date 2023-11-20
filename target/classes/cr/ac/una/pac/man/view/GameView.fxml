@@ -60,7 +60,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="43.0" prefWidth="686.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="102.0" text="REINICIAR" />
+                  <Button mnemonicParsing="false" onAction="#onAction_encierro" prefHeight="30.0" prefWidth="102.0" text="REINICIAR" />
                   <ImageView fx:id="imgTemaNivel" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                   <Button layoutX="302.0" layoutY="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="102.0" text="PAUSA" />
                </children>

@@ -193,6 +193,9 @@ public class GameViewController extends Controller implements Initializable {
     private int horas = 0;
     @FXML
     private ImageView imgTemaNivel;
+    
+    int lostLifes = 0;
+    int deadGhost = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -212,12 +215,7 @@ public class GameViewController extends Controller implements Initializable {
         cargarMapa(nivel);
         lbl_level.setText(String.valueOf(nivel));
 
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                //System.out.print(map[i][j] + " ");
-            }
-            System.out.println();  // Nueva línea después de cada fila
-        }
+       
         startTime(lblTime);
     }
 
@@ -296,10 +294,10 @@ public class GameViewController extends Controller implements Initializable {
                 }
                 pacManTimeline.play();
 
-                // blinkyTimeline.play();
-                //pinkyTimeline.play();
-                //clydeTimeline.play();
-                //inkyTimeline.play();
+                blinkyTimeline.play();
+                pinkyTimeline.play();
+                clydeTimeline.play();
+                inkyTimeline.play();
                 {
 
                 }
@@ -475,7 +473,7 @@ public class GameViewController extends Controller implements Initializable {
 
                     if (checkInkyCollision() && !isPoweredUp && !inkyEnc) {
                         //reinicio;
-                        handleCollision();
+                       handleCollision();
                     }
                     gridPaneMap.getChildren().remove(inkyImageView);
                     gridPaneMap.add(inkyImageView, inkyX, inkyY);
@@ -579,9 +577,9 @@ public class GameViewController extends Controller implements Initializable {
             }
             List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
 
-            System.out.println("BB: " + shortestPath.size());
+          
             if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc) {
-                handleCollision();
+                //handleCollision();
             }
             if (shortestPath != null && shortestPath.size() > 1 && lifes > 1) {
                 // Obtiene el siguiente nodo en el camino más corto
@@ -641,7 +639,7 @@ public class GameViewController extends Controller implements Initializable {
 
             List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
 
-            if (shortestPath.size() == 1 && !isPoweredUp && !pinkyEnc) {
+            if (shortestPath.size() == 1 && !isPoweredUp && !pinkyEnc && !shockPinky) {
                 handleCollision();
             }
             if (shortestPath != null && shortestPath.size() > 1) {
@@ -707,12 +705,7 @@ public class GameViewController extends Controller implements Initializable {
     }
 
     private void movePacman() {
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                System.out.print(map[i][j] + " ");
-            }
-            System.out.println();  // Nueva línea después de cada fila
-        }
+       
 //        defineTunel();
         frameCount++;
 
@@ -789,6 +782,8 @@ public class GameViewController extends Controller implements Initializable {
     private void handleCollision() {
         if (lifes > 0) {
             lifes--;
+            lostLifes++;
+            
             algorithms.kill(lifes, imgViewLife1, imgViewLife2, imgViewLife3, imgViewLife4, imgViewLife5, imgViewLife6);
             restartGhost();
             paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
@@ -809,6 +804,9 @@ public class GameViewController extends Controller implements Initializable {
         AppContext.getInstance().set("GameTime", time);
         AppContext.getInstance().set("GameScore", score);
         AppContext.getInstance().set("GameLife", lifes);
+         AppContext.getInstance().set("GameLostLifes", lostLifes);
+         AppContext.getInstance().set("GameDeadGhost", deadGhost);
+         System.out.println("Dead: "+ deadGhost);
         paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
         FlowController.getInstance().goViewInWindow("LevelComplete");
         getStage().close();
@@ -827,8 +825,10 @@ public class GameViewController extends Controller implements Initializable {
     public void houseGosht() {
         if (checkGhostCollision(blinkyX, blinkyY)) {
             if (isPoweredUp) {
+                deadGhost++;
                 shockBlinky = true;
                 blinkyImageView.setImage(gameMap.getImage("ojos"));
+                
             } else {
 
                 handleCollision();
@@ -836,6 +836,7 @@ public class GameViewController extends Controller implements Initializable {
         }
         if (checkGhostCollision(pinkyX, pinkyY)) {
             if (isPoweredUp) {
+                deadGhost++;
                 shockPinky = true;
                 pinkyImageView.setImage(gameMap.getImage("ojos"));
             } else {
@@ -845,14 +846,17 @@ public class GameViewController extends Controller implements Initializable {
         }
         if (checkGhostCollision(inkyX, inkyY)) {
             if (isPoweredUp) {
+                deadGhost++;
                 shockInky = true;
                 inkyImageView.setImage(gameMap.getImage("ojos"));
+                
             } else {
                 handleCollision();
             }
         }
         if (checkGhostCollision(clydeX, clydeY)) {
             if (isPoweredUp) {
+                deadGhost++;
                 shockClyde = true;
                 clydeImageView.setImage(gameMap.getImage("ojos"));
             } else {
@@ -908,39 +912,44 @@ public class GameViewController extends Controller implements Initializable {
         return pacmanX == ghostX && pacmanY == ghostY;
     }
 
+    @FXML
     private void onAction_encierro(ActionEvent event) {
 
-        if (!encierro) {
-            btn_encierro.setStyle("-fx-background-color: green;");
-            Set<Integer> selectedIndices = new HashSet<>();
-            Random random = new Random();
-            int count = 0;
-
-            while (count < 2) {
-                System.out.println("-w-");
-                int randomGhost = random.nextInt(4);
-                System.out.println(randomGhost);
-
-                if (selectedIndices.add(randomGhost)) {
-
-                    switch (randomGhost) {
-                        case 0:
-                            blinkyEnc = true;
-                            break;
-                        case 1:
-                            pinkyEnc = true;
-                            break;
-                        case 2:
-                            clydeEnc = true;
-                            break;
-                        case 3:
-                            inkyEnc = true;
-                            break;
-                    }
-                    count++;
-                }
-            }
-        }
+      
+                            completeLevel();
+                        
+        
+//        if (!encierro) {
+//            btn_encierro.setStyle("-fx-background-color: green;");
+//            Set<Integer> selectedIndices = new HashSet<>();
+//            Random random = new Random();
+//            int count = 0;
+//
+//            while (count < 2) {
+//                System.out.println("-w-");
+//                int randomGhost = random.nextInt(4);
+//                System.out.println(randomGhost);
+//
+//                if (selectedIndices.add(randomGhost)) {
+//
+//                    switch (randomGhost) {
+//                        case 0:
+//                            blinkyEnc = true;
+//                            break;
+//                        case 1:
+//                            pinkyEnc = true;
+//                            break;
+//                        case 2:
+//                            clydeEnc = true;
+//                            break;
+//                        case 3:
+//                            inkyEnc = true;
+//                            break;
+//                    }
+//                    count++;
+//                }
+//            }
+//        }
     }
 
     public Image imageLevel(String levelNumber) {

@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,8 +40,9 @@ public class LevelCompleteController extends Controller implements Initializable
     ObservableList<Level> levelList;
     ObservableList<Statistics> statisticsList;
     int score = (int) AppContext.getInstance().get("GameScore");
-    ;
-     int lifes = (int) AppContext.getInstance().get("GameLife");
+    int deadGhost = (int) AppContext.getInstance().get("GameDeadGhost");
+
+    int lifes = (int) AppContext.getInstance().get("GameLife");
 
     String time = (String) AppContext.getInstance().get("GameTime");
     int nivel = (int) AppContext.getInstance().get("Level");
@@ -59,17 +62,7 @@ public class LevelCompleteController extends Controller implements Initializable
         getStatistics();
         levelUpdate();
         updateStatistics();
-
-//            System.out.println("Nombre: " +  levelList.get(nivel-1).getName());
-//            System.out.println("Número de nivel: " +  levelList.get(nivel-1).getLevelNumber());
-//            System.out.println("Disponible: " +  levelList.get(nivel-1).isAvailable());
-//            System.out.println("Completo: " +  levelList.get(nivel-1).isComplete());
-//            System.out.println("Puntuación: " +  levelList.get(nivel-1).getScore());
-//            System.out.println("Puntuación de vida: " +  levelList.get(nivel-1).getScoreLife());
-//            System.out.println("¿Jugar?: " +  levelList.get(nivel-1).getPlay());
-//            System.out.println("Tiempo: " +  levelList.get(nivel-1).getTime());
-//            System.out.println("--------------");
-//        
+       
     }
 
     @Override
@@ -77,19 +70,42 @@ public class LevelCompleteController extends Controller implements Initializable
     }
 
     public void updateStatistics() {
-
         statistics = statisticsList.get(0);
-        statistics.setScore(String.valueOf(score));
-        statistics.setTime(time);
-        statistics.setLifes(String.valueOf(lifes));
 
-        System.out.println("Score: " + statistics.getScore());
-        System.out.println("Time: " + statistics.getTime());
-        System.out.println("Lifes: " + statistics.getLifes());
-        System.out.println("Ghost: " + statistics.getGhost());
+        int vidas = Integer.parseInt(statistics.getLifes());
+        System.out.println("Vidas: " + statistics.getLifes());
+         System.out.println("Vidas int: " + vidas);
+        
+        int scoreG = Integer.parseInt(statistics.getScore()) + score;
+        statistics.setScore(String.valueOf(scoreG));
 
-     updateStisticsFile();
+        int deadG = Integer.parseInt(statistics.getGhost());
+        statistics.setLifes(String.valueOf(deadG + deadGhost));
 
+      
+
+         String tiempoExistenteStr = statistics.getTime();
+        LocalTime tiempoExistente = LocalTime.parse(tiempoExistenteStr, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LocalTime tiempoNuevo = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LocalTime tiempoSumado = tiempoExistente.plusHours(tiempoNuevo.getHour())
+                .plusMinutes(tiempoNuevo.getMinute())
+                .plusSeconds(tiempoNuevo.getSecond());
+
+        statistics.setTime(tiempoSumado.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        
+       
+
+        // Suma las vidas actuales con las nuevas
+        int totalLifes = vidas + (6-lifes);
+         System.out.println("Vidas existentes: " + vidas);
+         System.out.println("Vidas totales: " + totalLifes);
+
+        // Actualiza las estadísticas con el nuevo total de vidas
+        statistics.setLifes(String.valueOf(totalLifes));
+
+        System.out.println("Lifes: " + totalLifes);
+
+        updateStisticsFile(statistics);
     }
 
     public void getStatistics() {
@@ -210,17 +226,17 @@ public class LevelCompleteController extends Controller implements Initializable
 
     }
 
-    private void updateStisticsFile() {
+    private void updateStisticsFile(Statistics statis) {
         try {
 
             String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\statistics.txt";
             FileWriter writer = new FileWriter(filePath);
 
-            for (Statistics statistics : statisticsList) {
-                String statisticsString = statistics.getScore() + "(//)" + statistics.getTime() + "(//)" + statistics.getLifes() + "(//)"
-                        + statistics.getGhost() + "***";
+           
+                String statisticsString = statis.getScore() + "(//)" + statis.getTime() + "(//)" + statis.getLifes() + "(//)"
+                        + statis.getGhost() + "***";
                 writer.write(statisticsString);
-            }
+            
 
             writer.close();
         } catch (IOException e) {
@@ -248,3 +264,4 @@ public class LevelCompleteController extends Controller implements Initializable
     }
 
 }
+
