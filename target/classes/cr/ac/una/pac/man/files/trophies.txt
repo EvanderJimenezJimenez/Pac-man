@@ -1,1 +1,1 @@
-clasico(//)0(//)false***cazador(//)0(//)false***experto(//)0(//)false***encierro(//)0(//)false***flash(//)0(//)false***rey(//)0(//)false***
+clasico(//)0(//)true***cazador(//)0(//)false***experto(//)0(//)false***encierro(//)0(//)true***flash(//)0(//)true***rey(//)0(//)true***

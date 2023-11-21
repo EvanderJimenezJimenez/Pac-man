@@ -2,17 +2,29 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.GameOverViewController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.GameOverViewController">
    <children>
-      <VBox alignment="CENTER" layoutX="230.0" layoutY="108.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-         <children>
-            <Label prefHeight="51.0" prefWidth="61.0" text="Game Over" />
-            <Button mnemonicParsing="false" prefHeight="57.0" prefWidth="116.0" text="Salir" />
-         </children>
-      </VBox>
+      <VBox alignment="BOTTOM_CENTER" layoutX="287.0" layoutY="387.0" prefHeight="43.0" prefWidth="134.0" AnchorPane.bottomAnchor="176.0" AnchorPane.leftAnchor="287.0" AnchorPane.rightAnchor="285.0" AnchorPane.topAnchor="387.0" />
+      <ImageView fitHeight="168.0" fitWidth="298.0" layoutX="213.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/game%20over.gif" />
+         </image>
+      </ImageView>
+      <Button layoutX="227.0" layoutY="498.0" mnemonicParsing="false" onAction="#onAction_exit" prefHeight="54.0" prefWidth="271.0" text="S  A L I R" />
+      <ImageView fitHeight="133.0" fitWidth="162.0" layoutX="281.0" layoutY="229.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/gameover.gif" />
+         </image>
+      </ImageView>
+      <Button layoutX="230.0" layoutY="415.0" mnemonicParsing="false" onAction="#onAction_continue" prefHeight="54.0" prefWidth="265.0" text="Seguir jugando: 1500 pts" />
+      <Label layoutX="224.0" layoutY="321.0" prefHeight="32.0" prefWidth="114.0" text="Puntos Totales:" />
+      <Label fx:id="lbl_score" layoutX="350.0" layoutY="321.0" prefHeight="32.0" prefWidth="101.0" text="0" />
+      <Label layoutX="225.0" layoutY="358.0" prefHeight="32.0" prefWidth="114.0" text="Vidas" />
+      <Label layoutX="351.0" layoutY="358.0" prefHeight="32.0" prefWidth="101.0" text="0" />
    </children>
 </AnchorPane>

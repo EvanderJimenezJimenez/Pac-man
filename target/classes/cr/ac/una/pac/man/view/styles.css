@@ -1,4 +1,3 @@
-
 *{
     -fx-text-fill: white;
 }
@@ -60,11 +59,128 @@
 
 /* Label */
 #Title{
-    -fx-font-size: 30.5px;
+    -fx-font-size: 15px;
     -fx-alignment: TOP_LEFT;
     -fx-text-align: center;
 }
 
 .SubScene{
     -fx-background-color:#FFC95F;
+}
+
+.root {
+    -fx-background-color: #000000; 
+}
+
+/* Title Label */
+.title-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #FFFFFF; 
+    -fx-font-family: "Arcade Classic";
+}
+
+/* Estilos para los botones */
+.button {
+    -fx-background-color: #FFFF00; 
+    -fx-text-fill: #000000;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-font-family: "Arcade Classic";
+}
+
+.button:hover {
+    -fx-background-color: #FFD700; 
+}
+
+
+.image-view {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 10);
+}
+
+
+.loading-pane {
+    -fx-background-color: #FFFFFF;
+}
+
+.bar {
+    -fx-background-color: #FFFF00;
+}
+
+
+.text-field {
+    -fx-background-color: #333333;
+    -fx-text-fill: #FFFFFF;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #FFFFFF; 
+    -fx-background-color: #333333; 
+}
+
+.combo-box .list-cell:filled:selected, .combo-box .list-cell:filled:selected:hover {
+    -fx-text-fill: black; 
+    -fx-background-color: -fx-selection-bar; 
+}
+
+.combo-box .list-cell:hover {
+    -fx-text-fill: #FFFFFF; 
+    -fx-background-color: #666666; 
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+}
+
+.table-row-cell,
+.table-cell {
+    -fx-background-color: #444444;
+    -fx-border-color: #333333;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #555555;
+}
+
+.table-row-cell:selected,
+.table-cell:selected {
+    -fx-background-color: #A78295;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #666666;
+}
+
+.table-view .column-header {
+    -fx-background-color: #666666;
+    -fx-text-fill: white;
+    -fx-border-color: #333333;
+}
+
+.table-view .column-header:hover {
+    -fx-background-color: #555555;
+}
+
+/* ScrollBar */
+.scroll-bar {
+    -fx-background-color: #333333;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #666666;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #555555;
+}
+
+.scroll-bar .thumb:pressed {
+    -fx-background-color: #A78295;
 }

@@ -1,6 +1,7 @@
 package cr.ac.una.pac.man.controller;
 
 import cr.ac.una.pac.man.Trophie;
+import cr.ac.una.pac.man.util.FlowController;
 import cr.ac.una.pac.man.util.Mensaje;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,8 +24,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -53,6 +57,8 @@ public class PlayerNameController extends Controller implements Initializable {
     ObservableList<Trophie> trophiesList;
     @FXML
     private HBox hbox_0;
+    @FXML
+    private ImageView img_retroceder;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -112,65 +118,38 @@ public class PlayerNameController extends Controller implements Initializable {
 
     }
 
-public void marcarCompletado(int index) {
-    try {
-        // Obtén el trofeo correspondiente
-        Trophie trofeo = trophiesList.get(index);
+    public void marcarCompletado(int index) {
+        try {
 
-        // Modifica el estado del trofeo
-        trofeo.setComplete(true);
+            Trophie trofeo = trophiesList.get(index);
 
-        // Actualiza el archivo de trofeos con la nueva información
-        updateTrophiesFile(index);
+            trofeo.setComplete(true);
 
-        // Actualiza la interfaz según sea necesario
-        // trophiesAvailable();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
+            updateTrophiesFile(index);
 
-
-
-private void updateTrophiesFile(int trofeoIndex) {
-    try {
-        // Lee el contenido actual del archivo trophies.txt
-        List<String> lines = Files.readAllLines(Paths.get(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt"));
-
-        // Verifica si el índice está dentro de los límites del archivo
-        if (trofeoIndex >= 0 && trofeoIndex < lines.size()) {
-            // Obtiene la línea correspondiente al trofeo
-            String trofeoLine = lines.get(trofeoIndex);
-
-            // Separa los campos del trofeo
-            String[] trofeoData = trofeoLine.split("\\(//\\)");
-
-            // Modifica el estado del trofeo en el archivo
-            System.out.println(trofeoData[2]);
-            trofeoData[2] = "true";
-            System.out.println(trofeoData[2]);
-
-            // Une los campos del trofeo con el formato correcto
-            String trofeoUpdatedLine = String.join("(//)", trofeoData);
-
-            // Actualiza solo la línea del trofeo en la lista
-            lines.set(trofeoIndex, trofeoUpdatedLine);
-
-            // Escribe las líneas actualizadas de vuelta al archivo trophies.txt
-            //Files.write(Paths.get(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt"), lines);
-        } else {
-            System.out.println("Índice de trofeo fuera de límites.");
+            // trophiesAvailable();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (IOException ex) {
-        ex.printStackTrace();
     }
-}
 
+    private void updateTrophiesFile(int trofeoIndex) {
+        try {
+          
+            String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt";
+            FileWriter writer = new FileWriter(filePath);
 
+            for (Trophie trofeo : trophiesList) {
+                String trofeoString = trofeo.getName() + "(//)" + trofeo.getScore() + "(//)" + trofeo.isComplete() + "***";
+                writer.write(trofeoString);
+            }
 
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-
-    
     public void trophiesAvailable() {
 
         for (int i = 0; i < 6; i++) {
@@ -184,11 +163,11 @@ private void updateTrophiesFile(int trofeoIndex) {
                     }
                     break;
                 case 1:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >=5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
                         vbox_2.setDisable(false);
                         vbox_2.setOpacity(100);
                         marcarCompletado(i);
-                    }
+                    } 
                     break;
                 case 2:
                     if (Integer.parseInt(trophiesList.get(i).getScore()) >= 3) {
@@ -198,25 +177,27 @@ private void updateTrophiesFile(int trofeoIndex) {
                     }
                     break;
                 case 3:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) != 5) {
                         vbox_4.setDisable(false);
                         vbox_4.setOpacity(100);
+                        marcarCompletado(i);
                     }
                     break;
                 case 4:
                     if (Integer.parseInt(trophiesList.get(i).getScore()) >= 0) {
                         vbox_5.setDisable(false);
                         vbox_5.setOpacity(100);
-                        
+                        marcarCompletado(i);
+
                     }
                     break;
                 case 5:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 10) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) != 10) {
                         vbox_6.setDisable(false);
                         vbox_6.setOpacity(100);
+                        marcarCompletado(i);
                     }
                     break;
-                    
 
             }
 
@@ -267,7 +248,7 @@ private void updateTrophiesFile(int trofeoIndex) {
     private void onAction_savePlayer(ActionEvent event) {
 
         if (txt_PlayerName.getText().length() > 0) {
-            addPalyer();
+            //addPalyer();
             getStage().close();
 
         } else {
@@ -278,6 +259,13 @@ private void updateTrophiesFile(int trofeoIndex) {
 
     @FXML
     private void onAction_deleteData(ActionEvent event) {
+    }
+
+    @FXML
+    private void onMouseAtras(MouseEvent event) {
+        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
+        currentStage.close();
+        FlowController.getInstance().goMain();
     }
 
 }
