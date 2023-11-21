@@ -3,9 +3,12 @@ package cr.ac.una.pac.man;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
@@ -42,7 +45,7 @@ public class Algorithms {
     }
 
     //matriz adyacencia 
-    public int[][] matrizAdyacentePesos(char[][] map) {
+    public int[][] matrizAdyacentePesos2(char[][] map) {
         int mapSize = map.length;
         int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
 
@@ -79,99 +82,88 @@ public class Algorithms {
         return graph;
     }
 
-    public List<Integer> dijisktraShortPath(int start, int target, int[][] matrizAdyacentePesos) { //dijsktra
-        int numNodes = matrizAdyacentePesos.length;
-        int[] distance = new int[numNodes];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+    public int[][] matrizAdyacentePesos(char[][] map) {
+        int mapSize = map.length;
+        int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
 
-        PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> distance[node]));
-        queue.add(start);
-        distance[start] = 0;
-
-        int[] previous = new int[numNodes];
-        Arrays.fill(previous, -1);
-
-        while (!queue.isEmpty()) {
-            int currentNode = queue.poll();
-            if (currentNode == target) {
-                break;
+        for (int i = 0; i < mapSize * mapSize; i++) {
+            for (int j = 0; j < mapSize * mapSize; j++) {
+                graph[i][j] = (i == j) ? 0 : Integer.MAX_VALUE; // Inicializar con valor infinito
             }
+        }
 
-            for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-                int weight = matrizAdyacentePesos[currentNode][neighbor];
-                if (weight != Integer.MAX_VALUE) {
-                    int altDistance = distance[currentNode] + weight;
-                    if (altDistance < distance[neighbor]) {
-                        distance[neighbor] = altDistance;
-                        previous[neighbor] = currentNode;
-                        queue.add(neighbor);
+        for (int y = 0; y < mapSize; y++) {
+            for (int x = 0; x < mapSize; x++) {
+                if (map[y][x] != 'W') {
+                    // Asignar un peso de 1 a todas las aristas no bloqueadas
+                    if (y > 0 && map[y - 1][x] != 'W') {
+                        graph[y * mapSize + x][(y - 1) * mapSize + x] = 1;
+                        graph[(y - 1) * mapSize + x][y * mapSize + x] = 1;
+                    }
+                    if (y < mapSize - 1 && map[y + 1][x] != 'W') {
+                        graph[y * mapSize + x][(y + 1) * mapSize + x] = 1;
+                        graph[(y + 1) * mapSize + x][y * mapSize + x] = 1;
+                    }
+                    if (x > 0 && map[y][x - 1] != 'W') {
+                        graph[y * mapSize + x][y * mapSize + (x - 1)] = 1;
+                        graph[y * mapSize + (x - 1)][y * mapSize + x] = 1;
+                    }
+                    if (x < mapSize - 1 && map[y][x + 1] != 'W') {
+                        graph[y * mapSize + x][y * mapSize + (x + 1)] = 1;
+                        graph[y * mapSize + (x + 1)][y * mapSize + x] = 1;
                     }
                 }
             }
         }
 
-        List<Integer> path = new ArrayList<>();
-        int current = target;
-        while (current != -1) {
-            path.add(0, current);
-            current = previous[current];
-        }
-
-        return path;
+        return graph;
     }
 
+public List<Integer> longestPathDijkstra(int inicio, int objetivo, int[][] matrizAdyacentePesos) {
+        int numNodos = matrizAdyacentePesos.length;
+        int[] distancia = new int[numNodos];
+        Arrays.fill(distancia, Integer.MIN_VALUE);
 
+        PriorityQueue<Integer> colaPrioridad = new PriorityQueue<>(numNodos, Comparator.comparingInt(nodo -> -distancia[nodo]));
+        colaPrioridad.add(inicio);
+        distancia[inicio] = 0;
 
-public List<Integer> longestPathDijkstra(int start, int target, int[][] matrizAdyacentePesos) {
-    int numNodes = matrizAdyacentePesos.length;
-    int[] distance = new int[numNodes];
-    Arrays.fill(distance, Integer.MIN_VALUE);
+        int[] anterior = new int[numNodos];
+        Arrays.fill(anterior, -1);
 
-    PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node]));
-    queue.add(start);
-    distance[start] = 0;
+        while (!colaPrioridad.isEmpty()) {
+            int nodoActual = colaPrioridad.poll();
+            //System.out.println("Visitando nodo: " + nodoActual + ", longitud del camino: " + distancia[nodoActual]);
 
-    int[] previous = new int[numNodes];
-    Arrays.fill(previous, -1);
+            if (nodoActual == objetivo) {
+                break;
+            }
 
-    while (!queue.isEmpty()) {
-        int currentNode = queue.poll();
-        if (currentNode == target) {
-            break;
-        }
+            for (int vecino = 0; vecino < numNodos; vecino++) {
+                if (matrizAdyacentePesos[nodoActual][vecino] != Integer.MAX_VALUE && distancia[vecino] == Integer.MIN_VALUE) {
+                    int distanciaAlternativa = distancia[nodoActual] + 1;  // Aumenta la distancia por 1 al moverse a un vecino
+                //    System.out.println("Distancia alternativa a " + vecino + ": " + distanciaAlternativa);
 
-        for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-            int weight = matrizAdyacentePesos[currentNode][neighbor];
-            if (weight != Integer.MAX_VALUE) {
-                int altDistance = distance[currentNode] + weight;
-                if (altDistance > distance[neighbor]) {
-                    distance[neighbor] = altDistance;
-                    previous[neighbor] = currentNode;
-                    queue.add(neighbor);
+                    if (distanciaAlternativa > distancia[vecino]) {
+                        distancia[vecino] = distanciaAlternativa;
+                        anterior[vecino] = nodoActual;
+                        colaPrioridad.add(vecino);
+                    }
                 }
             }
         }
-    }
 
-    List<Integer> path = new ArrayList<>();
-    int current = target;
-    while (current != -1) {
-        path.add(0, current);
-        current = previous[current];
-    }
+        List<Integer> camino = new ArrayList<>();
+        int actual = objetivo;
+        while (actual != -1) {
+            camino.add(0, actual);
+            actual = anterior[actual];
+        }
 
-    System.out.println("Longitud del camino: " + path.size());
-    System.out.println("Camino: " + path);
+       // System.out.println("Longitud del camino: " + camino.size());
+      //  System.out.println("Camino: " + camino);
 
-    return path;
-}
-
-
-    public List<Integer> longestPath(int start, int target, int[][] matrizFloyd) {
-
-        List<Integer> longestPath = new ArrayList<>();
-
-        return longestPath;
+        return camino;
     }
 
     public int[][] floydWarshall(int[][] graph) {
@@ -274,4 +266,44 @@ public List<Integer> longestPathDijkstra(int start, int target, int[][] matrizAd
 
     }
 
+    public List<Integer> dijisktraShortPath(int start, int target, int[][] matrizAdyacentePesos) { //dijsktra
+        int numNodes = matrizAdyacentePesos.length;
+        int[] distance = new int[numNodes];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+
+        PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> distance[node]));
+        queue.add(start);
+        distance[start] = 0;
+
+        int[] previous = new int[numNodes];
+        Arrays.fill(previous, -1);
+
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            if (currentNode == target) {
+                break;
+            }
+
+            for (int neighbor = 0; neighbor < numNodes; neighbor++) {
+                int weight = matrizAdyacentePesos[currentNode][neighbor];
+                if (weight != Integer.MAX_VALUE) {
+                    int altDistance = distance[currentNode] + weight;
+                    if (altDistance < distance[neighbor]) {
+                        distance[neighbor] = altDistance;
+                        previous[neighbor] = currentNode;
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        List<Integer> path = new ArrayList<>();
+        int current = target;
+        while (current != -1) {
+            path.add(0, current);
+            current = previous[current];
+        }
+
+        return path;
+    }
 }

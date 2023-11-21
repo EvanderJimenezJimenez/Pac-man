@@ -40,31 +40,44 @@ public class LevelCompleteController extends Controller implements Initializable
 
     ObservableList<Level> levelList;
     ObservableList<Statistics> statisticsList;
-    int score = (int) AppContext.getInstance().get("GameScore");
-    int deadGhost = (int) AppContext.getInstance().get("GameDeadGhost");
 
-    int lifes = (int) AppContext.getInstance().get("GameLife");
-
-    int scporeDead = (int) AppContext.getInstance().get("GameScoreDead");
-
-    String time = (String) AppContext.getInstance().get("GameTime");
-    int nivel = (int) AppContext.getInstance().get("Level");
+    public int score = (int) AppContext.getInstance().get("GameScore");
+    public int deadGhost = (int) AppContext.getInstance().get("GameDeadGhost");
+    public int lifes = (int) AppContext.getInstance().get("GameLife");
+    public int scporeDead = (int) AppContext.getInstance().get("GameScoreDead");
+    public String time = (String) AppContext.getInstance().get("GameTime");
+    public int nivel = (int) AppContext.getInstance().get("Level");
 
     Statistics statistics;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        this.score = (int) AppContext.getInstance().get("GameScore");
+
+//        AppContext.getInstance().delete("Level");
+//        AppContext.getInstance().delete("GameTime");
+//        AppContext.getInstance().delete("GameScoreDead");
+//        AppContext.getInstance().delete("GameScore");
+//        AppContext.getInstance().delete("GameDeadGhost");
+        System.out.println("Score: " + score);
+        System.out.println("DeadG: " + deadGhost);
+        System.out.println("lifes: " + lifes);
+        System.out.println("sore dead: " + scporeDead);
+        System.out.println("level: " + nivel);
+        System.out.println("Time: " + time);
+
         statistics = new Statistics();
 
         lbl_time.setText(time);
         lbl_score.setText(String.valueOf(score));
-        lbl_level.setText(String.valueOf(nivel));
 
         loadLevelDataFromFile();
         getStatistics();
         levelUpdate();
         updateStatistics();
+
+        lbl_level.setText(String.valueOf(nivel));
 
     }
 
@@ -77,8 +90,6 @@ public class LevelCompleteController extends Controller implements Initializable
 
         int vidas = Integer.parseInt(statistics.getLifes());
         int ghostD = Integer.parseInt(statistics.getGhost());
-        System.out.println("Vidas: " + statistics.getLifes());
-        System.out.println("Vidas int: " + vidas);
 
         int scoreG = Integer.parseInt(statistics.getScore()) + score;
         statistics.setScore(String.valueOf(scoreG));
@@ -97,15 +108,11 @@ public class LevelCompleteController extends Controller implements Initializable
 
         // Suma las vidas actuales con las nuevas
         int totalLifes = vidas + (6 - lifes);
-        System.out.println("Vidas existentes: " + vidas);
-        System.out.println("Vidas totales: " + totalLifes);
 
         // Actualiza las estadísticas con el nuevo total de vidas
         statistics.setLifes(String.valueOf(totalLifes));
 
         statistics.setGhost(String.valueOf(deadG + deadGhost));
-
-        System.out.println("Lifes: " + totalLifes);
 
         updateStisticsFile(statistics);
     }
@@ -144,19 +151,17 @@ public class LevelCompleteController extends Controller implements Initializable
 
         statisticsList = FXCollections.observableArrayList(statiscstics);
 
-        System.out.println("Item: " + levelList.get(0).getName()
-                + levelList.get(0).getLevelNumber() + levelList.get(0).isAvailable()
-                + levelList.get(0).isComplete());
-
     }
 
     @FXML
     private void onAction_continue(ActionEvent event) {
+
         if (nivel != 10) {
             nivel += 1;
             AppContext.getInstance().set("Level", nivel);
             FlowController.getInstance().goViewInWindow("GameView");
             getStage().close();
+            FlowController.getInstance().deleteView("LevelComplete");
         } else {
             FlowController.getInstance().goViewInWindow("WelcomeView");
             getStage().close();
@@ -201,9 +206,6 @@ public class LevelCompleteController extends Controller implements Initializable
 
         levelList = FXCollections.observableArrayList(levels);
 
-        System.out.println("Item: " + levelList.get(0).getName()
-                + levelList.get(0).getLevelNumber() + levelList.get(0).isAvailable()
-                + levelList.get(0).isComplete());
     }
 
     public boolean state(String state) {
