@@ -98,7 +98,7 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCountClyde = 0;
     private int frameCountInky = 0;
 
-    private int frameDelay = 2; // Controla la velocidad de movimiento
+    private int frameDelay = 0; // Controla la velocidad de movimiento
     private int frameDelayBlinky = 4;
     private int frameDelayPinky = 4;
     private int frameDelayClyde = 4;
@@ -200,8 +200,8 @@ public class GameViewController extends Controller implements Initializable {
     boolean consecutivo = false;
     boolean velocityHelp = false;
     boolean doubleponits = false;
-    
-    int consecutiveGhostCount =0;
+
+    int consecutiveGhostCount = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -214,6 +214,7 @@ public class GameViewController extends Controller implements Initializable {
         algorithms = new Algorithms();
 
         this.nivel = (int) AppContext.getInstance().get("Level");
+        AppContext.getInstance().set("LifeBuy", false);
         inicializarVidas();
         configurarManejoDeTeclado();
         iniciarAnimacionPacman();
@@ -278,8 +279,12 @@ public class GameViewController extends Controller implements Initializable {
     }
 
     private void configurarManejoDeTeclado() {
+
         anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent keyEvent) {
+
+
+
                 if (keyEvent.getCode() == LEFT) {
                     directionX = -1;
                     directionY = 0;
@@ -571,13 +576,13 @@ public class GameViewController extends Controller implements Initializable {
             int targetNode = 0;
 
             if (!shockBlinky && !blinkyEnc) {
-               
+
                 targetNode = pacmanY * 15 + pacmanX;
                 blinkyVelocity();
             } else {
                 targetNode = blinkyYHouse * 15 + blinkyXHouse;
                 frameDelayBlinky = 0;
-                
+
                 if (blinkyX == blinkyXHouse && blinkyY == blinkyYHouse) {
                     Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
                         System.out.println("GGs");
@@ -798,13 +803,26 @@ public class GameViewController extends Controller implements Initializable {
 
     private void handleCollision() {
 
+        boolean lifesBuy = false;
+
+        lifesBuy = (boolean) AppContext.getInstance().get("LifeBuy");
+
+        if (lifesBuy) {
+            lifes = 0;
+            lifesBuy = false;
+
+        }
+
         if (lifes == 6) {
             scoreDead = score;
         }
 
         if (lifes > 0) {
-
+            AppContext.getInstance().set("LifeBuy", false);
             lifes--;
+            if (lifes == 1) {
+                lifes = 0;
+            }
             lostLifes++;
 
             algorithms.kill(lifes, imgViewLife1, imgViewLife2, imgViewLife3, imgViewLife4, imgViewLife5, imgViewLife6);
@@ -812,7 +830,8 @@ public class GameViewController extends Controller implements Initializable {
             paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
         } else {
             FlowController.getInstance().goViewInWindow("GameOverView");
-
+            restartGhost();
+            paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
         }
 
     }
@@ -865,7 +884,7 @@ public class GameViewController extends Controller implements Initializable {
 
                     if (consecutivo) {
                         score += 100;
-                         handleConsecutiveGhostEating();
+                        handleConsecutiveGhostEating();
                     }
                     score += 300;
                     lbl_score.setText(String.valueOf(score));
@@ -886,7 +905,7 @@ public class GameViewController extends Controller implements Initializable {
 
                     if (consecutivo) {
                         score += 100;
-                         handleConsecutiveGhostEating();
+                        handleConsecutiveGhostEating();
                     }
                     score += 300;
                     lbl_score.setText(String.valueOf(score));
@@ -908,11 +927,11 @@ public class GameViewController extends Controller implements Initializable {
 
                     if (consecutivo) {
                         score += 100;
-                         handleConsecutiveGhostEating();
+                        handleConsecutiveGhostEating();
                     }
                     score += 300;
                     lbl_score.setText(String.valueOf(score));
-                    
+
                 }
                 shockInky = true;
                 inkyImageView.setImage(gameMap.getImage("ojos"));
@@ -928,7 +947,7 @@ public class GameViewController extends Controller implements Initializable {
 
                     if (consecutivo) {
                         score += 100;
-                         handleConsecutiveGhostEating();
+                        handleConsecutiveGhostEating();
                     }
                     score += 300;
                     lbl_score.setText(String.valueOf(score));
@@ -1105,18 +1124,18 @@ public class GameViewController extends Controller implements Initializable {
         }));
         timeline.play();
     }
-    
+
     public void handleConsecutiveGhostEating() {
-    consecutiveGhostCount++;
+        consecutiveGhostCount++;
 
-    if (consecutiveGhostCount == 2) {
-        // Activa la habilidad especial al comer 2 fantasmas consecutivamente
-        velocityHelp = true;
+        if (consecutiveGhostCount == 2) {
+            // Activa la habilidad especial al comer 2 fantasmas consecutivamente
+            velocityHelp = true;
 
-        // Reinicia el contador de fantasmas consecutivos
-        consecutiveGhostCount = 0;
+            // Reinicia el contador de fantasmas consecutivos
+            consecutiveGhostCount = 0;
+        }
     }
-}
 
     public void activarConsecutivo() {
         consecutivo = true;
