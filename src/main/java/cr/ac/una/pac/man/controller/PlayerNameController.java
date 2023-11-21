@@ -1,5 +1,6 @@
 package cr.ac.una.pac.man.controller;
 
+import cr.ac.una.pac.man.GeneratedMap;
 import cr.ac.una.pac.man.Trophie;
 import cr.ac.una.pac.man.util.FlowController;
 import cr.ac.una.pac.man.util.Mensaje;
@@ -59,6 +60,8 @@ public class PlayerNameController extends Controller implements Initializable {
     private HBox hbox_0;
     @FXML
     private ImageView img_retroceder;
+    
+    GeneratedMap gmap;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -68,6 +71,7 @@ public class PlayerNameController extends Controller implements Initializable {
     @Override
     public void initialize() {
 
+        gmap = new GeneratedMap();
         loadTrophiesDataFromFile();
         trophiesDisable();
         System.out.println("Trofeo: " + trophiesList.get(0).getName()
@@ -135,7 +139,7 @@ public class PlayerNameController extends Controller implements Initializable {
 
     private void updateTrophiesFile(int trofeoIndex) {
         try {
-          
+
             String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt";
             FileWriter writer = new FileWriter(filePath);
 
@@ -167,7 +171,7 @@ public class PlayerNameController extends Controller implements Initializable {
                         vbox_2.setDisable(false);
                         vbox_2.setOpacity(100);
                         marcarCompletado(i);
-                    } 
+                    }
                     break;
                 case 2:
                     if (Integer.parseInt(trophiesList.get(i).getScore()) >= 3) {
@@ -259,6 +263,7 @@ public class PlayerNameController extends Controller implements Initializable {
 
     @FXML
     private void onAction_deleteData(ActionEvent event) {
+        gmap.mapGenerated();
     }
 
     @FXML
@@ -267,5 +272,7 @@ public class PlayerNameController extends Controller implements Initializable {
         currentStage.close();
         FlowController.getInstance().goMain();
     }
+
+    
 
 }
