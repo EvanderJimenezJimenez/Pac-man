@@ -18,7 +18,7 @@ import javafx.scene.layout.BorderPane;
  */
 public class LoadingView extends Controller implements Initializable {
 
-    long duracionEnMilisegundos = 5000; // 5 segundos
+    long duracionEnMilisegundos = 200; // 5 segundos
     double largo = 0;
     
     String nextPage = (String) AppContext.getInstance().get("NextPage");
@@ -59,7 +59,7 @@ public class LoadingView extends Controller implements Initializable {
                     timer.cancel();
                 }
             }
-        }, 1000, 100);
+        }, 50, 10); //1000 100
     }
 
     public void AvanceBar(int seg) {

@@ -32,16 +32,13 @@ public class WelcomeView extends Controller implements Initializable {
     private void onAction_start(ActionEvent event) {
 
         if (archivoNoVacio()) {
-            System.out.println("Hola1");
-            //FlowController.getInstance().goViewInWindow("ChooseLevel");
-            FlowController.getInstance().goViewInWindow("PlayerName");//Cambio Joshua
+            System.out.println("Hoal1");
+            FlowController.getInstance().goViewInWindow("ChooseLevel");
             getStage().close();
 
         } else {
             System.out.println("hola2");
-           // FlowController.getInstance().goViewInWindowModal("PlayerName",getStage(),true);
-           //FlowController.getInstance().goViewInWindow("PlayerName");//Cambio Joshua
-            FlowController.getInstance().goViewInWindow("PlayerName");//Cambio Joshua
+            FlowController.getInstance().goViewInWindowModal("PlayerName",getStage(),true);
             getStage().close();
 
         }
@@ -50,7 +47,7 @@ public class WelcomeView extends Controller implements Initializable {
 
     @FXML
     private void onAction_player(ActionEvent event) {
-        FlowController.getInstance().goViewInWindow("PlayerView");
+        FlowController.getInstance().goViewInWindow("PlayerName");
         getStage().close();
     }
 

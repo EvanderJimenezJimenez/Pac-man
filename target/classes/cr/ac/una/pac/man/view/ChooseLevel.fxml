@@ -27,7 +27,7 @@
                      <children>
                         <Label fx:id="lbl_name" prefHeight="41.0" prefWidth="85.0" text="Nombre: " />
                         <ImageView fx:id="img_level" fitHeight="230.0" fitWidth="312.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button mnemonicParsing="false" onAction="#onAction_play" prefHeight="58.0" prefWidth="132.0" text="Jugar" />
+                        <Button fx:id="btn_play" mnemonicParsing="false" onAction="#onAction_play" prefHeight="58.0" prefWidth="132.0" text="Bloqueado" />
                      </children>
                   </VBox>
                   <Button layoutX="284.0" layoutY="120.0" mnemonicParsing="false" onAction="#onAction_next" prefHeight="63.0" prefWidth="122.0" text="Siguiente" />

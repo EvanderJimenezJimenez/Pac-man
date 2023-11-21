@@ -1,45 +1,40 @@
 package cr.ac.una.pac.man.controller;
 
+import cr.ac.una.pac.man.Algorithms;
+import cr.ac.una.pac.man.GameMap;
+import cr.ac.una.pac.man.Pacman;
 import cr.ac.una.pac.man.util.AppContext;
 import cr.ac.una.pac.man.util.FlowController;
 import java.awt.Point;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-import static javafx.scene.input.KeyCode.SPACE;
 import static javafx.scene.input.KeyCode.LEFT;
 import static javafx.scene.input.KeyCode.RIGHT;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyCode.DOWN;
+import javafx.scene.layout.Background;
 import javafx.util.Duration;
 
 /**
@@ -64,23 +59,6 @@ public class GameViewController extends Controller implements Initializable {
     @FXML
     private Label lbl_score;
 
-    //map
-    private Image wallImage;
-    private Image bigPointImage;
-    private Image smallPointImage;
-
-    //pacman
-    private Image pacmanRight;
-    private Image pacmanFeft;
-    private Image pacmanUp;
-    private Image pacmanDown;
-
-    //Ghost
-    private Image blinkyImage;
-    private Image clydeImage;
-    private Image pinkyImage;
-    private Image inkyImage;
-
     private ImageView pacmanImageView; //pacman en el mapa
 
     private ImageView blinkyImageView; //pacman en el mapa
@@ -91,13 +69,6 @@ public class GameViewController extends Controller implements Initializable {
 
     private ImageView clydeImageView; //pacman en el mapa
 
-    //vidas
-    Image life1;
-    Image life2;
-    Image life3;
-    Image life4;
-    Image life5;
-    Image life6;
     @FXML
     private AnchorPane anchorPane;
 
@@ -116,40 +87,52 @@ public class GameViewController extends Controller implements Initializable {
 
     int score = 0;
 
+    //a base
+    private int frameCountInitial = 0;
+    private int frameDelayInitial = 4;
+
     private int frameCount = 0;
     private int frameCountBlinky = 0;
     private int frameCountPinky = 0;
     private int frameCountClyde = 0;
     private int frameCountInky = 0;
 
-    private int frameDelay = 1; // Controla la velocidad de movimiento, ajusta según tus necesidades
-    private int frameDelayBlinky = 3;
+    private int frameDelay = 2; // Controla la velocidad de movimiento, ajusta según tus necesidades
+    private int frameDelayBlinky = 5;
     private int frameDelayPinky = 4;
-    private int frameDelayClyde = 2;
+    private int frameDelayClyde = 4;
     private int frameDelayInky = 5;
 
-    private int pacmanSpeed = 1; // Velocidad predeterminada
+    private int pacmanSpeed = 3; // Velocidad predeterminada
     private int blinkySpeed = 0;
 
     private int blinkyX;
     private int blinkyY;
-    private int blinkyDirectionX;
-    private int blinkyDirectionY;
 
     private int pinkyX;
     private int pinkyY;
-    private int pinkyDirectionX;
-    private int pinkyDirectionY;
 
     private int inkyX;
     private int inkyY;
-    private int inkyDirectionX;
-    private int inkyDirectionY;
 
     private int clydeX;
     private int clydeY;
-    private int clydeDirectionX;
-    private int clydeDirectionY;
+
+    //house
+    private int blinkyXHouse;
+    private int blinkyYHouse;
+
+    private int pinkyXHouse;
+    private int pinkyYHouse;
+
+    private int inkyXHouse;
+    private int inkyYHouse;
+
+    private int clydeXHouse;
+    private int clydeYHouse;
+
+    private int pacmanXHouse;
+    private int pacmanYHouse;
 
     private Timeline blinkyTimeline;
 
@@ -158,7 +141,7 @@ public class GameViewController extends Controller implements Initializable {
 
     private Timeline inkyTimeline;
 
-    int[][] weightedGraph;
+    int[][] matrizAdyacentePesos;
 
     int[][] floydMatriz;
     @FXML
@@ -175,28 +158,60 @@ public class GameViewController extends Controller implements Initializable {
     private boolean inkyMovingToRandomPoint = false;
     private Point inkyTargetPoint;
     private Timer inkyTimer;
+
+    boolean blinkyPacman;
+
+    int lifes = 6;
+
+    GameMap gameMap;
+    Algorithms algorithms;
+    Pacman paman;
+
+    private boolean isPoweredUp = false;
+
+    private Timeline ghostTimeline;
+
+    boolean shockBlinky = false;
+    boolean shockPinky = false;
+    boolean shockInky = false;
+    boolean shockClyde = false;
+
+    private List<Point> tunnels = new ArrayList<>();
+
+    boolean blinkyEnc = false;
+    boolean pinkyEnc = false;
+    boolean clydeEnc = false;
+    boolean inkyEnc = false;
+    boolean encierro = false;
     @FXML
-    private Label NombrePlayerGameView;
+    private Button btn_encierro;
     @FXML
-    private Label lblTime;
-    private Timeline timeline;
-    private int segundos = 0;//Cambio Joshua
-    private int minutos = 0;//Cambio Joshua
-    private int horas = 0;//Cambio Joshua
+    private Button btn_velocidad;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        gameMap = new GameMap();
+        gameMap.cargarImagenes();
+
+        paman = new Pacman();
+
+        algorithms = new Algorithms();
+
         this.nivel = (int) AppContext.getInstance().get("Level");
-        cargarImagenes();
         inicializarVidas();
         configurarManejoDeTeclado();
         iniciarAnimacionPacman();
-        System.out.println("Nievl GV" + nivel);
+
         cargarMapa(nivel);
         lbl_level.setText(String.valueOf(nivel));
-         startTime(lblTime);//Cambio Joshua 
 
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();  // Nueva línea después de cada fila
+        }
     }
 
     public void setnivelActual(int nivelActual) {
@@ -215,39 +230,13 @@ public class GameViewController extends Controller implements Initializable {
         return this.finJuego;
     }
 
-    private void cargarImagenes() {
-        wallImage = getIamge("wall");
-        smallPointImage = getIamge("smallPoint");
-        bigPointImage = getIamge("bigPoint");
-
-        //pacman
-        pacmanRight = getIamge("pacmanRight");
-        pacmanFeft = getIamge("pacmanLeft");
-        pacmanUp = getIamge("pacmanUp");
-        pacmanDown = getIamge("pacmanDown");
-
-        //ghost
-        blinkyImage = getIamge("blinky");
-        clydeImage = getIamge("clyde");
-        inkyImage = getIamge("inky");
-        pinkyImage = getIamge("pinky");
-
-        life1 = getIamge("life");
-        life2 = getIamge("life");
-        life3 = getIamge("life");
-        life4 = getIamge("life");
-        life5 = getIamge("life");
-        life6 = getIamge("life");
-
-    }
-
     private void inicializarVidas() {
-        imgViewLife1.setImage(life1);
-        imgViewLife2.setImage(life2);
-        imgViewLife3.setImage(life3);
-        imgViewLife4.setImage(life4);
-        imgViewLife5.setImage(life5);
-        imgViewLife6.setImage(life6);
+        imgViewLife1.setImage(gameMap.getLife1());
+        imgViewLife2.setImage(gameMap.getLife2());
+        imgViewLife3.setImage(gameMap.getLife3());
+        imgViewLife4.setImage(gameMap.getLife4());
+        imgViewLife5.setImage(gameMap.getLife5());
+        imgViewLife6.setImage(gameMap.getLife6());
     }
 
     private void configurarManejoDeTeclado() {
@@ -256,31 +245,34 @@ public class GameViewController extends Controller implements Initializable {
                 if (keyEvent.getCode() == LEFT) {
                     directionX = -1;
                     directionY = 0;
-                    pacmanImageView.setImage(pacmanFeft);
+                    pacmanImageView.setImage(gameMap.getPacmanFeft());
                 } else if (keyEvent.getCode() == RIGHT) {
                     directionX = 1;
                     directionY = 0;
-                    pacmanImageView.setImage(pacmanRight);
+                    pacmanImageView.setImage(gameMap.getPacmanRight());
                 } else if (keyEvent.getCode() == UP) {
                     directionX = 0;
                     directionY = -1;
-                    pacmanImageView.setImage(pacmanUp);
+                    pacmanImageView.setImage(gameMap.getPacmanUp());
                 } else if (keyEvent.getCode() == DOWN) {
                     directionX = 0;
                     directionY = 1;
-                    pacmanImageView.setImage(pacmanDown);
+                    pacmanImageView.setImage(gameMap.getPacmanDown());
                 }
                 pacManTimeline.play();
+
                 blinkyTimeline.play();
-                pinkyTimeline.play();
-                clydeTimeline.play();
-                inkyTimeline.play();
+                //pinkyTimeline.play();
+                //clydeTimeline.play();
+                //inkyTimeline.play();
+                {
+
+                }
 
             }
         });
     }
 
-    //System.out.println("p:" + smallPoints);
     //verMatriz();
     private void iniciarAnimacionPacman() {
 
@@ -301,10 +293,10 @@ public class GameViewController extends Controller implements Initializable {
 
         inkyTimeline = new Timeline(new KeyFrame(Duration.millis(200), event -> inkymove()));
         inkyTimeline.setCycleCount(Timeline.INDEFINITE);
+
         // pacManTimeline.play();
     }
 
-   
     @Override
     public void initialize() {
         //blinkyTimeline.play();
@@ -314,72 +306,22 @@ public class GameViewController extends Controller implements Initializable {
         inkyTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                inkyTargetPoint = selectRandomPointInky();
+                inkyTargetPoint = algorithms.selectRandomPointInky(smallPoints, pacmanX, pacmanY, blinkyX, blinkyY, clydeX, clydeY, pinkyX, pinkyY);
                 inkyMovingToRandomPoint = true;
             }
         }, 0, 5000);
 
-       
-        
-        
-        
     }
-    ///////////////////////////Cambio Joshua////////////////////////////////////////////////
-     private void startTime(Label label) {
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                segundos++;
-                
-                label.setText(String.format("%02d:%02d:%02d",horas,minutos, segundos));
-                if (segundos == 60){
-                    segundos = 0;
-                    minutos++;
-                    
-                    if (minutos == 60){
-                        minutos = 0;
-                        horas++;
-                    }
-                }
-                
-                
-            GameData gameData = new GameData();//instanceo la clase GameData  
-            gameData.setHoras(horas);
-            gameData.setMinutos(minutos);
-            gameData.setSegundos(segundos);
-            AppContext.getInstance().set("tiempo", gameData);
-  
-            }
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();        
-    }
-//////////////////////////////////////////////////////////////////////////////////
-    
-    
 
     private void cargarMapa(int nivel) {
         double imageSize = 15.0;
-        int cantidadFilas = 15, cantidadColumnas = 15;
-        map = new char[cantidadFilas][cantidadColumnas];
+
         gridPaneMap.getChildren().clear();
-        System.out.println("NiveL.: " + nivel);
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("src\\main\\resources\\cr\\ac\\una\\pac\\man\\niveles\\nivel (" + nivel + ").txt"));
-            String linea;
-            int fila = 0;
 
-            while ((linea = br.readLine()) != null) {
-                String[] elementos = linea.split(" ");
+        gameMap.cargarMapa(nivel);
 
-                for (int columna = 0; columna < cantidadColumnas; columna++) {
-                    map[fila][columna] = elementos[columna].charAt(0);
-                }
+        map = gameMap.getMap();
 
-                fila++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[y].length; x++) {
                 char cell = map[y][x];
@@ -388,147 +330,80 @@ public class GameViewController extends Controller implements Initializable {
                 imageView.setFitHeight(imageSize);
 
                 if (cell == 'W') {
-                    imageView.setImage(wallImage);
+                    imageView.setImage(gameMap.getWallImage());
                 } else if (cell == 'S') {
-                    imageView.setImage(smallPointImage);
+                    imageView.setImage(gameMap.getSmallPointImage());
                     smallPoints.add(new Point(x, y));
                 } else if (cell == 'B') {
-                    blinkyImageView = new ImageView(blinkyImage);
+                    blinkyImageView = new ImageView(gameMap.getBlinkyImage());
                     blinkyImageView.setFitHeight(imageSize);
                     blinkyImageView.setFitWidth(imageSize);
                     gridPaneMap.add(blinkyImageView, x, y);
-                    blinkyX = x; // Coordenada X inicial de Blinky
+                    blinkyX = x;
                     blinkyY = y;
+                    blinkyXHouse = x;
+                    blinkyYHouse = y;
 
                 } else if (cell == 'I') {
-                    inkyImageView = new ImageView(inkyImage);
+                    inkyImageView = new ImageView(gameMap.getInkyImage());
                     inkyImageView.setFitHeight(imageSize);
                     inkyImageView.setFitWidth(imageSize);
                     gridPaneMap.add(inkyImageView, x, y);
-                    inkyX = x; // Coordenada X inicial de inky
+                    inkyX = x;
                     inkyY = y;
+                    inkyXHouse = x;
+                    inkyYHouse = y;
 
                 } else if (cell == 'R') {
-                    pinkyImageView = new ImageView(pinkyImage);
+                    pinkyImageView = new ImageView(gameMap.getPinkyImage());
                     pinkyImageView.setFitHeight(imageSize);
                     pinkyImageView.setFitWidth(imageSize);
                     gridPaneMap.add(pinkyImageView, x, y);
-                    pinkyX = x; // Coordenada X inicial de inky
+                    pinkyX = x;
                     pinkyY = y;
+                    pinkyXHouse = x;
+                    pinkyYHouse = y;
 
                 } else if (cell == 'D') {
-                    imageView.setImage(bigPointImage);
+                    imageView.setImage(gameMap.getBigPointImage());
                 } else if (cell == 'C') {
 
-                    clydeImageView = new ImageView(clydeImage);
+                    clydeImageView = new ImageView(gameMap.getClydeImage());
                     clydeImageView.setFitHeight(imageSize);
                     clydeImageView.setFitWidth(imageSize);
                     gridPaneMap.add(clydeImageView, x, y);
-                    clydeX = x; // Coordenada X inicial de Blinky
+                    clydeX = x;
                     clydeY = y;
+                    clydeXHouse = x;
+                    clydeYHouse = y;
 
                 } else if (cell == 'P') {
-                    pacmanImageView = new ImageView(pacmanRight);
+                    pacmanImageView = new ImageView(gameMap.getPacmanFeft());
                     pacmanImageView.setFitHeight(imageSize);
                     pacmanImageView.setFitWidth(imageSize);
                     gridPaneMap.add(pacmanImageView, x, y);
                     pacmanX = x;
                     pacmanY = y;
+                    pacmanXHouse = x;
+                    pacmanYHouse = y;
+                }
+                if (cell == 'T') {
+                    if (tunnels.isEmpty()) {
+                        tunnels.add(new Point(x, y));
+                    } else {
+                        tunnels.add(new Point(x, y));
+                    }
                 }
 
                 gridPaneMap.add(imageView, x, y);
             }
         }
 
-        weightedGraph = createWeightedGraph(map);
+        matrizAdyacentePesos = algorithms.matrizAdyacentePesos(map);
 
-        floydMatriz = floydWarshall(weightedGraph);
+        floydMatriz = algorithms.floydWarshall(matrizAdyacentePesos);
 
     }
-
-    public Image getIamge(String imageName) {
-
-        URL imageURL = null;
-        switch (imageName) {
-            case "wall":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/wall.png");
-                break;
-            case "smallPoint":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/smallPoint.png");
-                break;
-            case "bigPoint":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/bigPoint.png");
-                break;
-            case "life":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/life.png");
-                break;
-            case "pacmanRight":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanRight.gif");
-                break;
-            case "pacmanLeft":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanLeft.gif");
-                break;
-            case "pacmanUp":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanUp.gif");
-                break;
-            case "pacmanDown":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/pacmanDown.gif");
-                break;
-            case "clyde":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Clyde.gif");
-                break;
-            case "blinky":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Blinky.gif");
-                break;
-            case "inky":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Inky.gif");
-                break;
-            case "pinky":
-                imageURL = getClass().getResource("/cr/ac/una/pac/man/resources/Pinky.gif");
-                break;
-            default:
-                throw new AssertionError();
-        }
-
-        if (imageURL != null) {
-            return new Image(imageURL.toExternalForm());
-        } else {
-            System.out.println("F");
-            return null;
-        }
-    }
-
-    private Point selectRandomPoint() {
-
-        int randomIndex = (int) (Math.random() * smallPoints.size());
-        System.out.println("Randon: " + randomIndex);
-        return smallPoints.get(randomIndex);
-    }
-    
-private Point selectRandomPointInky() {
-    int randomChoice = (int) (Math.random() * 5);
-    Point randomPoint;
-
-    if (randomChoice == 0) {
-        int randomIndex = (int) (Math.random() * smallPoints.size());
-        randomPoint = smallPoints.get(randomIndex);
-    } else if (randomChoice == 1) {
-        
-        randomPoint = new Point(pacmanX, pacmanY);
-    } else if (randomChoice == 2) {
-      
-        randomPoint = new Point(blinkyX, blinkyY);
-    } else if(randomChoice == 3) {
-       
-        randomPoint = new Point(clydeX, clydeY);
-    } else {
-        randomPoint = new Point(pinkyX, pinkyY);
-    }
-
-    System.out.println("Random Inky: " + randomPoint);
-    return randomPoint;
-}
-
 
     private void inkymove() {
         frameCountInky++;
@@ -536,8 +411,24 @@ private Point selectRandomPointInky() {
         if (frameCountInky >= frameDelayInky) {
             if (inkyMovingToRandomPoint) {
                 int startNode = inkyY * 15 + inkyX;
-                int targetNode = inkyTargetPoint.y * 15 + inkyTargetPoint.x;
-                List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
+                int targetNode = 0;
+
+                if (!shockInky && !inkyEnc) {
+                    targetNode = inkyTargetPoint.y * 15 + inkyTargetPoint.x;
+                } else {
+                    targetNode = inkyYHouse * 15 + inkyXHouse;
+                    frameDelayInky = 0;
+                    if (inkyX == inkyXHouse && inkyY == inkyYHouse) {
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                            shockInky = false;
+                            inkyEnc = false;
+                            frameDelayInky = 4;
+                        }));
+                        timeline.play();
+                    }
+                }
+
+                List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
 
                 if (shortestPath != null && shortestPath.size() > 1) {
                     int nextNode = shortestPath.get(1);
@@ -547,8 +438,13 @@ private Point selectRandomPointInky() {
                     inkyX = nextX;
                     inkyY = nextY;
 
+                    if (checkInkyCollision() && !isPoweredUp && !inkyEnc) {
+                        //reinicio;
+                        handleCollision();
+                    }
                     gridPaneMap.getChildren().remove(inkyImageView);
                     gridPaneMap.add(inkyImageView, inkyX, inkyY);
+
                 }
             }
             frameCountInky = 0;
@@ -560,14 +456,28 @@ private Point selectRandomPointInky() {
 
         if (frameCountClyde >= frameDelayClyde) {
             if (!isMovingToRandomPoint) {
-                currentRandomPoint = selectRandomPoint();
+                currentRandomPoint = algorithms.selectRandomPoint(smallPoints);
                 isMovingToRandomPoint = true;
             }
 
             int startNode = clydeY * 15 + clydeX;
             int randomX = currentRandomPoint.x;
             int randomY = currentRandomPoint.y;
-            int targetNode = randomY * 15 + randomX;
+            int targetNode = 0;
+            if (!shockClyde && !clydeEnc) {
+                targetNode = randomY * 15 + randomX;
+            } else {
+                targetNode = clydeYHouse * 15 + clydeXHouse;
+                frameDelayClyde = 0;
+                if (clydeX == clydeXHouse && clydeY == clydeYHouse) {
+                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                        shockClyde = false;
+                        clydeEnc = false;
+                        frameDelayClyde = 5;
+                    }));
+                    timeline.play();
+                }
+            }
 
             int shortestDistance = floydMatriz[startNode][targetNode];
 
@@ -600,10 +510,15 @@ private Point selectRandomPointInky() {
                 clydeX = nextX;
                 clydeY = nextY;
                 gridPaneMap.add(clydeImageView, clydeX, clydeY);
+
+                if (checkClydeCollision() && !isPoweredUp && clydeEnc) {
+                    handleCollision();
+                }
             }
 
             frameCountClyde = 0;
         }
+
     }
 
     private void blinkyMove() {
@@ -611,10 +526,29 @@ private Point selectRandomPointInky() {
 
         if (frameCountBlinky >= frameDelayBlinky) {
             int startNode = blinkyY * 15 + blinkyX;
-            int targetNode = pacmanY * 15 + pacmanX;
-            List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
+            int targetNode = 0;
 
-            if (shortestPath != null && shortestPath.size() > 1) {
+            if (!shockBlinky && !blinkyEnc) {
+                targetNode = pacmanY * 15 + pacmanX;
+            } else {
+                targetNode = blinkyYHouse * 15 + blinkyXHouse;
+                frameDelayBlinky = 0;
+                if (blinkyX == blinkyXHouse && blinkyY == blinkyYHouse) {
+                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                        shockBlinky = false;
+                        blinkyEnc = false;
+                        frameDelayBlinky = 3;
+                    }));
+                    timeline.play();
+                }
+            }
+            List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
+
+            System.out.println("BB: " + shortestPath.size());
+            if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc) {
+                handleCollision();
+            }
+            if (shortestPath != null && shortestPath.size() > 1 && lifes > 1) {
                 // Obtiene el siguiente nodo en el camino más corto
                 int nextNode = shortestPath.get(1);
                 int nextX = nextNode % 15; // Convierte el nodo en coordenadas X
@@ -645,7 +579,7 @@ private Point selectRandomPointInky() {
                 anticipatedPacmanX += directionX;
                 anticipatedPacmanY += directionY;
 
-                if (map[anticipatedPacmanY][anticipatedPacmanX] == 'W') {
+                if (map[anticipatedPacmanY][anticipatedPacmanX] == 'W' || map[anticipatedPacmanY][anticipatedPacmanX] == 'T') {
 
                     anticipatedPacmanX -= directionX;
                     anticipatedPacmanY -= directionY;
@@ -654,9 +588,27 @@ private Point selectRandomPointInky() {
             }
 
             int startNode = pinkyY * 15 + pinkyX;
-            int targetNode = anticipatedPacmanY * 15 + anticipatedPacmanX;
-            List<Integer> shortestPath = shortestPath(startNode, targetNode, weightedGraph);
+            int targetNode = 0;
+            if (!shockPinky && !pinkyEnc) {
+                targetNode = anticipatedPacmanY * 15 + anticipatedPacmanX;
+            } else {
+                targetNode = pinkyYHouse * 15 + pinkyXHouse;
+                frameDelayPinky = 0;
+                if (pinkyX == pinkyXHouse && pinkyY == pinkyYHouse) {
+                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                        shockPinky = false;
+                        pinkyEnc = false;
+                        frameDelayPinky = 4;
+                    }));
+                    timeline.play();
+                }
+            }
 
+            List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
+
+            if (shortestPath.size() == 1 && !isPoweredUp && !pinkyEnc) {
+                handleCollision();
+            }
             if (shortestPath != null && shortestPath.size() > 1) {
 
                 int nextNode = shortestPath.get(1);
@@ -675,11 +627,53 @@ private Point selectRandomPointInky() {
         }
     }
 
+    public void tunnels() {
+
+        int newPacmanX = pacmanX + directionX;
+        int newPacmanY = pacmanY + directionY;
+
+//        if(newPacmanX == 0){
+//            newPacmanX = 14;
+//            System.out.println("0");
+//        }
+//              if(newPacmanX == 14){
+//            newPacmanX = 0;
+//            System.out.println("14");
+//        }
+        if (newPacmanX >= 0 && newPacmanX <= 15 && newPacmanY >= 0 && newPacmanY <= 15) { // Verifica si está dentro de los límites del mapa
+            char nextCell = map[newPacmanY][newPacmanX];
+            if (nextCell == 'T') {
+                // Identifica la ubicación del túnel actual
+                Point t1 = tunnels.get(0);
+                Point t2 = tunnels.get(1);
+
+                Point currentTunnelPoint = new Point(newPacmanX, newPacmanY);
+
+                if (currentTunnelPoint.equals(t1)) {
+                    // Está en el túnel 1, entonces salta al túnel 2
+                    pacmanX = t2.x;
+                    pacmanY = t2.y;
+                } else if (currentTunnelPoint.equals(t2)) {
+                    // Está en el túnel 2, entonces salta al túnel 1
+                    pacmanX = t1.x;
+                    pacmanY = t1.y;
+                }
+
+                ImageView cellImageView = (ImageView) algorithms.getNodeByRowColumnIndex(newPacmanY, newPacmanX, gridPaneMap);
+                gridPaneMap.getChildren().remove(cellImageView);
+
+                gridPaneMap.add(pacmanImageView, newPacmanX, newPacmanY);
+
+            }
+        }
+
+    }
+
     private void movePacman() {
         frameCount++;
 
         if (frameCount >= frameDelay) {
-            if (map[pacmanY][pacmanX] != 'B' && map[pacmanY][pacmanX] != 'C') {
+            if (map[pacmanY][pacmanX] != 'B' && map[pacmanY][pacmanX] != 'C' && map[pacmanY][pacmanX] != 'T') {
                 map[pacmanY][pacmanX] = ' '; // celda vacía
             }
 
@@ -689,18 +683,20 @@ private Point selectRandomPointInky() {
             if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) { //rango del mapa
                 char nextCell = map[newPacmanY][newPacmanX];
                 if (nextCell != 'W') { // no es muro
-                    if (nextCell == 'S' || nextCell == 'D') { //si es un punto
+                    //tunnel
+                    tunnels();
+                    if (nextCell == 'S') { //si es un punto
                         map[newPacmanY][newPacmanX] = 'P'; //define la nueva posicion de P
                         score += 10;
                         lbl_score.setText(String.valueOf(score));
-                        if (levelCompleted()) {
+                        if (algorithms.levelCompleted(map)) {
                             FlowController.getInstance().goViewInWindow("LevelComplete");
                             getStage().close();
                             FlowController.getInstance().deleteView("GameView");
-                            System.out.println("Hola");
+
                         }
 
-                        ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
+                        ImageView cellImageView = (ImageView) algorithms.getNodeByRowColumnIndex(newPacmanY, newPacmanX, gridPaneMap);
                         gridPaneMap.getChildren().remove(cellImageView);
 
                         // Reemplazar la imagen de la celda por una celda vacía
@@ -708,6 +704,30 @@ private Point selectRandomPointInky() {
                         emptyImageView.setFitWidth(15);
                         emptyImageView.setFitHeight(15);
                         gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+                    } else if (nextCell == 'D') {
+
+                        changeGhost();
+                        isPoweredUp = true;
+
+                        map[newPacmanY][newPacmanX] = 'P'; //define la nueva posicion de P
+                        score += 10;
+                        lbl_score.setText(String.valueOf(score));
+                        if (algorithms.levelCompleted(map)) {
+                            FlowController.getInstance().goViewInWindow("LevelComplete");
+                            getStage().close();
+                            FlowController.getInstance().deleteView("GameView");
+
+                        }
+
+                        ImageView cellImageView = (ImageView) algorithms.getNodeByRowColumnIndex(newPacmanY, newPacmanX, gridPaneMap);
+                        gridPaneMap.getChildren().remove(cellImageView);
+
+                        // Reemplazar la imagen de la celda por una celda vacía
+                        ImageView emptyImageView = new ImageView();
+                        emptyImageView.setFitWidth(15);
+                        emptyImageView.setFitHeight(15);
+                        gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+
                     }
 
                     gridPaneMap.getChildren().remove(pacmanImageView);
@@ -716,174 +736,153 @@ private Point selectRandomPointInky() {
                     pacmanImageView.setFitHeight(15);
                     pacmanImageView.setFitWidth(15);
                     gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
+
+                    if (checkGhostCollision(blinkyX, blinkyY)) {
+                        if (isPoweredUp) {
+                            shockBlinky = true;
+                            blinkyImageView.setImage(gameMap.getImage("ojos"));
+                        } else {
+
+                            handleCollision();
+                        }
+                    }
+                    if (checkGhostCollision(pinkyX, pinkyY)) {
+                        if (isPoweredUp) {
+                            shockPinky = true;
+                            pinkyImageView.setImage(gameMap.getImage("ojos"));
+                        } else {
+
+                            handleCollision();
+                        }
+                    }
+                    if (checkGhostCollision(inkyX, inkyY)) {
+                        if (isPoweredUp) {
+                            shockInky = true;
+                            inkyImageView.setImage(gameMap.getImage("ojos"));
+                        } else {
+                            handleCollision();
+                        }
+                    }
+                    if (checkGhostCollision(clydeX, clydeY)) {
+                        if (isPoweredUp) {
+                            shockClyde = true;
+                            clydeImageView.setImage(gameMap.getImage("ojos"));
+                        } else {
+                            handleCollision();
+                        }
+                    }
+
                 }
             }
             frameCount = 0;
         }
     }
 
-// Función para obtener una ImageView en una fila y columna específicas
-    private Node getNodeByRowColumnIndex(final int row, final int column) {
-        Node result = null;
-        ObservableList<Node> children = gridPaneMap.getChildren();
-
-        for (Node node : children) {
-            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-                result = node;
-                break;
-            }
+    private void handleCollision() {
+        if (lifes > 0) {
+            lifes--;
+            algorithms.kill(lifes, imgViewLife1, imgViewLife2, imgViewLife3, imgViewLife4, imgViewLife5, imgViewLife6);
+            restartGhost();
+            paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
+        }else{
+            FlowController.getInstance().goViewInWindow("GameOverView");
+            
         }
 
-        return result;
     }
 
-    public boolean levelCompleted() {
-        boolean isComplete = true;
-
-        if (map != null) {
-            for (int y = 0; y < map.length; y++) {
-                for (int x = 0; x < map[y].length; x++) {
-                    if (map[y][x] == 'S' || map[y][x] == 'D') {
-                        isComplete = false;
-
-                        break;
-                    }
-                }
-                if (!isComplete) {
-                    break;
-                }
-            }
-        }
-        // verMatriz();
-        return isComplete;
+    private boolean checkClydeCollision() {
+        return clydeX == pacmanX && clydeY == pacmanY;
     }
 
-    //matriz adyacencia 
-    private int[][] createWeightedGraph(char[][] map) {
-        int mapSize = map.length;
-        int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
-
-        for (int i = 0; i < mapSize * mapSize; i++) {
-            for (int j = 0; j < mapSize * mapSize; j++) {
-                graph[i][j] = (i == j) ? 0 : Integer.MAX_VALUE; // Inicializar con valor infinito
-            }
-        }
-
-        for (int y = 0; y < mapSize; y++) {
-            for (int x = 0; x < mapSize; x++) {
-                if (map[y][x] != 'W') {
-                    // Comprueba los vecinos arriba, abajo, izquierda y derecha
-                    if (y > 0 && map[y - 1][x] != 'W') {
-                        graph[y * mapSize + x][(y - 1) * mapSize + x] = 1;
-                        graph[(y - 1) * mapSize + x][y * mapSize + x] = 1;
-                    }
-                    if (y < mapSize - 1 && map[y + 1][x] != 'W') {
-                        graph[y * mapSize + x][(y + 1) * mapSize + x] = 1;
-                        graph[(y + 1) * mapSize + x][y * mapSize + x] = 1;
-                    }
-                    if (x > 0 && map[y][x - 1] != 'W') {
-                        graph[y * mapSize + x][y * mapSize + (x - 1)] = 1;
-                        graph[y * mapSize + (x - 1)][y * mapSize + x] = 1;
-                    }
-                    if (x < mapSize - 1 && map[y][x + 1] != 'W') {
-                        graph[y * mapSize + x][y * mapSize + (x + 1)] = 1;
-                        graph[y * mapSize + (x + 1)][y * mapSize + x] = 1;
-                    }
-                }
-            }
-        }
-
-        return graph;
+    private boolean checkInkyCollision() {
+        return inkyX == pacmanX && inkyY == pacmanY;
     }
 
-    private List<Integer> shortestPath(int start, int target, int[][] weightedGraph) { //dijsktra
-        int numNodes = weightedGraph.length;
-        int[] distance = new int[numNodes];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+    public void restartGhost() {
 
-        PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> distance[node]));
-        queue.add(start);
-        distance[start] = 0;
+        //blinky
+        blinkyX = blinkyXHouse;
+        blinkyY = blinkyYHouse;
+        //pinky
+        pinkyX = pinkyXHouse;
+        pinkyY = pinkyYHouse;
+        //inky
+        inkyX = inkyXHouse;
+        inkyY = inkyYHouse;
+        //clyde
+        clydeX = clydeXHouse;
+        clydeY = clydeYHouse;
+        //pacman
+        pacmanX = pacmanXHouse;
+        pacmanY = pacmanYHouse;
+        paman.restartGhost(gridPaneMap, blinkyImageView, blinkyXHouse, blinkyYHouse, pinkyImageView, pinkyXHouse, pinkyYHouse, inkyImageView, inkyXHouse, inkyYHouse, clydeImageView, clydeXHouse, clydeYHouse, pacmanImageView, pacmanXHouse, pacmanYHouse);
 
-        int[] previous = new int[numNodes];
-        Arrays.fill(previous, -1);
+    }
 
-        while (!queue.isEmpty()) {
-            int currentNode = queue.poll();
-            if (currentNode == target) {
-                break;
-            }
+    public void changeGhost() {
+        blinkyImageView.setImage(gameMap.getImage("blue"));
+        pinkyImageView.setImage(gameMap.getImage("blue"));
+        clydeImageView.setImage(gameMap.getImage("blue"));
+        inkyImageView.setImage(gameMap.getImage("blue"));
 
-            for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-                int weight = weightedGraph[currentNode][neighbor];
-                if (weight != Integer.MAX_VALUE) {
-                    int altDistance = distance[currentNode] + weight;
-                    if (altDistance < distance[neighbor]) {
-                        distance[neighbor] = altDistance;
-                        previous[neighbor] = currentNode;
-                        queue.add(neighbor);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            initialGhost();
+            isPoweredUp = false;
+            System.out.println("Función ejecutada después de 10 segundos");
+        }));
+
+        timeline.play();
+    }
+
+    public void initialGhost() {
+        blinkyImageView.setImage(gameMap.getBlinkyImage());
+        inkyImageView.setImage(gameMap.getInkyImage());
+        pinkyImageView.setImage(gameMap.getPinkyImage());
+        clydeImageView.setImage(gameMap.getClydeImage());
+    }
+
+    private boolean checkGhostCollision(int ghostX, int ghostY) {
+        return pacmanX == ghostX && pacmanY == ghostY;
+    }
+
+    @FXML
+    private void onAction_encierro(ActionEvent event) {
+
+        if (!encierro) {
+           btn_encierro.setStyle("-fx-background-color: green;");
+            Set<Integer> selectedIndices = new HashSet<>();
+            Random random = new Random();
+            int count = 0;
+
+            while (count < 2) {
+                System.out.println("-w-");
+                int randomGhost = random.nextInt(4);
+                System.out.println(randomGhost);
+
+                if (selectedIndices.add(randomGhost)) {
+
+                    switch (randomGhost) {
+                        case 0:
+                            blinkyEnc = true;
+                            break;
+                        case 1:
+                            pinkyEnc = true;
+                            break;
+                        case 2:
+                            clydeEnc = true;
+                            break;
+                        case 3:
+                            inkyEnc = true;
+                            break;
                     }
+                    count++;
                 }
             }
         }
-
-        List<Integer> path = new ArrayList<>();
-        int current = target;
-        while (current != -1) {
-            path.add(0, current);
-            current = previous[current];
-        }
-
-        return path;
     }
 
-    private List<Integer> longestPath(int start, int target, int[][] weightedGraph) {
-
-        List<Integer> longestPath = new ArrayList<>();
-
-        return longestPath;
-    }
-
-    public int[][] floydWarshall(int[][] graph) {
-        int V = graph.length;
-        int[][] dist = new int[V][V];
-
-        for (int i = 0; i < V; i++) {
-            for (int j = 0; j < V; j++) {
-                dist[i][j] = graph[i][j];
-            }
-        }
-
-        for (int k = 0; k < V; k++) {
-            for (int i = 0; i < V; i++) {
-                for (int j = 0; j < V; j++) {
-                    if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE
-                            && dist[i][k] + dist[k][j] < dist[i][j]) {
-                        dist[i][j] = dist[i][k] + dist[k][j];
-                    }
-                }
-            }
-        }
-
-//        System.out.println("Matriz floyd");
-//
-//        for (int i = 0; i < V; i++) {
-//            for (int j = 0; j < V; j++) {
-//                System.out.print(dist[i][j] + " ");
-//            }
-//            System.out.println();
-//        }
-        return dist;
-    }
-
-    public void verMatriz() {
-
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                System.out.print(weightedGraph[i][j] + " ");
-            }
-            System.out.println();
-
-        }
+    @FXML
+    private void onAction_velocidad(ActionEvent event) {
     }
 }
