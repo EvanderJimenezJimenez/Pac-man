@@ -1,6 +1,7 @@
 package cr.ac.una.pac.man.controller;
 
 import cr.ac.una.pac.man.GeneratedMap;
+import cr.ac.una.pac.man.Level;
 import cr.ac.una.pac.man.Trophie;
 import cr.ac.una.pac.man.util.FlowController;
 import cr.ac.una.pac.man.util.Mensaje;
@@ -15,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -62,12 +62,29 @@ public class PlayerNameController extends Controller implements Initializable {
     private ImageView img_retroceder;
     
     GeneratedMap gmap;
+    
+     ObservableList<Level> levelList;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        getLevels();
     }
 
+    public boolean levelsComplete(){
+        
+        boolean complete = true;
+        
+        for(Level lev: levelList){
+            
+            if(!lev.isComplete()){
+                complete = false;
+            }
+            
+        }
+        return complete;
+    }
+    
     @Override
     public void initialize() {
 
@@ -81,6 +98,46 @@ public class PlayerNameController extends Controller implements Initializable {
         System.out.println("Trofeo: " + trophiesList.get(0).getName()
                 + trophiesList.get(0).getScore()
                 + trophiesList.get(0).isComplete());
+
+    }
+    
+     private void getLevels() {
+        List<cr.ac.una.pac.man.Level> levels = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\completedlevels.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] levelData = line.split("\\*\\*\\*");
+
+                for (String levelString : levelData) {
+
+                    String[] parts = levelString.split("\\(//\\)");
+
+                    if (parts.length >= 8) {
+                        String name = parts[0];
+                        String levelNumber = parts[1];
+
+                        boolean available = state(parts[2]);
+                        boolean complete = state(parts[3]);
+
+                        String score = parts[4];
+
+                        String scoreLife = parts[5];
+
+                        String play = parts[6];
+
+                        String time = parts[7];
+
+                        cr.ac.una.pac.man.Level level = new cr.ac.una.pac.man.Level(name, levelNumber, available, complete, score, scoreLife, play, time);
+                        levels.add(level);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        levelList = FXCollections.observableArrayList(levels);
 
     }
 
@@ -160,7 +217,7 @@ public class PlayerNameController extends Controller implements Initializable {
 
             switch (i) {
                 case 0:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) != 10) {
+                    if (levelsComplete()) {
                         vbox_1.setDisable(false);
                         vbox_1.setOpacity(100);
                         marcarCompletado(i);
