@@ -283,8 +283,6 @@ public class GameViewController extends Controller implements Initializable {
         anchorPane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             public void handle(KeyEvent keyEvent) {
 
-
-
                 if (keyEvent.getCode() == LEFT) {
                     directionX = -1;
                     directionY = 0;
@@ -815,6 +813,7 @@ public class GameViewController extends Controller implements Initializable {
 
         if (lifes == 6) {
             scoreDead = score;
+            System.out.println("Puntos sin morir: " + scoreDead);
         }
 
         if (lifes > 0) {
@@ -847,6 +846,10 @@ public class GameViewController extends Controller implements Initializable {
         System.out.println("Nivel de juego: " + lev);
 
         String time = lblTime.getText();
+        if (lifes == 6) {
+            scoreDead = score;
+            System.out.println("Puntos sin morir: " + scoreDead);
+        }
 
         score += (lev * 100);
 
