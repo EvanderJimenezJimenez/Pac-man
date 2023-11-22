@@ -191,7 +191,9 @@ public class StatisticsViewController extends Controller implements Initializabl
     @FXML
     private void onAction_top(ActionEvent event) {
         System.out.println("Lsds");
-        //FlowController.getInstance().goViewInWindowModal("TopPlayersView", getStage(), true);
+        FlowController.getInstance().goViewInWindow("TopPlayersView");
+        getStage().close();
+         FlowController.getInstance().deleteView("StatisticsView");
     }
 
 }

@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.SettingViewController">
-    
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.SettingViewController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="300.0" layoutY="191.0" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="134.0" prefWidth="685.0" spacing="5.0">
+               <children>
+                  <Label prefHeight="61.0" prefWidth="233.0" text="Seleccione la dificultad del Juego" />
+                  <Separator prefWidth="200.0" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#onAction_facil" prefHeight="58.0" prefWidth="102.0" text="Facil" />
+                        <Button layoutX="302.0" layoutY="23.0" mnemonicParsing="false" onAction="#onAction_medio" prefHeight="58.0" prefWidth="102.0" text="Medio" />
+                        <Button layoutX="353.0" layoutY="23.0" mnemonicParsing="false" onAction="#onAction_dificil" prefHeight="58.0" prefWidth="102.0" text="Dificil" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Separator prefWidth="200.0" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onAction_activarNiveles" prefHeight="65.0" prefWidth="150.0" text="Activar todos los niveles" />
+                  <Button mnemonicParsing="false" onAction="#onAction_activarTrofeos" prefHeight="65.0" prefWidth="198.0" text="Desbloquear todos los trofeos" />
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <HBox alignment="CENTER" prefHeight="220.0" prefWidth="685.0" spacing="15.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="166.0" prefWidth="233.0" spacing="3.0">
+                     <children>
+                        <HBox prefHeight="37.0" prefWidth="134.0">
+                           <children>
+                              <Label prefHeight="36.0" prefWidth="150.0" text="Puntuación actual: " />
+                              <Label fx:id="lbl_score" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="127.0" text="0" />
+                           </children>
+                        </HBox>
+                        <Label prefHeight="61.0" prefWidth="176.0" text="Definir nueva puntuacion" />
+                        <JFXTextField fx:id="txt_score" prefHeight="32.0" prefWidth="233.0" />
+                        <Button minWidth="99.0" mnemonicParsing="false" onAction="#onActionGuardarScore" prefHeight="47.0" prefWidth="99.0" text="Guardar" />
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <VBox alignment="CENTER" layoutX="257.0" layoutY="10.0" prefHeight="166.0" prefWidth="223.0" spacing="3.0">
+                     <children>
+                        <HBox alignment="TOP_CENTER" prefHeight="37.0" prefWidth="134.0">
+                           <children>
+                              <Label prefHeight="36.0" prefWidth="50.0" text="Vidas:" />
+                              <Label fx:id="lbl_vidas" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="96.0" text="6" />
+                           </children>
+                        </HBox>
+                        <Label prefHeight="61.0" prefWidth="194.0" text="Definir nuevas Vidas iniciales" />
+                        <JFXTextField fx:id="txt_vidas" prefHeight="33.0" prefWidth="223.0" />
+                        <Button minWidth="99.0" mnemonicParsing="false" onAction="#onActionGuardarVidas" prefHeight="47.0" prefWidth="99.0" text="Guardar" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </Separator>
+            <Button minWidth="82.0" mnemonicParsing="false" onAction="#onAction_salir" prefHeight="59.0" prefWidth="82.0" text="Volver" />
+         </children>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </VBox>
+   </children>
 </AnchorPane>

@@ -202,7 +202,6 @@ public class PlayerNameController extends Controller implements Initializable {
                         marcarCompletado(i);
                     }
                     break;
-
             }
 
         }

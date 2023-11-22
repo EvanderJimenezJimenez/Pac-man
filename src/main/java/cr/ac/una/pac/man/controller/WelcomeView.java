@@ -49,12 +49,14 @@ public class WelcomeView extends Controller implements Initializable {
     private void onAction_player(ActionEvent event) {
         FlowController.getInstance().goViewInWindow("PlayerName");
         getStage().close();
+         FlowController.getInstance().deleteView("WelcomeView");
     }
 
     @FXML
     private void onAction_settings(ActionEvent event) {
-        FlowController.getInstance().goLoadingView("TopPlayersView");
+        FlowController.getInstance().goLoadingView("SettingView");
         getStage().close();
+         FlowController.getInstance().deleteView("WelcomeView");
     }
 
     @FXML
@@ -64,8 +66,9 @@ public class WelcomeView extends Controller implements Initializable {
 
     @FXML
     private void onAction_Estadisticas(ActionEvent event) {
-        FlowController.getInstance().goLoadingView("StatisticsView");
+        FlowController.getInstance().goViewInWindow("StatisticsView");
         getStage().close();
+         FlowController.getInstance().deleteView("WelcomeView");
     }
 
 }
