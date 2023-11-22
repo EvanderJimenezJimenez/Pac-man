@@ -24,28 +24,29 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class TopPlayersViewController extends Controller implements Initializable {
 
- ObservableList<TopPlayers> topPlayersList;
+    ObservableList<TopPlayers> topPlayersList;
     @FXML
     private TableView<TopPlayers> tbv_top;
     @FXML
     private TableColumn<TopPlayers, String> columnName;
     @FXML
     private TableColumn<TopPlayers, String> columnScore;
- 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
-        columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        columnScore.setCellValueFactory(new PropertyValueFactory<>("score"));
-        
-        getDataTops();
-        
-        // TODO
-    }    
 
     @Override
-    public void initialize() {}
-    
+    public void initialize(URL url, ResourceBundle rb) {
+
+        columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        columnScore.setCellValueFactory(new PropertyValueFactory<>("score"));
+
+        getDataTops();
+
+        // TODO
+    }
+
+    @Override
+    public void initialize() {
+    }
+
     public void getDataTops() {
 
         List<TopPlayers> topsp = new ArrayList<>();
@@ -65,9 +66,7 @@ public class TopPlayersViewController extends Controller implements Initializabl
 
                         String score = parts[1];
 
-
-
-                       TopPlayers tops = new TopPlayers(name, score);
+                        TopPlayers tops = new TopPlayers(name, score);
                         topsp.add(tops);
                     }
                 }
@@ -77,7 +76,13 @@ public class TopPlayersViewController extends Controller implements Initializabl
         }
 
         topPlayersList = FXCollections.observableArrayList(topsp);
+        topPlayersList.sort((player1, player2) -> {
+          
+            int score1 = Integer.parseInt(player1.getScore());
+            int score2 = Integer.parseInt(player2.getScore());
+            return Integer.compare(score2, score1); 
+        });
         tbv_top.setItems(topPlayersList);
     }
-    
+
 }

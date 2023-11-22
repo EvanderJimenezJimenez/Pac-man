@@ -105,7 +105,7 @@
                            </image>
                         </ImageView>
                      </children></HBox>
-                  <Button fx:id="btn_top10" disable="true" mnemonicParsing="false" onAction="#onAction_top" prefHeight="54.0" prefWidth="122.0" styleClass="jfx-button" text="Ver top 10" />
+                  <Button fx:id="btn_top10" mnemonicParsing="false" onAction="#onAction_top" prefHeight="54.0" prefWidth="122.0" styleClass="jfx-button" text="Ver top 10" />
                </children>
                <padding>
                   <Insets bottom="2.0" top="2.0" />

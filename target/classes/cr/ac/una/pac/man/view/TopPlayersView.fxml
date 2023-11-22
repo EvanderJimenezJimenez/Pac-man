@@ -18,7 +18,7 @@
       <VBox alignment="CENTER" layoutX="10.5" layoutY="10.5" prefHeight="575.0" prefWidth="685.0" spacing="10.0" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
          <children>
             <Label alignment="CENTER" prefHeight="37.0" prefWidth="142.0" styleClass="title-label" stylesheets="@styles.css" text="Mejores Jugadores" />
-            <TableView fx:id="tbv_top" prefHeight="239.0" prefWidth="685.0">
+            <TableView fx:id="tbv_top" prefHeight="314.0" prefWidth="682.0">
               <columns>
                 <TableColumn fx:id="columnName" prefWidth="75.0" text="Jugador" />
                 <TableColumn fx:id="columnScore" prefWidth="75.0" text="Puntuacion" />
