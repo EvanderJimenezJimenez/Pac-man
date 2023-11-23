@@ -125,7 +125,7 @@ public List<Integer> longestPathDijkstra(int inicio, int objetivo, int[][] matri
         Arrays.fill(distancia, Integer.MIN_VALUE);
 
         PriorityQueue<Integer> colaPrioridad = new PriorityQueue<>(numNodos, Comparator.comparingInt(nodo -> -distancia[nodo]));
-        colaPrioridad.add(inicio);
+        colaPrioridad.add(inicio); //
         distancia[inicio] = 0;
 
         int[] anterior = new int[numNodos];
