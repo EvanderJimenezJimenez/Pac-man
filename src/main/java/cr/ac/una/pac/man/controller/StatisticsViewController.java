@@ -87,9 +87,9 @@ public class StatisticsViewController extends Controller implements Initializabl
 
     @FXML
     private void onMouseAtras(MouseEvent event) {
-        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
-        currentStage.close();
-        FlowController.getInstance().goMain();
+       getStage().close();
+     
+     
     }
 
     private void loadLevelDataFromFile() {
@@ -194,6 +194,7 @@ public class StatisticsViewController extends Controller implements Initializabl
         FlowController.getInstance().goViewInWindow("TopPlayersView");
         getStage().close();
          FlowController.getInstance().deleteView("StatisticsView");
+  
     }
 
 }

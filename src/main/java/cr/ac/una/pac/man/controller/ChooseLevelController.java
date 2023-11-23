@@ -69,7 +69,7 @@ public class ChooseLevelController extends Controller implements Initializable {
 
         loadLevelDataFromFile();
         setDataLevel(levelList.get(index));
-        
+
     }
 
     private void loadLevelDataFromFile() {
@@ -92,14 +92,14 @@ public class ChooseLevelController extends Controller implements Initializable {
                         boolean complete = state(parts[3]);
 
                         String score = parts[4];
-                        
+
                         String scoreLife = parts[5];
-                        
+
                         String play = parts[6];
-                        
+
                         String time = parts[7];
 
-                        Level level = new Level(name, levelNumber, available, complete, score,scoreLife,play,time);
+                        Level level = new Level(name, levelNumber, available, complete, score, scoreLife, play, time);
                         levels.add(level);
                     }
                 }
@@ -124,10 +124,10 @@ public class ChooseLevelController extends Controller implements Initializable {
         img_level.setImage(imageLevel(levelData.getLevelNumber()));
         System.out.println("Level: " + levelData.getLevelNumber());
         newSelectCbx(Integer.valueOf(levelData.getLevelNumber()));
-        
-        if(levelData.isAvailable()){
+
+        if (levelData.isAvailable()) {
             btn_play.setText("Jugar");
-        }else{
+        } else {
             btn_play.setText("Bloqueado");
         }
 
@@ -219,20 +219,20 @@ public class ChooseLevelController extends Controller implements Initializable {
 
     @FXML
     private void onAction_play(ActionEvent event) {
-        
+
         int level = cbx_level.getSelectionModel().getSelectedIndex();
-System.out.println("Level: " + level);
+        System.out.println("Level: " + level);
         if (level == 0) {
             level = 1;
-        }else{
+        } else {
             level++;
         }
 
         if (available()) {
-             System.out.println("Level: " + level);
+            System.out.println("Level: " + level);
             AppContext.getInstance().set("Level", level);
             //FlowController.getInstance().goLoadingView("GameView");
-           
+
             FlowController.getInstance().goViewInWindow("GameView");
             getStage().close();
         } else {
@@ -254,9 +254,9 @@ System.out.println("Level: " + level);
 
     @FXML
     private void onMouseAtras(MouseEvent event) {
-        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
-        currentStage.close();
-        FlowController.getInstance().goMain();
+FlowController.getInstance().goViewInWindow("WelcomeView");
+        getStage().close();
+
     }
 
 }

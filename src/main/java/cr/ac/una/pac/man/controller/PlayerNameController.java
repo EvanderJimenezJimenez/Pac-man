@@ -70,11 +70,12 @@ public class PlayerNameController extends Controller implements Initializable {
 
     String player = null;
 
-     Statistics statistics;
+    Statistics statistics;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-          statistics = new Statistics();
-          
+        statistics = new Statistics();
+
         getLevels();
         getPlayer();
         getStatistics();
@@ -170,9 +171,8 @@ public class PlayerNameController extends Controller implements Initializable {
 
     }
 
-    private void addPalyer(String nombre,String esp) {
+    private void addPalyer(String nombre, String esp) {
         try {
-          
 
             File playerName = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player.txt");
 
@@ -405,10 +405,11 @@ public class PlayerNameController extends Controller implements Initializable {
     private void onAction_savePlayer(ActionEvent event) {
 
         if (txt_PlayerName.getText().length() > 0) {
-            addPalyer( txt_PlayerName.getText(),"***");
-            FlowController.getInstance().goMain();
-            getStage().close();
+            addPalyer(txt_PlayerName.getText(), "***");
 
+          
+            getStage().close();
+        
         } else {
             new Mensaje().show(Alert.AlertType.ERROR, "Nombre Jugador", "Ingresa el nombre del jugador.");
         }
@@ -421,9 +422,9 @@ public class PlayerNameController extends Controller implements Initializable {
     }
 
     private void deleteInfoFiles() {
-        
-         if(new Mensaje().showConfirmation("Eliminar info",getStage(), "Desea eliminar los datos.")){
-             String level1 = levelList.get(0).getName();
+
+        if (new Mensaje().showConfirmation("Eliminar info", getStage(), "Desea eliminar los datos.")) {
+            String level1 = levelList.get(0).getName();
 
 //        for(Level lev : levelList){
 //           // System.out.println(lev.getName());
@@ -443,8 +444,6 @@ public class PlayerNameController extends Controller implements Initializable {
 //            trophie.setComplete(false);
 //        }
 //        updateTrophiesFile();
-
-     
 //           statistics = statisticsList.get(0);
 //            statistics.setScore(String.valueOf(0));
 //            statistics.setLifes(String.valueOf(0));
@@ -452,22 +451,19 @@ public class PlayerNameController extends Controller implements Initializable {
 //            statistics.setTime("00:00:00");
 //       
 //        updateStisticsFile(statisticsList.get(0));
-        
-       // addPalyer("","");
-              new Mensaje().show(Alert.AlertType.INFORMATION, "Eliminar info", "Datos eliminados correctamente.");
-         }
+            // addPalyer("","");
+            new Mensaje().show(Alert.AlertType.INFORMATION, "Eliminar info", "Datos eliminados correctamente.");
+        }
 
-        
-       
-      
     }
 
 //gmap.mapGenerated();
     @FXML
     private void onMouseAtras(MouseEvent event) {
-        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
-        currentStage.close();
-        FlowController.getInstance().goMain();
+
+            getStage().close();
+    
+
     }
 
 }

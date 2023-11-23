@@ -26,10 +26,11 @@ public class PlayerViewController extends Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
 
     @FXML
     private void onActionDelete(ActionEvent event) {
@@ -37,9 +38,10 @@ public class PlayerViewController extends Controller implements Initializable {
 
     @FXML
     private void onMouseAtras(MouseEvent event) {
-        Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
-        currentStage.close();
+
+        getStage().close();
         FlowController.getInstance().goMain();
+
     }
-    
+
 }
