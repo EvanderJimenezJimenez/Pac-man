@@ -160,6 +160,8 @@ public class GameViewController extends Controller implements Initializable {
     boolean blinkyPacman;
 
     int lifes = 6;
+     int velocityF = 0;
+      int encierroF = 0;
 
     GameMap gameMap;
     Algorithms algorithms;
@@ -726,6 +728,8 @@ public class GameViewController extends Controller implements Initializable {
 
     private void movePacman() {
 
+        velocityActiva();
+        encierroActivo();
 //        defineTunel();
         frameCount++;
 
@@ -1012,12 +1016,29 @@ public class GameViewController extends Controller implements Initializable {
     private boolean checkGhostCollision(int ghostX, int ghostY) {
         return pacmanX == ghostX && pacmanY == ghostY;
     }
+    
+    public void encierroActivo(){
+        
+        if(encierro){
+            btn_encierro.setOpacity(100);
+            
+        }
+        
+    }
 
+        public void velocityActiva(){
+        
+        if(velocityHelp){
+            btn_encierro.setOpacity(100);
+            velocityHelp = false;
+        }
+        
+    }
     @FXML
     private void onAction_encierro(ActionEvent event) {
 
-        completeLevel();
-
+        //completeLevel();
+        
         if (!encierro) {
 
             //btn_encierro.setStyle("-fx-background-color: green;");

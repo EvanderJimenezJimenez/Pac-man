@@ -48,7 +48,12 @@ public class LevelCompleteController extends Controller implements Initializable
     public String time = (String) AppContext.getInstance().get("GameTime");
     public int nivel = (int) AppContext.getInstance().get("Level");
 
+    public int velocity = (int) AppContext.getInstance().get("velocity");
+    public int encierro = (int) AppContext.getInstance().get("encierro");
+
     Statistics statistics;
+
+    ObservableList<Trophie> trophiesList;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -73,9 +78,13 @@ public class LevelCompleteController extends Controller implements Initializable
         lbl_score.setText(String.valueOf(score));
 
         loadLevelDataFromFile();
-        getStatistics();
         levelUpdate();
+
+        getStatistics();
         updateStatistics();
+
+        getTrophies();
+        updateDataTrophies();
 
         lbl_level.setText(String.valueOf(nivel));
 
@@ -275,6 +284,80 @@ public class LevelCompleteController extends Controller implements Initializable
                 String trofeoString = level.getName() + "(//)" + level.getLevelNumber() + "(//)" + level.isAvailable() + "(//)"
                         + level.isComplete() + "(//)" + level.getScore() + "(//)" + level.getScoreLife()
                         + "(//)" + level.getPlay() + "(//)" + level.getTime() + "***";
+                writer.write(trofeoString);
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getTrophies() {
+        List<Trophie> trophies = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] trophieData = line.split("\\*\\*\\*");
+
+                for (String trophieString : trophieData) {
+
+                    String[] parts = trophieString.split("\\(//\\)");
+
+                    if (parts.length >= 3) {
+                        String name = parts[0];
+                        String score = parts[1];
+
+                        boolean complete = state(parts[2]);
+
+                        Trophie troph = new Trophie(name, score, complete);
+                        trophies.add(troph);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        trophiesList = FXCollections.observableArrayList(trophies);
+
+    }
+
+    private void updateDataTrophies() {
+
+        if (lifes == 6) {
+            int scoreLifes = Integer.parseInt(trophiesList.get(2).getScore());
+            trophiesList.get(2).setScore(String.valueOf(scoreLifes++));
+        }
+        if (deadGhost != 0) {
+            int dGhost = Integer.parseInt(trophiesList.get(1).getScore());
+
+            trophiesList.get(1).setScore(String.valueOf(dGhost + deadGhost));
+        }
+
+        if (encierro != 0) {
+            int encierroT = Integer.parseInt(trophiesList.get(3).getScore());
+
+            trophiesList.get(3).setScore(String.valueOf(encierroT + encierro));
+        }
+
+        if (velocity != 0) {
+            int velocidadT = Integer.parseInt(trophiesList.get(4).getScore());
+            trophiesList.get(4).setScore(String.valueOf(velocidadT + velocity));
+        }
+
+        updateTrophiesFile();
+    }
+
+    private void updateTrophiesFile() {
+        try {
+
+            String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt";
+            FileWriter writer = new FileWriter(filePath);
+
+            for (Trophie trofeo : trophiesList) {
+                String trofeoString = trofeo.getName() + "(//)" + trofeo.getScore() + "(//)" + trofeo.isComplete() + "***";
                 writer.write(trofeoString);
             }
 

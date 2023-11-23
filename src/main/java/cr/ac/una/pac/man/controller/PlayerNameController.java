@@ -65,10 +65,32 @@ public class PlayerNameController extends Controller implements Initializable {
     
      ObservableList<Level> levelList;
 
+      String player = null;
+      
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         getLevels();
+        getPlayer();
+        txt_PlayerName.setText(player);
+    }
+        public void getPlayer() {
+        player = null; // Asegúrate de inicializar la variable antes de usarla
+
+        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Buscar la posición de "***"
+                int index = line.indexOf("***");
+                if (index != -1) {
+                    // Extraer el nombre antes de "***"
+                    player = line.substring(0, index).trim();
+                    break; // Rompe el bucle después de encontrar la primera ocurrencia
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean levelsComplete(){
@@ -145,8 +167,6 @@ public class PlayerNameController extends Controller implements Initializable {
         try {
             String nombre = txt_PlayerName.getText();
 
-            String contenido;
-
             File playerName = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player.txt");
 
             FileWriter player = new FileWriter(playerName);
@@ -155,7 +175,6 @@ public class PlayerNameController extends Controller implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void trophiesDisable() {
@@ -308,7 +327,8 @@ public class PlayerNameController extends Controller implements Initializable {
     private void onAction_savePlayer(ActionEvent event) {
 
         if (txt_PlayerName.getText().length() > 0) {
-            //addPalyer();
+            addPalyer();
+            FlowController.getInstance().goMain();
             getStage().close();
 
         } else {
