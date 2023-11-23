@@ -2,6 +2,7 @@ package cr.ac.una.pac.man.controller;
 
 import cr.ac.una.pac.man.GeneratedMap;
 import cr.ac.una.pac.man.Level;
+import cr.ac.una.pac.man.Statistics;
 import cr.ac.una.pac.man.Trophie;
 import cr.ac.una.pac.man.util.FlowController;
 import cr.ac.una.pac.man.util.Mensaje;
@@ -60,21 +61,27 @@ public class PlayerNameController extends Controller implements Initializable {
     private HBox hbox_0;
     @FXML
     private ImageView img_retroceder;
-    
-    GeneratedMap gmap;
-    
-     ObservableList<Level> levelList;
 
-      String player = null;
-      
+    GeneratedMap gmap;
+
+    ObservableList<Level> levelList;
+
+    ObservableList<Statistics> statisticsList;
+
+    String player = null;
+
+     Statistics statistics;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+          statistics = new Statistics();
+          
         getLevels();
         getPlayer();
+        getStatistics();
         txt_PlayerName.setText(player);
     }
-        public void getPlayer() {
+
+    public void getPlayer() {
         player = null; // Asegúrate de inicializar la variable antes de usarla
 
         try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player.txt"))) {
@@ -93,20 +100,20 @@ public class PlayerNameController extends Controller implements Initializable {
         }
     }
 
-    public boolean levelsComplete(){
-        
+    public boolean levelsComplete() {
+
         boolean complete = true;
-        
-        for(Level lev: levelList){
-            
-            if(!lev.isComplete()){
+
+        for (Level lev : levelList) {
+
+            if (!lev.isComplete()) {
                 complete = false;
             }
-            
+
         }
         return complete;
     }
-    
+
     @Override
     public void initialize() {
 
@@ -122,8 +129,8 @@ public class PlayerNameController extends Controller implements Initializable {
                 + trophiesList.get(0).isComplete());
 
     }
-    
-     private void getLevels() {
+
+    private void getLevels() {
         List<cr.ac.una.pac.man.Level> levels = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\completedlevels.txt"))) {
@@ -163,14 +170,14 @@ public class PlayerNameController extends Controller implements Initializable {
 
     }
 
-    private void addPalyer() {
+    private void addPalyer(String nombre,String esp) {
         try {
-            String nombre = txt_PlayerName.getText();
+          
 
             File playerName = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\player.txt");
 
             FileWriter player = new FileWriter(playerName);
-            player.write(nombre + "***");
+            player.write(nombre + esp);
             player.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +212,7 @@ public class PlayerNameController extends Controller implements Initializable {
 
             trofeo.setComplete(true);
 
-            updateTrophiesFile(index);
+            updateTrophiesFile();
 
             // trophiesAvailable();
         } catch (Exception e) {
@@ -213,7 +220,7 @@ public class PlayerNameController extends Controller implements Initializable {
         }
     }
 
-    private void updateTrophiesFile(int trofeoIndex) {
+    private void updateTrophiesFile() {
         try {
 
             String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\trophies.txt";
@@ -323,11 +330,82 @@ public class PlayerNameController extends Controller implements Initializable {
         return "true".equals(state);
     }
 
+    private void updateLevelFile() {
+        try {
+
+            String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\completedlevels.txt";
+            FileWriter writer = new FileWriter(filePath);
+
+            for (Level level : levelList) {
+                String trofeoString = level.getName() + "(//)" + level.getLevelNumber() + "(//)" + level.isAvailable() + "(//)"
+                        + level.isComplete() + "(//)" + level.getScore() + "(//)" + level.getScoreLife()
+                        + "(//)" + level.getPlay() + "(//)" + level.getTime() + "***";
+                writer.write(trofeoString);
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getStatistics() {
+
+        List<Statistics> statiscstics = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\statistics.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] statisticsData = line.split("\\*\\*\\*");
+
+                for (String statisticsString : statisticsData) {
+
+                    String[] parts = statisticsString.split("\\(//\\)");
+
+                    if (parts.length >= 3) {
+
+                        String score = parts[0];
+
+                        String time = parts[1];
+
+                        String lifes = parts[2];
+
+                        String ghost = parts[3];
+
+                        Statistics statistics = new Statistics(score, time, lifes, ghost);
+                        statiscstics.add(statistics);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        statisticsList = FXCollections.observableArrayList(statiscstics);
+
+    }
+
+    private void updateStisticsFile(Statistics statis) {
+        try {
+
+            String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\statistics.txt";
+            FileWriter writer = new FileWriter(filePath);
+
+            String statisticsString = statis.getScore() + "(//)" + statis.getTime() + "(//)" + statis.getLifes() + "(//)"
+                    + statis.getGhost() + "***";
+            writer.write(statisticsString);
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void onAction_savePlayer(ActionEvent event) {
 
         if (txt_PlayerName.getText().length() > 0) {
-            addPalyer();
+            addPalyer( txt_PlayerName.getText(),"***");
             FlowController.getInstance().goMain();
             getStage().close();
 
@@ -339,16 +417,57 @@ public class PlayerNameController extends Controller implements Initializable {
 
     @FXML
     private void onAction_deleteData(ActionEvent event) {
-        gmap.mapGenerated();
+        deleteInfoFiles();
     }
 
+    private void deleteInfoFiles() {
+        
+         if(new Mensaje().showConfirmation("Eliminar info",getStage(), "Desea eliminar los datos.")){
+             String level1 = levelList.get(0).getName();
+
+//        for(Level lev : levelList){
+//           // System.out.println(lev.getName());
+//            if(lev.getName()!= level1){
+//                System.out.println(lev.getName());
+//                lev.setAvailable(false);
+//            }
+//            lev.setComplete(false);
+//            lev.setPlay(String.valueOf(0));
+//            lev.setScoreLife(String.valueOf(0));
+//            lev.setScore(String.valueOf(0));
+//            lev.setTime("00:00:00");
+//        }
+//        updateLevelFile();
+//        for (Trophie trophie : trophiesList) {
+//            trophie.setScore(String.valueOf(0));
+//            trophie.setComplete(false);
+//        }
+//        updateTrophiesFile();
+
+     
+//           statistics = statisticsList.get(0);
+//            statistics.setScore(String.valueOf(0));
+//            statistics.setLifes(String.valueOf(0));
+//            statistics.setGhost(String.valueOf(0));
+//            statistics.setTime("00:00:00");
+//       
+//        updateStisticsFile(statisticsList.get(0));
+        
+       // addPalyer("","");
+              new Mensaje().show(Alert.AlertType.INFORMATION, "Eliminar info", "Datos eliminados correctamente.");
+         }
+
+        
+       
+      
+    }
+
+//gmap.mapGenerated();
     @FXML
     private void onMouseAtras(MouseEvent event) {
         Stage currentStage = (Stage) img_retroceder.getScene().getWindow();
         currentStage.close();
         FlowController.getInstance().goMain();
     }
-
-    
 
 }
