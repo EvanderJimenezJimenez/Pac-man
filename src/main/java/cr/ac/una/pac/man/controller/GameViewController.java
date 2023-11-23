@@ -761,7 +761,12 @@ public class GameViewController extends Controller implements Initializable {
                     tunnels();
                     if (nextCell == 'S') { //si es un punto
                         map[newPacmanY][newPacmanX] = 'P'; //define la nueva posicion de P
-                        score += 10;
+                        if (doubleponits) {
+                            score = score + (2 * 10);
+                        } else {
+                            score += 10;
+                        }
+
                         lbl_score.setText(String.valueOf(score));
                         if (algorithms.levelCompleted(map)) {
                             completeLevel();
@@ -781,7 +786,11 @@ public class GameViewController extends Controller implements Initializable {
                         isPoweredUp = true;
 
                         map[newPacmanY][newPacmanX] = 'P'; //define la nueva posicion de P
-                        score += 10;
+                        if (doubleponits) {
+                            score = score + (2 * 10);
+                        } else {
+                            score += 10;
+                        }
                         lbl_score.setText(String.valueOf(score));
                         if (algorithms.levelCompleted(map)) {
                             completeLevel();
@@ -886,9 +895,9 @@ public class GameViewController extends Controller implements Initializable {
         FlowController.getInstance().deleteView("GameView");
 
     }
-    
-    public void appContext(){
-         int lev = Integer.parseInt(lbl_level.getText());
+
+    public void appContext() {
+        int lev = Integer.parseInt(lbl_level.getText());
         AppContext.getInstance().set("Level", lev);
         System.out.println("Nivel de juego: " + lev);
 
@@ -909,8 +918,7 @@ public class GameViewController extends Controller implements Initializable {
 
         AppContext.getInstance().set("velocity", velocityF);
         AppContext.getInstance().set("encierro", encierroF);
-        
-        
+
     }
 
     private boolean checkClydeCollision() {
@@ -1060,16 +1068,13 @@ public class GameViewController extends Controller implements Initializable {
 
     private void encierroActivo() {
 
-       
-        
-        if (score >= ptsBlinky / 2 && !usoEncierro) {
-             lbl_encierro_bloqueado.setText("Disponile");
+        if (score >= ptsBlinky / 2 && !usoEncierro && lifes == 6) {
+            lbl_encierro_bloqueado.setText("Disponile");
             encierro = true;
-            
-            //return encierro;
 
+            //return encierro;
         } else {
-            lbl_encierro_bloqueado.setText("Bloqueado");   
+            lbl_encierro_bloqueado.setText("Bloqueado");
             encierro = false;
             //return encierro;
         }
