@@ -592,7 +592,7 @@ public class GameViewController extends Controller implements Initializable {
             } else {
                 targetNode = blinkyYHouse * 15 + blinkyXHouse;
                 frameDelayBlinky = 0;
-
+                
                 if (blinkyX == blinkyXHouse && blinkyY == blinkyYHouse) {
                     Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
                         System.out.println("GGs");
