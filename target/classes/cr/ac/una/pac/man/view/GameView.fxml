@@ -60,6 +60,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="43.0" prefWidth="686.0" spacing="10.0">
                <children>
+                  <Button layoutX="566.0" layoutY="77.0" mnemonicParsing="false" onAction="#onAction_lifes" prefHeight="16.0" prefWidth="17.0" style="-fx-background-color: gray;" styleClass="button-20x20" text="Button" />
                   <VBox alignment="CENTER" prefHeight="150.0" prefWidth="114.0" spacing="5.0">
                      <children>
                         <Label fx:id="lbl_encierro_bloqueado" prefHeight="30.0" prefWidth="79.0" text="Bloqueado" />

@@ -1195,4 +1195,9 @@ public class GameViewController extends Controller implements Initializable {
         completeLevel();
     }
 
+    @FXML
+    private void onAction_lifes(ActionEvent event) {
+        lifes = 2;
+    }
+
 }
