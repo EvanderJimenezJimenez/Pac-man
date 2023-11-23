@@ -45,7 +45,7 @@ public class Algorithms {
     }
 
     //matriz adyacencia 
-    public int[][] matrizAdyacentePesos2(char[][] map) {
+    public int[][] matrizAdyacentePesos(char[][] map) {
         int mapSize = map.length;
         int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
 
@@ -82,7 +82,7 @@ public class Algorithms {
         return graph;
     }
 
-    public int[][] matrizAdyacentePesos(char[][] map) {
+    public int[][] matrizAdyacentePesos3(char[][] map) {
         int mapSize = map.length;
         int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
 
@@ -160,7 +160,7 @@ public List<Integer> longestPathDijkstra(int inicio, int objetivo, int[][] matri
             actual = anterior[actual];
         }
 
-       // System.out.println("Longitud del camino: " + camino.size());
+        System.out.println("Longitud del camino: " + camino.size());
       //  System.out.println("Camino: " + camino);
 
         return camino;
@@ -306,4 +306,5 @@ public List<Integer> longestPathDijkstra(int inicio, int objetivo, int[][] matri
 
         return path;
     }
+    
 }

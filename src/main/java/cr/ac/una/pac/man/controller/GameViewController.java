@@ -98,11 +98,11 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCountClyde = 0;
     private int frameCountInky = 0;
 
-    private int frameDelay = 3; // Controla la velocidad de movimiento
-    private int frameDelayBlinky = 6;
-    private int frameDelayPinky = 6;
-    private int frameDelayClyde = 6;
-    private int frameDelayInky = 6;
+    private int frameDelay = 2; // Controla la velocidad de movimiento
+    private int frameDelayBlinky = 5;
+    private int frameDelayPinky = 5;
+    private int frameDelayClyde = 5;
+    private int frameDelayInky = 5;
 
     private int blinkyX;
     private int blinkyY;
@@ -315,9 +315,9 @@ public class GameViewController extends Controller implements Initializable {
                 pacManTimeline.play();
 
                 blinkyTimeline.play();
-                pinkyTimeline.play();
-                clydeTimeline.play();
-                inkyTimeline.play();
+                //pinkyTimeline.play();
+                //clydeTimeline.play();
+               // inkyTimeline.play();
                 {
 
                 }
@@ -625,11 +625,11 @@ public class GameViewController extends Controller implements Initializable {
 
                 }
             }
-            List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
-            List<Integer> shortestPath2 = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
+            List<Integer> shortestPath2 = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
+            List<Integer> shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
 
             // System.out.println("Corta: "+ shortestPath2.size());
-            //System.out.println("Larga: " + shortestPath.size());
+            System.out.println("Larga: " + shortestPath.size());
             if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc && !shockBlinky) {
                 handleCollision();
             }
