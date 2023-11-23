@@ -406,7 +406,7 @@ public class PlayerNameController extends Controller implements Initializable {
 
         if (txt_PlayerName.getText().length() > 0) {
             addPalyer( txt_PlayerName.getText(),"***");
-            FlowController.getInstance().goMain();
+            //FlowController.getInstance().goMain();
             getStage().close();
 
         } else {

@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -138,62 +139,52 @@ public class WelcomeView extends Controller implements Initializable {
     }
 
     public void playerTopUpdate(String playerName) {
-     
         int currentScore = Integer.parseInt(statisticsList.get(0).getScore());
 
-      
-        boolean playerExists = palyersList.stream().anyMatch(player -> player.getName().equals(playerName));
+        boolean playerExists = false;
+        TopPlayers existingPlayer = null;
 
-        if (palyersList.size() < 10) {
-            
-            if (playerExists) {
-                
-                TopPlayers existingPlayer = palyersList.stream()
-                        .filter(player -> player.getName().equals(playerName))
-                        .findFirst().orElse(null);
+        palyersList.sort((player1, player2) -> {
 
-                if (existingPlayer != null && currentScore > Integer.parseInt(existingPlayer.getScore())) {
-                    existingPlayer.setScore(String.valueOf(currentScore));
-                   
-                }
-            } else {
-              
-                palyersList.add(new TopPlayers(playerName, String.valueOf(currentScore)));
-              
-            }
-        } else {
-           
-            int indexToReplace = -1;
+            int score1 = Integer.parseInt(player1.getScore());
+            int score2 = Integer.parseInt(player2.getScore());
+            return Integer.compare(score2, score1);
+        });
 
-            for (int i = 0; i < palyersList.size(); i++) {
-                int playerScore = Integer.parseInt(palyersList.get(i).getScore());
-                if (currentScore > playerScore) {
-                    indexToReplace = i;
-                    break; 
-                }
-            }
-
-            if (indexToReplace != -1) {
-               
-                palyersList.set(indexToReplace, new TopPlayers(playerName, String.valueOf(currentScore)));
-             
-            } else if (playerExists) {
-               
-                TopPlayers existingPlayer = palyersList.stream()
-                        .filter(player -> player.getName().equals(playerName))
-                        .findFirst().orElse(null);
-
-                if (existingPlayer != null && currentScore > Integer.parseInt(existingPlayer.getScore())) {
-                    existingPlayer.setScore(String.valueOf(currentScore));
-                    //oo
-                }
+        for (TopPlayers player : palyersList) {
+            if (player.getName().equals(playerName)) {
+                playerExists = true;
+                existingPlayer = player;
+                break;
             }
         }
 
-        updateTopsFile();
+        if (!playerExists) {
+            //agrega 
+            palyersList.add(new TopPlayers(playerName, String.valueOf(currentScore)));
+
+        } else {
+
+            if (existingPlayer != null && currentScore > Integer.parseInt(existingPlayer.getScore())) {
+                existingPlayer.setScore(String.valueOf(currentScore));
+            }
+        }
+
+        palyersList.sort((player1, player2) -> {
+
+            int score1 = Integer.parseInt(player1.getScore());
+            int score2 = Integer.parseInt(player2.getScore());
+            return Integer.compare(score2, score1);
+        });
+
+        while (palyersList.size() > 10) {
+            palyersList.remove(palyersList.size() - 1);
+        }
+
+        updateTopsFile(palyersList);
     }
 
-    private void updateTopsFile() {
+    private void updateTopsFile(ObservableList<TopPlayers> palyersList) {
         try {
 
             String filePath = ".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\topplayers.txt";
