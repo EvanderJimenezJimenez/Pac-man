@@ -843,6 +843,7 @@ public class GameViewController extends Controller implements Initializable {
             restartGhost();
             paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
         } else {
+            appContext();
             FlowController.getInstance().goViewInWindow("GameOverView");
             restartGhost();
             paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
@@ -884,6 +885,32 @@ public class GameViewController extends Controller implements Initializable {
         getStage().close();
         FlowController.getInstance().deleteView("GameView");
 
+    }
+    
+    public void appContext(){
+         int lev = Integer.parseInt(lbl_level.getText());
+        AppContext.getInstance().set("Level", lev);
+        System.out.println("Nivel de juego: " + lev);
+
+        String time = lblTime.getText();
+        if (lifes == 6) {
+            scoreDead = score;
+            System.out.println("Puntos sin morir: " + scoreDead);
+        }
+
+        score += (lev * 100);
+
+        AppContext.getInstance().set("GameTime", time);
+        AppContext.getInstance().set("GameScore", score);
+        AppContext.getInstance().set("GameLife", lifes);
+        AppContext.getInstance().set("GameLostLifes", lostLifes);
+        AppContext.getInstance().set("GameDeadGhost", deadGhost);
+        AppContext.getInstance().set("GameScoreDead", scoreDead);
+
+        AppContext.getInstance().set("velocity", velocityF);
+        AppContext.getInstance().set("encierro", encierroF);
+        
+        
     }
 
     private boolean checkClydeCollision() {
