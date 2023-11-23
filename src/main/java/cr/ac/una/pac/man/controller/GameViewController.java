@@ -160,8 +160,8 @@ public class GameViewController extends Controller implements Initializable {
     boolean blinkyPacman;
 
     int lifes = 6;
-     int velocityF = 0;
-      int encierroF = 0;
+    int velocityF = 0;
+    int encierroF = 0;
 
     GameMap gameMap;
     Algorithms algorithms;
@@ -204,6 +204,16 @@ public class GameViewController extends Controller implements Initializable {
     boolean doubleponits = false;
 
     int consecutiveGhostCount = 0;
+    @FXML
+    private Button btn_encierroF;
+    @FXML
+    private Button btn_velocityF;
+    @FXML
+    private Label lbl_encierro_bloqueado;
+    @FXML
+    private Label lbl_velocidad_bloqueado;
+
+    boolean usoEncierro = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -728,7 +738,8 @@ public class GameViewController extends Controller implements Initializable {
 
     private void movePacman() {
 
-        velocityActiva();
+        // velocityActiva();
+        // encierroActivo();
         encierroActivo();
 //        defineTunel();
         frameCount++;
@@ -863,6 +874,9 @@ public class GameViewController extends Controller implements Initializable {
         AppContext.getInstance().set("GameLostLifes", lostLifes);
         AppContext.getInstance().set("GameDeadGhost", deadGhost);
         AppContext.getInstance().set("GameScoreDead", scoreDead);
+
+        AppContext.getInstance().set("velocity", velocityF);
+        AppContext.getInstance().set("encierro", encierroF);
 
         System.out.println("Dead: " + scoreDead);
         paman.pauseGame(pinkyTimeline, inkyTimeline, blinkyTimeline, clydeTimeline, pacManTimeline);
@@ -1016,32 +1030,32 @@ public class GameViewController extends Controller implements Initializable {
     private boolean checkGhostCollision(int ghostX, int ghostY) {
         return pacmanX == ghostX && pacmanY == ghostY;
     }
-    
-    public void encierroActivo(){
+
+    private void encierroActivo() {
+
+       
         
-        if(encierro){
-            btn_encierro.setOpacity(100);
+        if (score >= ptsBlinky / 2 && !usoEncierro) {
+             lbl_encierro_bloqueado.setText("Disponile");
+            encierro = true;
             
+            //return encierro;
+
+        } else {
+            lbl_encierro_bloqueado.setText("Bloqueado");   
+            encierro = false;
+            //return encierro;
         }
-        
     }
 
-        public void velocityActiva(){
-        
-        if(velocityHelp){
-            btn_encierro.setOpacity(100);
-            velocityHelp = false;
-        }
-        
-    }
     @FXML
     private void onAction_encierro(ActionEvent event) {
 
-        //completeLevel();
-        
-        if (!encierro) {
-
-            //btn_encierro.setStyle("-fx-background-color: green;");
+        //
+        if (encierro && usoEncierro == false) {
+            System.out.println("Encierro entro");
+            encierroF++;
+            usoEncierro = true;
             Set<Integer> selectedIndices = new HashSet<>();
             Random random = new Random();
             int count = 0;
@@ -1131,6 +1145,9 @@ public class GameViewController extends Controller implements Initializable {
 
         if (velocityHelp) {
             velocityActive();
+            velocityF++;
+            System.out.println("PASO VELO");
+            velocityHelp = false;
         }
 
     }
@@ -1140,6 +1157,7 @@ public class GameViewController extends Controller implements Initializable {
         frameDelay = 0;
         doubleponits = true;
         System.out.println("Velo: " + frameDelay);
+        lbl_velocidad_bloqueado.setText("Bloqueado");
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(6), event -> {
 
             frameDelay = 2;
@@ -1155,7 +1173,8 @@ public class GameViewController extends Controller implements Initializable {
         if (consecutiveGhostCount == 2) {
             // Activa la habilidad especial al comer 2 fantasmas consecutivamente
             velocityHelp = true;
-
+            lbl_velocidad_bloqueado.setText("Disponible");
+            //  btn_encierro.setVisible(true);
             // Reinicia el contador de fantasmas consecutivos
             consecutiveGhostCount = 0;
         }
@@ -1169,6 +1188,11 @@ public class GameViewController extends Controller implements Initializable {
             consecutivo = false;
         }));
         timeline.play();
+    }
+
+    @FXML
+    private void onAction_nextLevel(ActionEvent event) {
+        completeLevel();
     }
 
 }

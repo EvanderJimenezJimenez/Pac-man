@@ -326,8 +326,10 @@ public class LevelCompleteController extends Controller implements Initializable
 
     private void updateDataTrophies() {
 
+       
         if (lifes == 6) {
-            int scoreLifes = Integer.parseInt(trophiesList.get(2).getScore());
+            int scoreLifes = Integer.parseInt(trophiesList.get(2).getScore()) +1;
+            System.out.println("Lifes txt "+ scoreLifes);
             trophiesList.get(2).setScore(String.valueOf(scoreLifes++));
         }
         if (deadGhost != 0) {

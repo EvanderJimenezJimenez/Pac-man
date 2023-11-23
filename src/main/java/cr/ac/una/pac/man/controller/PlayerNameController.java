@@ -243,7 +243,7 @@ public class PlayerNameController extends Controller implements Initializable {
                     }
                     break;
                 case 1:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) > 5) {
                         vbox_2.setDisable(false);
                         vbox_2.setOpacity(100);
                         marcarCompletado(i);
@@ -257,14 +257,14 @@ public class PlayerNameController extends Controller implements Initializable {
                     }
                     break;
                 case 3:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) != 5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
                         vbox_4.setDisable(false);
                         vbox_4.setOpacity(100);
                         marcarCompletado(i);
                     }
                     break;
                 case 4:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 0) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
                         vbox_5.setDisable(false);
                         vbox_5.setOpacity(100);
                         marcarCompletado(i);

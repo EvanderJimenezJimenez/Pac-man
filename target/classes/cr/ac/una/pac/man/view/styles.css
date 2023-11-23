@@ -57,6 +57,18 @@
     -fx-cursor: hand;
 }
 
+.button-20x20 {
+    -fx-border-color: ghostwhite;
+    -fx-background-color: #EFE1D1;
+    -fx-text-fill: black;
+    -fx-content-display: left;
+    -fx-opacity: 1;
+    transition: .5s;
+    -fx-border-width: 3px;
+    -fx-min-width: 10px;
+    -fx-min-height: 10px;
+}
+
 /* Label */
 #Title{
     -fx-font-size: 15px;
