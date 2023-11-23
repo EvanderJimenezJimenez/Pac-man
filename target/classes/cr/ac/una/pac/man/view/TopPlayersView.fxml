@@ -29,7 +29,7 @@
             </TableView>
             <HBox prefHeight="67.0" prefWidth="685.0">
                <children>
-                  <ImageView fitHeight="65.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="65.0" fitWidth="70.0" onMouseClicked="#onMouseAtras" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../resources/atras.png" />
                      </image>

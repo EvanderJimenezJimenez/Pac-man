@@ -98,11 +98,11 @@ public class GameViewController extends Controller implements Initializable {
     private int frameCountClyde = 0;
     private int frameCountInky = 0;
 
-    private int frameDelay = 0; // Controla la velocidad de movimiento
-    private int frameDelayBlinky = 4;
-    private int frameDelayPinky = 4;
-    private int frameDelayClyde = 4;
-    private int frameDelayInky = 4;
+    private int frameDelay = 3; // Controla la velocidad de movimiento
+    private int frameDelayBlinky = 6;
+    private int frameDelayPinky = 6;
+    private int frameDelayClyde = 6;
+    private int frameDelayInky = 6;
 
     private int blinkyX;
     private int blinkyY;
@@ -475,12 +475,19 @@ public class GameViewController extends Controller implements Initializable {
                     targetNode = inkyYHouse * 15 + inkyXHouse;
                     frameDelayInky = 0;
                     if (inkyX == inkyXHouse && inkyY == inkyYHouse) {
-                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                        if (inkyEnc) {
+                            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                                shockInky = false;
+                                inkyEnc = false;
+                                frameDelayInky = 4;
+                            }));
+                            timeline.play();
+                        }else{
+                            inkyImageView.setImage(gameMap.getInkyImage());
                             shockInky = false;
-                            inkyEnc = false;
                             frameDelayInky = 4;
-                        }));
-                        timeline.play();
+                        }
+
                     }
                 }
 
@@ -526,12 +533,19 @@ public class GameViewController extends Controller implements Initializable {
                 targetNode = clydeYHouse * 15 + clydeXHouse;
                 frameDelayClyde = 0;
                 if (clydeX == clydeXHouse && clydeY == clydeYHouse) {
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                    if (clydeEnc) {
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                            shockClyde = false;
+                            clydeEnc = false;
+                            frameDelayClyde = 5;
+                        }));
+                        timeline.play();
+                    } else {
+                        clydeImageView.setImage(gameMap.getClydeImage());
                         shockClyde = false;
-                        clydeEnc = false;
                         frameDelayClyde = 5;
-                    }));
-                    timeline.play();
+                    }
+
                 }
             }
 
@@ -592,16 +606,23 @@ public class GameViewController extends Controller implements Initializable {
             } else {
                 targetNode = blinkyYHouse * 15 + blinkyXHouse;
                 frameDelayBlinky = 0;
-                
-                if (blinkyX == blinkyXHouse && blinkyY == blinkyYHouse) {
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
-                        System.out.println("GGs");
-                        shockBlinky = false;
-                        blinkyEnc = false;
 
-                        blinkyVelocity();
-                    }));
-                    timeline.play();
+                if (blinkyX == blinkyXHouse && blinkyY == blinkyYHouse) {
+
+                    if (blinkyEnc) {
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                            System.out.println("GGs");
+                            shockBlinky = false;
+                            blinkyEnc = false;
+
+                            blinkyVelocity();
+                        }));
+                        timeline.play();
+                    } else {
+                        blinkyImageView.setImage(gameMap.getBlinkyImage());
+                        shockBlinky = false;
+                    }
+
                 }
             }
             List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
@@ -659,12 +680,19 @@ public class GameViewController extends Controller implements Initializable {
                 targetNode = pinkyYHouse * 15 + pinkyXHouse;
                 frameDelayPinky = 0;
                 if (pinkyX == pinkyXHouse && pinkyY == pinkyYHouse) {
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                    if(pinkyEnc){
+                         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
                         shockPinky = false;
                         pinkyEnc = false;
                         frameDelayPinky = 4;
                     }));
                     timeline.play();
+                    }else{
+                         pinkyImageView.setImage(gameMap.getPinkyImage());
+                         shockPinky = false;
+                          frameDelayPinky = 4;
+                    }
+                   
                 }
             }
             List<Integer> shortestPath2 = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);

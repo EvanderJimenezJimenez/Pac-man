@@ -72,9 +72,8 @@ public class StatisticsViewController extends Controller implements Initializabl
         columnTime.setCellValueFactory(new PropertyValueFactory<>("time"));
 
         statistics = new Statistics();
-        
-        //tbv_levels.
 
+        //tbv_levels.
         getStatistics();
         loadGeneralStatistics();
         loadLevelDataFromFile();
@@ -87,9 +86,8 @@ public class StatisticsViewController extends Controller implements Initializabl
 
     @FXML
     private void onMouseAtras(MouseEvent event) {
-       getStage().close();
-     
-     
+        getStage().close();
+
     }
 
     private void loadLevelDataFromFile() {
@@ -190,11 +188,8 @@ public class StatisticsViewController extends Controller implements Initializabl
 
     @FXML
     private void onAction_top(ActionEvent event) {
-        System.out.println("Lsds");
-        FlowController.getInstance().goViewInWindow("TopPlayersView");
-        getStage().close();
-         FlowController.getInstance().deleteView("StatisticsView");
-  
+        FlowController.getInstance().goViewInWindowModal("TopPlayersView", getStage(), Boolean.FALSE);
+
     }
 
 }

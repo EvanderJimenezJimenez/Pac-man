@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 
 /**
  * FXML Controller class
@@ -83,6 +84,11 @@ public class TopPlayersViewController extends Controller implements Initializabl
             return Integer.compare(score2, score1); 
         });
         tbv_top.setItems(topPlayersList);
+    }
+
+    @FXML
+    private void onMouseAtras(MouseEvent event) {
+        getStage().close();
     }
 
 }
