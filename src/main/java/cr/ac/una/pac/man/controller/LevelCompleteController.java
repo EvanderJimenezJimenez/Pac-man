@@ -172,7 +172,7 @@ public class LevelCompleteController extends Controller implements Initializable
             getStage().close();
             FlowController.getInstance().deleteView("LevelComplete");
         } else {
-            FlowController.getInstance().goViewInWindow("WelcomeView");
+            FlowController.getInstance().goMain();
             getStage().close();
         }
     }

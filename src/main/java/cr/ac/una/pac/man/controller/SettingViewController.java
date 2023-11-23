@@ -284,6 +284,7 @@ public class SettingViewController extends Controller implements Initializable {
 
     @FXML
     private void onAction_salir(ActionEvent event) {
+        getStage().close();
     }
 
     @FXML
