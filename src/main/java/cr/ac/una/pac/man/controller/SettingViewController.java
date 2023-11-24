@@ -6,6 +6,7 @@ import cr.ac.una.pac.man.Statistics;
 import cr.ac.una.pac.man.Trophie;
 import cr.ac.una.pac.man.util.Mensaje;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,16 +35,16 @@ public class SettingViewController extends Controller implements Initializable {
     private Label lbl_score;
     @FXML
     private JFXTextField txt_score;
-    @FXML
-    private Label lbl_vidas;
-    @FXML
-    private JFXTextField txt_vidas;
 
     ObservableList<Level> levelList;
     ObservableList<Statistics> statisticsList;
     ObservableList<Trophie> trophiesList;
 
     Statistics statistics;
+    @FXML
+    private Label lbl_dificultad;
+
+    String dificultad = null;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -52,6 +53,10 @@ public class SettingViewController extends Controller implements Initializable {
         getStatistics();
         loadTrophiesDataFromFile();
         loadLevelDataFromFile();
+
+        getificultad();
+
+        lbl_dificultad.setText(dificultad);
 
         lbl_score.setText(statisticsList.get(0).getScore());
 
@@ -261,29 +266,70 @@ public class SettingViewController extends Controller implements Initializable {
         }
     }
 
+    public void getificultad() {
+        dificultad = null; // Asegúrate de inicializar la variable antes de usarla
+
+        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\dificultad.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Buscar la posición de "***"
+                int index = line.indexOf("***");
+                if (index != -1) {
+                    // Extraer el nombre antes de "***"
+                    dificultad = line.substring(0, index).trim();
+                    break; // Rompe el bucle después de encontrar la primera ocurrencia
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void actualizarDificultad(String nombre) {
+        try {
+
+            File playerName = new File(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\dificultad.txt");
+
+            FileWriter player = new FileWriter(playerName);
+            player.write(nombre + "***");
+            player.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void onAction_facil(ActionEvent event) {
+        lbl_dificultad.setText("facil");
+        actualizarDificultad(lbl_dificultad.getText());
+        getificultad();
     }
 
     @FXML
     private void onAction_medio(ActionEvent event) {
+        lbl_dificultad.setText("medio");
+        actualizarDificultad(lbl_dificultad.getText());
+        getificultad();
     }
 
     @FXML
     private void onAction_dificil(ActionEvent event) {
+        lbl_dificultad.setText("dificil");
+        actualizarDificultad(lbl_dificultad.getText());
+        getificultad();
     }
 
     @FXML
     private void onAction_activarNiveles(ActionEvent event) {
         levelUpdate();
-         new Mensaje().show(Alert.AlertType.INFORMATION, "Niveles", "Todos los niveles han sido debloqueados.");
+        new Mensaje().show(Alert.AlertType.INFORMATION, "Niveles", "Todos los niveles han sido debloqueados.");
     }
 
     @FXML
     private void onAction_activarTrofeos(ActionEvent event) {
         trophieUpdate();
-         new Mensaje().show(Alert.AlertType.INFORMATION, "Trofeos", "Todos los trofeos han sido desbloqueados.");
-        
+        new Mensaje().show(Alert.AlertType.INFORMATION, "Trofeos", "Todos los trofeos han sido desbloqueados.");
+
     }
 
     @FXML
@@ -294,11 +340,7 @@ public class SettingViewController extends Controller implements Initializable {
     @FXML
     private void onActionGuardarScore(ActionEvent event) {
         StatisticsUpdate();
-         new Mensaje().show(Alert.AlertType.INFORMATION, "Puntuacion actualizada", "Actualizada correctamente.");
-    }
-
-    @FXML
-    private void onActionGuardarVidas(ActionEvent event) {
+        new Mensaje().show(Alert.AlertType.INFORMATION, "Puntuacion actualizada", "Actualizada correctamente.");
     }
 
 }

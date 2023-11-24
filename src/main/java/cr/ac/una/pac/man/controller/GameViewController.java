@@ -7,6 +7,9 @@ import cr.ac.una.pac.man.Pacman;
 import cr.ac.una.pac.man.util.AppContext;
 import cr.ac.una.pac.man.util.FlowController;
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -215,9 +218,15 @@ public class GameViewController extends Controller implements Initializable {
 
     boolean usoEncierro = false;
 
+    String dificultad = null;
+    @FXML
+    private Label lbl_dificultad;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        getDificultad();
+        
         gameMap = new GameMap();
         gameMap.cargarImagenes();
 
@@ -233,6 +242,7 @@ public class GameViewController extends Controller implements Initializable {
         imgTemaNivel.setImage(imageLevel(String.valueOf(nivel)));
         cargarMapa(nivel);
         lbl_level.setText(String.valueOf(nivel));
+        lbl_dificultad.setText(dificultad);
 
         startTime(lblTime);
     }
@@ -317,7 +327,7 @@ public class GameViewController extends Controller implements Initializable {
                 blinkyTimeline.play();
                 //pinkyTimeline.play();
                 //clydeTimeline.play();
-               // inkyTimeline.play();
+                // inkyTimeline.play();
                 {
 
                 }
@@ -482,7 +492,7 @@ public class GameViewController extends Controller implements Initializable {
                                 frameDelayInky = 4;
                             }));
                             timeline.play();
-                        }else{
+                        } else {
                             inkyImageView.setImage(gameMap.getInkyImage());
                             shockInky = false;
                             frameDelayInky = 4;
@@ -625,15 +635,24 @@ public class GameViewController extends Controller implements Initializable {
 
                 }
             }
-            List<Integer> shortestPath2 = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
-            List<Integer> shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
+             List<Integer> shortestPath = new ArrayList<>();
+             System.out.println("Dificultad. "+ dificultad);
+            if("facil".equals(dificultad)){
+              
+                shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
+            }else if("dificil".equals(dificultad)){
+             
+                  shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
+            }
+          
+           
 
             // System.out.println("Corta: "+ shortestPath2.size());
             //System.out.println("Larga: " + shortestPath.size());
             if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc && !shockBlinky) {
                 handleCollision();
             }
-            
+
             if (shortestPath != null && shortestPath.size() > 1 && lifes > 1) {
                 // Obtiene el siguiente nodo en el camino más corto
                 int nextNode = shortestPath.get(1);
@@ -681,19 +700,19 @@ public class GameViewController extends Controller implements Initializable {
                 targetNode = pinkyYHouse * 15 + pinkyXHouse;
                 frameDelayPinky = 0;
                 if (pinkyX == pinkyXHouse && pinkyY == pinkyYHouse) {
-                    if(pinkyEnc){
-                         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                    if (pinkyEnc) {
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+                            shockPinky = false;
+                            pinkyEnc = false;
+                            frameDelayPinky = 4;
+                        }));
+                        timeline.play();
+                    } else {
+                        pinkyImageView.setImage(gameMap.getPinkyImage());
                         shockPinky = false;
-                        pinkyEnc = false;
                         frameDelayPinky = 4;
-                    }));
-                    timeline.play();
-                    }else{
-                         pinkyImageView.setImage(gameMap.getPinkyImage());
-                         shockPinky = false;
-                          frameDelayPinky = 4;
                     }
-                   
+
                 }
             }
             List<Integer> shortestPath2 = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
@@ -1259,6 +1278,25 @@ public class GameViewController extends Controller implements Initializable {
     @FXML
     private void onAction_lifes(ActionEvent event) {
         lifes = 2;
+    }
+
+    public void getDificultad() {
+        dificultad = null;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(".\\src\\main\\resources\\cr\\ac\\una\\pac\\man\\files\\dificultad.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Buscar la posición de "***"
+                int index = line.indexOf("***");
+                if (index != -1) {
+                  
+                    dificultad = line.substring(0, index).trim();
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

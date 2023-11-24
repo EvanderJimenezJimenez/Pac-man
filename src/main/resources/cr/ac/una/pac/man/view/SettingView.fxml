@@ -19,9 +19,13 @@
                   <Separator prefWidth="200.0" />
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#onAction_facil" prefHeight="58.0" prefWidth="102.0" text="Facil" />
-                        <Button layoutX="302.0" layoutY="23.0" mnemonicParsing="false" onAction="#onAction_medio" prefHeight="58.0" prefWidth="102.0" text="Medio" />
-                        <Button layoutX="353.0" layoutY="23.0" mnemonicParsing="false" onAction="#onAction_dificil" prefHeight="58.0" prefWidth="102.0" text="Dificil" />
+                        <Button mnemonicParsing="false" onAction="#onAction_facil" prefHeight="58.0" prefWidth="102.0" style="-fx-background-color: purple;" text="Facil" />
+                        <Button layoutX="302.0" layoutY="23.0" mnemonicParsing="false" onAction="#onAction_medio" prefHeight="58.0" prefWidth="102.0" style="-fx-background-color: white;" text="Medio" />
+                        <Button layoutX="353.0" layoutY="23.0" mnemonicParsing="false" onAction="#onAction_dificil" prefHeight="58.0" prefWidth="102.0" style="-fx-background-color: purple;" text="Dificil" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <Label layoutX="490.0" layoutY="36.0" prefHeight="28.0" prefWidth="161.0" text="Dificultad selecionada:" underline="true" />
+                        <Label fx:id="lbl_dificultad" prefHeight="28.0" prefWidth="55.0" text="Dificil" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
                      </children>
                   </HBox>
                </children>
@@ -29,8 +33,8 @@
             <Separator prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onAction_activarNiveles" prefHeight="65.0" prefWidth="150.0" text="Activar todos los niveles" />
-                  <Button mnemonicParsing="false" onAction="#onAction_activarTrofeos" prefHeight="65.0" prefWidth="198.0" text="Desbloquear todos los trofeos" />
+                  <Button mnemonicParsing="false" onAction="#onAction_activarNiveles" prefHeight="65.0" prefWidth="150.0" style="-fx-background-color: white;" text="Activar todos los niveles" />
+                  <Button mnemonicParsing="false" onAction="#onAction_activarTrofeos" prefHeight="65.0" prefWidth="198.0" style="-fx-background-color: purple;" text="Desbloquear todos los trofeos" />
                </children>
             </HBox>
             <Separator prefWidth="200.0" />
@@ -46,7 +50,7 @@
                         </HBox>
                         <Label prefHeight="61.0" prefWidth="176.0" text="Definir nueva puntuacion" />
                         <JFXTextField fx:id="txt_score" prefHeight="32.0" prefWidth="233.0" />
-                        <Button minWidth="99.0" mnemonicParsing="false" onAction="#onActionGuardarScore" prefHeight="47.0" prefWidth="99.0" text="Guardar">
+                        <Button minWidth="99.0" mnemonicParsing="false" onAction="#onActionGuardarScore" prefHeight="47.0" prefWidth="99.0" style="-fx-background-color: white;" text="Guardar">
                            <VBox.margin>
                               <Insets top="5.0" />
                            </VBox.margin></Button>
