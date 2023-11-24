@@ -45,7 +45,7 @@ public class Algorithms {
     }
 
     //matriz adyacencia 
-    public int[][] matrizAdyacentePesos(char[][] map) {
+    public int[][] matrizAdyacentePesos2(char[][] map) {
         int mapSize = map.length;
         int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
 
@@ -82,7 +82,7 @@ public class Algorithms {
         return graph;
     }
 
-    public int[][] matrizAdyacentePesos3(char[][] map) {
+    public int[][] matrizAdyacentePesos(char[][] map) {
         int mapSize = map.length;
         int[][] graph = new int[mapSize * mapSize][mapSize * mapSize];
 
@@ -119,53 +119,37 @@ public class Algorithms {
         return graph;
     }
 
-public List<Integer> longestPathDijkstra(int inicio, int objetivo, int[][] matrizAdyacentePesos) {
-        int numNodos = matrizAdyacentePesos.length;
-        int[] distancia = new int[numNodos];
-        Arrays.fill(distancia, Integer.MIN_VALUE);
 
-        PriorityQueue<Integer> colaPrioridad = new PriorityQueue<>(numNodos, Comparator.comparingInt(nodo -> -distancia[nodo]));
-        colaPrioridad.add(inicio); //
-        distancia[inicio] = 0;
+     private int[][] invertirPesos(int[][] matrizOriginal) {
+        int filas = matrizOriginal.length;
+        int columnas = matrizOriginal[0].length;
+        int[][] matrizInvertida = new int[filas][columnas];
 
-        int[] anterior = new int[numNodos];
-        Arrays.fill(anterior, -1);
-
-        while (!colaPrioridad.isEmpty()) {
-            int nodoActual = colaPrioridad.poll();
-            //System.out.println("Visitando nodo: " + nodoActual + ", longitud del camino: " + distancia[nodoActual]);
-
-            if (nodoActual == objetivo) {
-                break;
-            }
-
-            for (int vecino = 0; vecino < numNodos; vecino++) {
-                if (matrizAdyacentePesos[nodoActual][vecino] != Integer.MAX_VALUE && distancia[vecino] == Integer.MIN_VALUE) {
-                    int distanciaAlternativa = distancia[nodoActual] + 1;  // Aumenta la distancia por 1 al moverse a un vecino
-                //    System.out.println("Distancia alternativa a " + vecino + ": " + distanciaAlternativa);
-
-                    if (distanciaAlternativa > distancia[vecino]) {
-                        distancia[vecino] = distanciaAlternativa;
-                        anterior[vecino] = nodoActual;
-                        colaPrioridad.add(vecino);
-                    }
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (matrizOriginal[i][j] != Integer.MAX_VALUE) {
+                    matrizInvertida[i][j] = -matrizOriginal[i][j];
+                } else {
+                    matrizInvertida[i][j] = Integer.MAX_VALUE;
                 }
             }
         }
 
-        List<Integer> camino = new ArrayList<>();
-        int actual = objetivo;
-        while (actual != -1) {
-            camino.add(0, actual);
-            actual = anterior[actual];
-        }
+        return matrizInvertida;
+    }
+
+    public List<Integer> longestPathDijkstra(int inicio, int objetivo, int[][] matrizAdyacentePesos) {
+        System.out.println("Ini: " + inicio);
+        System.out.println("Obj: " + objetivo);
+
+        int[][] matrizInvertida = invertirPesos(matrizAdyacentePesos);
+
+        List<Integer> camino = dijisktraShortPath(inicio, objetivo, matrizInvertida);
 
         System.out.println("Longitud del camino: " + camino.size());
-      //  System.out.println("Camino: " + camino);
 
         return camino;
     }
-
     public int[][] floydWarshall(int[][] graph) {
         int V = graph.length;
         int[][] dist = new int[V][V];
@@ -306,5 +290,5 @@ public List<Integer> longestPathDijkstra(int inicio, int objetivo, int[][] matri
 
         return path;
     }
-    
+
 }

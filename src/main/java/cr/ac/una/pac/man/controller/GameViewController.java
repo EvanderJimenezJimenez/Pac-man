@@ -629,10 +629,11 @@ public class GameViewController extends Controller implements Initializable {
             List<Integer> shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
 
             // System.out.println("Corta: "+ shortestPath2.size());
-            System.out.println("Larga: " + shortestPath.size());
+            //System.out.println("Larga: " + shortestPath.size());
             if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc && !shockBlinky) {
                 handleCollision();
             }
+            
             if (shortestPath != null && shortestPath.size() > 1 && lifes > 1) {
                 // Obtiene el siguiente nodo en el camino más corto
                 int nextNode = shortestPath.get(1);

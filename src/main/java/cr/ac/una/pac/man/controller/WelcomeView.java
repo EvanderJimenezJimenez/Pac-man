@@ -1,5 +1,6 @@
 package cr.ac.una.pac.man.controller;
 
+import cr.ac.una.pac.man.GeneratedMap;
 import cr.ac.una.pac.man.Statistics;
 import cr.ac.una.pac.man.TopPlayers;
 import cr.ac.una.pac.man.util.FlowController;
@@ -29,8 +30,12 @@ public class WelcomeView extends Controller implements Initializable {
 
     String player = null;
 
+    GeneratedMap gen;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        gen = new GeneratedMap();
 
         if (archivoNoVacio()) {
             getStatistics();
@@ -38,6 +43,9 @@ public class WelcomeView extends Controller implements Initializable {
             getPlayer();
             playerTopUpdate(player);
             System.out.println("Actualiza");
+        } else {
+            System.out.println("Genera mapas");
+            gen.mapGenerated();
         }
 
     }
@@ -220,13 +228,13 @@ public class WelcomeView extends Controller implements Initializable {
 
     @FXML
     private void onAction_player(ActionEvent event) {
-        FlowController.getInstance().goViewInWindowModal("PlayerName",getStage() , Boolean.FALSE);
-       
+        FlowController.getInstance().goViewInWindowModal("PlayerName", getStage(), Boolean.FALSE);
+
     }
 
     @FXML
     private void onAction_settings(ActionEvent event) {
-         FlowController.getInstance().goViewInWindowModal("SettingView",getStage() , Boolean.FALSE);
+        FlowController.getInstance().goViewInWindowModal("SettingView", getStage(), Boolean.FALSE);
     }
 
     @FXML
@@ -236,7 +244,7 @@ public class WelcomeView extends Controller implements Initializable {
 
     @FXML
     private void onAction_Estadisticas(ActionEvent event) {
-         FlowController.getInstance().goViewInWindowModal("StatisticsView",getStage() , Boolean.FALSE);
+        FlowController.getInstance().goViewInWindowModal("StatisticsView", getStage(), Boolean.FALSE);
     }
 
 }
