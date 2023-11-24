@@ -20,6 +20,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 
 /**
@@ -275,11 +276,14 @@ public class SettingViewController extends Controller implements Initializable {
     @FXML
     private void onAction_activarNiveles(ActionEvent event) {
         levelUpdate();
+         new Mensaje().show(Alert.AlertType.INFORMATION, "Niveles", "Todos los niveles han sido debloqueados.");
     }
 
     @FXML
     private void onAction_activarTrofeos(ActionEvent event) {
         trophieUpdate();
+         new Mensaje().show(Alert.AlertType.INFORMATION, "Trofeos", "Todos los trofeos han sido desbloqueados.");
+        
     }
 
     @FXML
@@ -290,6 +294,7 @@ public class SettingViewController extends Controller implements Initializable {
     @FXML
     private void onActionGuardarScore(ActionEvent event) {
         StatisticsUpdate();
+         new Mensaje().show(Alert.AlertType.INFORMATION, "Puntuacion actualizada", "Actualizada correctamente.");
     }
 
     @FXML

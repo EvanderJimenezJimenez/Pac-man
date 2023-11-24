@@ -243,35 +243,35 @@ public class PlayerNameController extends Controller implements Initializable {
 
             switch (i) {
                 case 0:
-                    if (levelsComplete()) {
+                    if (levelsComplete() || trophiesList.get(0).isComplete()) {
                         vbox_1.setDisable(false);
                         vbox_1.setOpacity(100);
                         marcarCompletado(i);
                     }
                     break;
                 case 1:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) > 5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) > 5 ||  trophiesList.get(1).isComplete()) {
                         vbox_2.setDisable(false);
                         vbox_2.setOpacity(100);
                         marcarCompletado(i);
                     }
                     break;
                 case 2:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 3) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 3 ||  trophiesList.get(2).isComplete()) {
                         vbox_3.setDisable(false);
                         vbox_3.setOpacity(100);
                         marcarCompletado(i);
                     }
                     break;
                 case 3:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5 ||  trophiesList.get(3).isComplete()) {
                         vbox_4.setDisable(false);
                         vbox_4.setOpacity(100);
                         marcarCompletado(i);
                     }
                     break;
                 case 4:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 5 ||  trophiesList.get(4).isComplete()) {
                         vbox_5.setDisable(false);
                         vbox_5.setOpacity(100);
                         marcarCompletado(i);
@@ -279,7 +279,7 @@ public class PlayerNameController extends Controller implements Initializable {
                     }
                     break;
                 case 5:
-                    if (Integer.parseInt(trophiesList.get(i).getScore()) != 10) {
+                    if (Integer.parseInt(trophiesList.get(i).getScore()) >= 10 ||  trophiesList.get(5).isComplete()) {
                         vbox_6.setDisable(false);
                         vbox_6.setOpacity(100);
                         marcarCompletado(i);
@@ -408,8 +408,6 @@ public class PlayerNameController extends Controller implements Initializable {
             addPalyer( txt_PlayerName.getText(),"***");
             //FlowController.getInstance().goMain();
             getStage().close();
-
-          
             getStage().close();
         
         } else {

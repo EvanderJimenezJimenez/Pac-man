@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="cr.ac.una.pac.man.controller.SettingViewController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.pac.man.controller.SettingViewController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="300.0" layoutY="191.0" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -47,21 +46,10 @@
                         </HBox>
                         <Label prefHeight="61.0" prefWidth="176.0" text="Definir nueva puntuacion" />
                         <JFXTextField fx:id="txt_score" prefHeight="32.0" prefWidth="233.0" />
-                        <Button minWidth="99.0" mnemonicParsing="false" onAction="#onActionGuardarScore" prefHeight="47.0" prefWidth="99.0" text="Guardar" />
-                     </children>
-                  </VBox>
-                  <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <VBox alignment="CENTER" layoutX="257.0" layoutY="10.0" prefHeight="166.0" prefWidth="223.0" spacing="3.0">
-                     <children>
-                        <HBox alignment="TOP_CENTER" prefHeight="37.0" prefWidth="134.0">
-                           <children>
-                              <Label prefHeight="36.0" prefWidth="50.0" text="Vidas:" />
-                              <Label fx:id="lbl_vidas" layoutX="10.0" layoutY="10.0" prefHeight="36.0" prefWidth="96.0" text="6" />
-                           </children>
-                        </HBox>
-                        <Label prefHeight="61.0" prefWidth="194.0" text="Definir nuevas Vidas iniciales" />
-                        <JFXTextField fx:id="txt_vidas" prefHeight="33.0" prefWidth="223.0" />
-                        <Button minWidth="99.0" mnemonicParsing="false" onAction="#onActionGuardarVidas" prefHeight="47.0" prefWidth="99.0" text="Guardar" />
+                        <Button minWidth="99.0" mnemonicParsing="false" onAction="#onActionGuardarScore" prefHeight="47.0" prefWidth="99.0" text="Guardar">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                </children>
