@@ -45,7 +45,7 @@ public class WelcomeView extends Controller implements Initializable {
             System.out.println("Actualiza");
         } else {
             System.out.println("Genera mapas");
-           // gen.mapGenerated();
+            gen.mapGenerated();
         }
 
     }

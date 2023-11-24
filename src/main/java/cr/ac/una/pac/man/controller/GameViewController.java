@@ -534,6 +534,7 @@ public class GameViewController extends Controller implements Initializable {
             }
 
             int startNode = clydeY * 15 + clydeX;
+            
             int randomX = currentRandomPoint.x;
             int randomY = currentRandomPoint.y;
             int targetNode = 0;

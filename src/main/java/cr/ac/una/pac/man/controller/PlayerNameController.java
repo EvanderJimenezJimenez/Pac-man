@@ -426,32 +426,33 @@ public class PlayerNameController extends Controller implements Initializable {
         if (new Mensaje().showConfirmation("Eliminar info", getStage(), "Desea eliminar los datos.")) {
             String level1 = levelList.get(0).getName();
 
-//        for(Level lev : levelList){
-//           // System.out.println(lev.getName());
-//            if(lev.getName()!= level1){
-//                System.out.println(lev.getName());
-//                lev.setAvailable(false);
-//            }
-//            lev.setComplete(false);
-//            lev.setPlay(String.valueOf(0));
-//            lev.setScoreLife(String.valueOf(0));
-//            lev.setScore(String.valueOf(0));
-//            lev.setTime("00:00:00");
-//        }
-//        updateLevelFile();
-//        for (Trophie trophie : trophiesList) {
-//            trophie.setScore(String.valueOf(0));
-//            trophie.setComplete(false);
-//        }
-//        updateTrophiesFile();
-//           statistics = statisticsList.get(0);
-//            statistics.setScore(String.valueOf(0));
-//            statistics.setLifes(String.valueOf(0));
-//            statistics.setGhost(String.valueOf(0));
-//            statistics.setTime("00:00:00");
-//       
-//        updateStisticsFile(statisticsList.get(0));
-            // addPalyer("","");
+        for(Level lev : levelList){
+           // System.out.println(lev.getName());
+            if(lev.getName()!= level1){
+                System.out.println(lev.getName());
+                lev.setAvailable(false);
+            }
+            lev.setComplete(false);
+            lev.setPlay(String.valueOf(0));
+            lev.setScoreLife(String.valueOf(0));
+            lev.setScore(String.valueOf(0));
+            lev.setTime("00:00:00");
+        }
+        updateLevelFile();
+        for (Trophie trophie : trophiesList) {
+            trophie.setScore(String.valueOf(0));
+            trophie.setComplete(false);
+        }
+        updateTrophiesFile();
+           statistics = statisticsList.get(0);
+            statistics.setScore(String.valueOf(0));
+            statistics.setLifes(String.valueOf(0));
+            statistics.setGhost(String.valueOf(0));
+            statistics.setTime("00:00:00");
+       
+        updateStisticsFile(statisticsList.get(0));
+             addPalyer("","");
+             getStage().close();
             new Mensaje().show(Alert.AlertType.INFORMATION, "Eliminar info", "Datos eliminados correctamente.");
         }
 
