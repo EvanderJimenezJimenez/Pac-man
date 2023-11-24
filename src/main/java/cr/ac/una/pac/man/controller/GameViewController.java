@@ -1,6 +1,8 @@
 package cr.ac.una.pac.man.controller;
 
+import cr.ac.una.pac.man.Ghost;
 import cr.ac.una.pac.man.util.FlowController;
+import cr.ac.una.pac.man.util.Ghost_Methonds;
 import java.awt.Point;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,12 +19,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-
-import static javafx.scene.input.KeyCode.SPACE;
 import static javafx.scene.input.KeyCode.LEFT;
 import static javafx.scene.input.KeyCode.RIGHT;
 import static javafx.scene.input.KeyCode.UP;
@@ -29,8 +29,6 @@ import static javafx.scene.input.KeyCode.DOWN;
 import javafx.util.Duration;
 
 /**
- * FXML Controller class
- *
  * @author dario
  */
 public class GameViewController extends Controller implements Initializable {
@@ -64,8 +62,11 @@ public class GameViewController extends Controller implements Initializable {
     //Ghost
     private Image blinkyImage;
     private Image clydeImage;
+    private Ghost ghost;
 
     private ImageView pacmanImageView;
+
+    Ghost_Methonds ghost_methonds = new Ghost_Methonds();
 
     Image life1;
     Image life2;
@@ -102,7 +103,7 @@ public class GameViewController extends Controller implements Initializable {
         wallImage = getIamge("wall");
         smallPointImage = getIamge("smallPoint");
         bigPointImage = getIamge("bigPoint");
-        
+
         //pacman
         pacmanRight = getIamge("pacmanRight");
         pacmanFeft = getIamge("pacmanLeft");
@@ -254,48 +255,84 @@ public class GameViewController extends Controller implements Initializable {
         }
     }
 
-    private void movePacman() {
-    frameCount++;
+    public void Update() {
+        double imageSize = 15.0;
+        gridPaneMap.getChildren().clear();  // Eliminar todos los elementos antiguos
 
-    if (frameCount >= frameDelay) {
-        int newPacmanX = pacmanX + directionX;
-        int newPacmanY = pacmanY + directionY;
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[y].length; x++) {
+                char cell = map[y][x];
+                ImageView imageView = new ImageView();
+                imageView.setFitWidth(imageSize);
+                imageView.setFitHeight(imageSize);
 
-        if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
-            char nextCell = map[newPacmanY][newPacmanX];
-            if (nextCell != 'W') {
-                if (nextCell == 'S' || nextCell == 'D') {
-                    map[newPacmanY][newPacmanX] = ' ';
-                    score += 10;
-                    lbl_score.setText(String.valueOf(score));
-                    if (levelCompleted()) {
-                        FlowController.getInstance().goViewInWindow("LevelComplete");
-                        getStage().close();
-                        System.out.println("Hola");
-                    }
-
-                    ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
-                    gridPaneMap.getChildren().remove(cellImageView);
-
-                    // Reemplazar la imagen de la celda por una celda vacía
-                    ImageView emptyImageView = new ImageView();
-                    emptyImageView.setFitWidth(15);
-                    emptyImageView.setFitHeight(15);
-                    gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+                if (cell == 'W') {
+                    imageView.setImage(wallImage);
+                } else if (cell == 'S') {
+                    imageView.setImage(smallPointImage);
+                    smallPoints.add(new Point(x, y));
+                } else if (cell == 'B') {
+                    imageView.setImage(blinkyImage);
+                } else if (cell == 'D') {
+                    imageView.setImage(bigPointImage);
+                } else if (cell == 'C') {
+                    imageView.setImage(clydeImage);
+                } else if (cell == 'P') {
+                    pacmanImageView = new ImageView(pacmanRight);
+                    pacmanImageView.setFitHeight(imageSize);
+                    pacmanImageView.setFitWidth(imageSize);
+                    pacmanX = x;
+                    pacmanY = y;
                 }
 
-                gridPaneMap.getChildren().remove(pacmanImageView);
-                pacmanX = newPacmanX;
-                pacmanY = newPacmanY;
-                pacmanImageView.setFitHeight(15);
-                pacmanImageView.setFitWidth(15);
-                gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
+                gridPaneMap.add(imageView, x, y);
             }
         }
-        frameCount = 0;
-    }
-}
 
+        // Agregar la imagen del jugador al final para que aparezca en la parte superior
+        gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
+    }
+
+    private void movePacman() {
+        frameCount++;
+
+        if (frameCount >= frameDelay) {
+            int newPacmanX = pacmanX + directionX;
+            int newPacmanY = pacmanY + directionY;
+
+            if (newPacmanX >= 0 && newPacmanX < 15 && newPacmanY >= 0 && newPacmanY < 15) {
+                char nextCell = map[newPacmanY][newPacmanX];
+                if (nextCell != 'W') {
+                    if (nextCell == 'S' || nextCell == 'D') {
+                        map[newPacmanY][newPacmanX] = ' ';
+                        score += 10;
+                        lbl_score.setText(String.valueOf(score));
+                        if (levelCompleted()) {
+                            FlowController.getInstance().goViewInWindow("LevelComplete");
+                            getStage().close();
+                        }
+
+                        ImageView cellImageView = (ImageView) getNodeByRowColumnIndex(newPacmanY, newPacmanX);
+                        gridPaneMap.getChildren().remove(cellImageView);
+
+                        // Reemplazar la imagen de la celda por una celda vacía
+                        ImageView emptyImageView = new ImageView();
+                        emptyImageView.setFitWidth(15);
+                        emptyImageView.setFitHeight(15);
+                        gridPaneMap.add(emptyImageView, newPacmanX, newPacmanY);
+                    }
+
+                    gridPaneMap.getChildren().remove(pacmanImageView);
+                    pacmanX = newPacmanX;
+                    pacmanY = newPacmanY;
+                    pacmanImageView.setFitHeight(15);
+                    pacmanImageView.setFitWidth(15);
+                    gridPaneMap.add(pacmanImageView, pacmanX, pacmanY);
+                }
+            }
+            frameCount = 0;
+        }
+    }
 
 // Función para obtener una ImageView en una fila y columna específicas
     private Node getNodeByRowColumnIndex(final int row, final int column) {
@@ -330,5 +367,15 @@ public class GameViewController extends Controller implements Initializable {
         }
         return isComplete;
     }
+
+    @FXML
+    private void onActionPrueba(ActionEvent event) {
+        // ghost_methonds.MoveElement('B', "RIGHT", map); //Tiene un error de duplicado
+        Update();
+        ghost_methonds.NormalGhostRoute(map);
+        Update();
+
+    }
+    
 
 }

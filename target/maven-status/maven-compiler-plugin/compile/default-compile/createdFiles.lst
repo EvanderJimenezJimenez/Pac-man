@@ -9,6 +9,8 @@ cr\ac\una\pac\man\controller\LoadingView.class
 cr\ac\una\pac\man\controller\LoadingView$1.class
 cr\ac\una\pac\man\controller\Controller.class
 cr\ac\una\pac\man\controller\ChooseLevelController.class
+cr\ac\una\pac\man\util\Ghost_Methonds.class
+cr\ac\una\pac\man\Ghost.class
 cr\ac\una\pac\man\controller\LevelCompleteController.class
 module-info.class
 cr\ac\una\pac\man\controller\SettingViewController.class
