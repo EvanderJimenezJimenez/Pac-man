@@ -119,53 +119,69 @@ public class Algorithms {
         return graph;
     }
 
+// ... Otro código ...
+
+
+
+
+
+
+ 
     public List<Integer> longestPathDijkstra(int start, int target, int[][] matrizAdyacentePesos) {
-        int numNodes = matrizAdyacentePesos.length;
-        int[] distance = new int[numNodes];
-        Arrays.fill(distance, Integer.MIN_VALUE); // Inicializar con valor negativo grande
+    int numNodes = matrizAdyacentePesos.length;
+    int[] distance = new int[numNodes];
+    Arrays.fill(distance, Integer.MIN_VALUE);
+    distance[start] = 0;
 
-        PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node])); // Invertir el orden de la cola de prioridad
-        queue.add(start);
-        distance[start] = 0;
+    PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node]));
 
-        int[] previous = new int[numNodes];
-        Arrays.fill(previous, -1);
+    queue.add(start);
 
-        while (!queue.isEmpty()) {
-            System.out.println("Queue size: " + queue.size());
-            int currentNode = queue.poll();
-            System.out.println("Processing node: " + currentNode);
+    int[] previous = new int[numNodes];
+    Arrays.fill(previous, -1);
 
-            if (currentNode == target) {
-                System.out.println("Target reached!");
-                break;
-            }
+    Set<Integer> visited = new HashSet<>();
 
-            for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-                int weight = matrizAdyacentePesos[currentNode][neighbor];
-                if (weight != Integer.MAX_VALUE) {
-                    int altDistance = distance[currentNode] + weight;
-                    if (altDistance < distance[neighbor]) {
-                        distance[neighbor] = altDistance;
-                        previous[neighbor] = currentNode;
-                        queue.add(neighbor);
-                        System.out.println("Updated distance to node " + neighbor + ": " + altDistance);
-                    }
+    while (!queue.isEmpty()) {
+        int currentNode = queue.poll();
 
+        if (visited.contains(currentNode)) {
+            continue;
+        }
+
+        visited.add(currentNode);
+
+        if (currentNode == target) {
+            break;
+        }
+
+        System.out.println("Explorando nodo: " + currentNode);
+
+        for (int neighbor = 0; neighbor < numNodes; neighbor++) {
+            if (matrizAdyacentePesos[currentNode][neighbor] != Integer.MAX_VALUE && !visited.contains(neighbor)) {
+                int altDistance = distance[currentNode] + matrizAdyacentePesos[currentNode][neighbor];
+                if (altDistance > distance[neighbor]) {
+                    distance[neighbor] = altDistance;
+                    previous[neighbor] = currentNode;
+                    queue.add(neighbor);
+                    System.out.println("Actualizando distancia y agregando vecino: " + neighbor);
                 }
             }
         }
-
-        List<Integer> path = new ArrayList<>();
-        int current = target;
-        while (current != -1) {
-            path.add(0, current);
-            current = previous[current];
-        }
-
-        return path;
     }
 
+    List<Integer> path = new ArrayList<>();
+    int current = target;
+    while (current != -1) {
+        path.add(0, current);
+        current = previous[current];
+    }
+
+    System.out.println("Tamaño_: " + path.size());
+    return path;
+}
+
+    
     public int[][] floydWarshall(int[][] graph) {
         int V = graph.length;
         int[][] dist = new int[V][V];

@@ -234,7 +234,7 @@ public class WelcomeView extends Controller implements Initializable {
 
     @FXML
     private void onAction_settings(ActionEvent event) {
-        FlowController.getInstance().goViewInWindowModal("SettingView", getStage(), Boolean.FALSE);
+        FlowController.getInstance().goLoadingView("SettingView");
     }
 
     @FXML

@@ -226,7 +226,7 @@ public class GameViewController extends Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         getDificultad();
-        
+
         gameMap = new GameMap();
         gameMap.cargarImagenes();
 
@@ -635,20 +635,15 @@ public class GameViewController extends Controller implements Initializable {
 
                 }
             }
-             List<Integer> shortestPath = new ArrayList<>();
-             System.out.println("Dificultad. "+ dificultad);
-            if("facil".equals(dificultad)){
-              
-                shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
-            }else if("dificil".equals(dificultad)){
-             
-                  shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
-            }
-          
-           
+            List<Integer> shortestPath = new ArrayList<>();
 
-            // System.out.println("Corta: "+ shortestPath2.size());
-            //System.out.println("Larga: " + shortestPath.size());
+            if ("facil".equals(dificultad)) {
+
+                shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
+            } else if ("dificil".equals(dificultad)) {
+                frameDelayBlinky = 2;
+                shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
+            }
             if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc && !shockBlinky) {
                 handleCollision();
             }
@@ -715,8 +710,15 @@ public class GameViewController extends Controller implements Initializable {
 
                 }
             }
-            List<Integer> shortestPath2 = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
-            List<Integer> shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
+            List<Integer> shortestPath = new ArrayList<>();
+
+            if ("facil".equals(dificultad)) {
+
+                shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
+            } else if ("dificil".equals(dificultad)) {
+
+                shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
+            }
 
             //  System.out.println("Corta: "+ shortestPath2.size());
             // System.out.println("Larga: " + shortestPath.size());
@@ -1289,7 +1291,7 @@ public class GameViewController extends Controller implements Initializable {
                 // Buscar la posición de "***"
                 int index = line.indexOf("***");
                 if (index != -1) {
-                  
+
                     dificultad = line.substring(0, index).trim();
                     break;
                 }
