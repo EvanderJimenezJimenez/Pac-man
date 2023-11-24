@@ -6,13 +6,27 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
 /**
  *
@@ -121,50 +135,30 @@ public class Algorithms {
 
 // ... Otro código ...
 
-
-
-
-
-
- 
-    public List<Integer> longestPathDijkstra(int start, int target, int[][] matrizAdyacentePesos) {
+ public List<Integer> longestPathDijkstra(int start, int target, int[][] matrizAdyacentePesos) {
     int numNodes = matrizAdyacentePesos.length;
     int[] distance = new int[numNodes];
-    Arrays.fill(distance, Integer.MIN_VALUE);
-    distance[start] = 0;
+    Arrays.fill(distance, Integer.MAX_VALUE);
 
-    PriorityQueue<Integer> queue = new PriorityQueue<>(numNodes, Comparator.comparingInt(node -> -distance[node]));
-
+    // PriorityQueue se elimina para no considerar la distancia
+    Queue<Integer> queue = new LinkedList<>();
     queue.add(start);
+    distance[start] = 0;
 
     int[] previous = new int[numNodes];
     Arrays.fill(previous, -1);
 
-    Set<Integer> visited = new HashSet<>();
-
     while (!queue.isEmpty()) {
         int currentNode = queue.poll();
 
-        if (visited.contains(currentNode)) {
-            continue;
-        }
-
-        visited.add(currentNode);
-
-        if (currentNode == target) {
-            break;
-        }
-
-        System.out.println("Explorando nodo: " + currentNode);
-
         for (int neighbor = 0; neighbor < numNodes; neighbor++) {
-            if (matrizAdyacentePesos[currentNode][neighbor] != Integer.MAX_VALUE && !visited.contains(neighbor)) {
-                int altDistance = distance[currentNode] + matrizAdyacentePesos[currentNode][neighbor];
-                if (altDistance > distance[neighbor]) {
+            int weight = matrizAdyacentePesos[currentNode][neighbor];
+            if (weight != Integer.MAX_VALUE) {
+                int altDistance = distance[currentNode] + weight;
+                if (altDistance < distance[neighbor]) {
                     distance[neighbor] = altDistance;
                     previous[neighbor] = currentNode;
                     queue.add(neighbor);
-                    System.out.println("Actualizando distancia y agregando vecino: " + neighbor);
                 }
             }
         }
@@ -177,10 +171,18 @@ public class Algorithms {
         current = previous[current];
     }
 
-    System.out.println("Tamaño_: " + path.size());
     return path;
-}
 
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     public int[][] floydWarshall(int[][] graph) {
         int V = graph.length;

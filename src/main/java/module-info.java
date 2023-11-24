@@ -7,6 +7,8 @@ module cr.ac.una.pac.man {
     
     requires javafx.graphics;
     requires  java.desktop;
+    
+    requires org.jgrapht.core;
 
 
     opens cr.ac.una.pac.man to javafx.fxml,javafx.graphics;

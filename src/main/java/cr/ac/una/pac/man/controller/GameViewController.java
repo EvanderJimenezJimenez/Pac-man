@@ -325,9 +325,9 @@ public class GameViewController extends Controller implements Initializable {
                 pacManTimeline.play();
 
                 blinkyTimeline.play();
-                //pinkyTimeline.play();
-                //clydeTimeline.play();
-                // inkyTimeline.play();
+                pinkyTimeline.play();
+                clydeTimeline.play();
+                 inkyTimeline.play();
                 {
 
                 }
@@ -641,7 +641,7 @@ public class GameViewController extends Controller implements Initializable {
 
                 shortestPath = algorithms.longestPathDijkstra(startNode, targetNode, matrizAdyacentePesos);
             } else if ("dificil".equals(dificultad)) {
-                frameDelayBlinky = 2;
+         
                 shortestPath = algorithms.dijisktraShortPath(startNode, targetNode, matrizAdyacentePesos);
             }
             if (shortestPath.size() == 1 && !isPoweredUp && !blinkyEnc && !shockBlinky) {
